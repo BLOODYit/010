@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marsad", "Marsad\Marsad.csproj", "{57CD9D87-EB77-4477-A451-8EF73E8DD873}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marsad.Tests", "Marsad.Tests\Marsad.Tests.csproj", "{49AD8F6F-38BB-49D2-994B-84190D3E4123}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{57CD9D87-EB77-4477-A451-8EF73E8DD873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57CD9D87-EB77-4477-A451-8EF73E8DD873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57CD9D87-EB77-4477-A451-8EF73E8DD873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57CD9D87-EB77-4477-A451-8EF73E8DD873}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49AD8F6F-38BB-49D2-994B-84190D3E4123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49AD8F6F-38BB-49D2-994B-84190D3E4123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49AD8F6F-38BB-49D2-994B-84190D3E4123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49AD8F6F-38BB-49D2-994B-84190D3E4123}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AA4F434A-A00A-47BA-BCE1-8B4BE79D64CE}
+	EndGlobalSection
+EndGlobal
