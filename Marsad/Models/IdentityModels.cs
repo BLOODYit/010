@@ -25,6 +25,13 @@ namespace Marsad.Models
         {
         }
 
+        public DbSet<Bundle> Bundles { get; set; }
+        public DbSet<DataSourceGroup> DataSourceGroups { get; set; }
+        public DbSet<DataSourceType> DataSourceTypes { get; set; }
+        public DbSet<Period> Periods { get; set; }
+        public DbSet<IndicatorGroup> IndicatorGroups { get; set; }
+        public DbSet<IndicatorType> IndicatorTypes { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
