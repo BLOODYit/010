@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -50,6 +51,22 @@ namespace Marsad.Models
         [Required]
         public bool IsHijri { get; set; }
 
+        [Required]
+        public int DataSourceTypeID { get; set; }
+        public DataSourceType DataSourceType { get; set; }
+
+        [NotMapped]
+        public string PeriodicString
+        {
+            get
+            {
+                if (!IsPeriodic)                
+                    return "غير دوري";
+                if (Period != null)
+                    return Period.Name;
+                return "";
+            }
+        }
         public List<DataSourceGroup> DataSourceGroups { get; set; }
         public List<Element> Elements { get; set; }
     }

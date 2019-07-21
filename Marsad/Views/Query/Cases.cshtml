@@ -1,0 +1,92 @@
+﻿@model IEnumerable<Marsad.Models.Case>
+@using Marsad.Models.Controls
+@{
+    ViewBag.Title = "Cases";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>إستعلام القضايا</h2>
+        </div>
+    </div>
+    <div class="row">
+        <form action="@Url.Action("Indicators","Cases")" method="get">
+            <div class="col-md-6">
+                @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "indicatorIds", Data = ViewBag.Indicators, Title = "المؤشرات المرتبطة", Name = "indicatorIds", Selected = ViewBag.indicatorIds })
+            </div>
+            <div class="col-md-6">
+                @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "yearIds", Data = ViewBag.Years, Title = "سنوات الطرح", Name = "yearIds", Selected = ViewBag.yearIds })
+            </div>
+            <div class="col-sm-9">
+                <br>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="كلمات مفتاحية" name="keywords" value="@ViewBag.keywords">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">بحث </button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <form action="@Url.Action()" method="get">
+                <table class="table table-striped jambo_table">
+                    <thead>
+                        <tr class="headings">
+                            <th width="1%"><input type="checkbox" name="all" id="chkAll" /></th>
+                            <th class="column-title">القضية</th>
+                            <th class="column-title">التعريف بالقضية</th>
+                            <th class="column-title">سنة طرح القضية</th>
+                            <th class="column-title no-link last">
+                                <span class="nobr">عمليات</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            ushort i = 0;
+                        }
+                        @foreach (var item in Model)
+                        {
+                            <tr class="@(i++%2==0?"even_pointer":"odd_pointer")">
+                                <td><input type="checkbox" name="ids" class="ids" value="@item.ID" /></td>
+                                <td>@item.Name</td>
+                                <td>@item.Description</td>
+                                <td>@item.Year</td>                                
+                                <td class=" last">
+                                    <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Cases",item.ID)">عرض</a>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" id="queryBtn">إستعلام عن قضايا التنمية المختارة</button>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function setBtnStatus() {
+                if ($('.ids:checked').length > 0) {
+                    $('#queryBtn').prop('disabled', false);
+                }
+                else {
+                    $('#queryBtn').prop('disabled', 'disabled');
+                }
+            }
+            $('#chkAll').click(function () {
+                $('.ids').prop('checked', $(this).prop('checked'));
+                setBtnStatus();
+            });
+            setBtnStatus();
+        });
+    </script>
+}

@@ -27,10 +27,9 @@ namespace Marsad
                       "~/Content/vendors/bootstrap-daterangepicker/daterangepicker.css"));
 
             //Scripts
-            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*"));
+            bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*", "~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
-                        "~/Scripts/jquery-{version}.js"                        
-                        , "~/Scripts/bootstrap.js"
+                          "~/Scripts/bootstrap.js"
                         , "~/Content/vendors/fastclick/lib/fastclick.js"
                         , "~/Content/build/js/custom.min.js"));
 

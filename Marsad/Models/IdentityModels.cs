@@ -31,6 +31,13 @@ namespace Marsad.Models
         public DbSet<Period> Periods { get; set; }
         public DbSet<IndicatorGroup> IndicatorGroups { get; set; }
         public DbSet<IndicatorType> IndicatorTypes { get; set; }
+        public DbSet<Indicator> Indicators { get; set; }
+        public DbSet<DataSource> DataSources { get; set; }
+        public DbSet<Case> Cases { get; set; }
+        public DbSet<CaseYear> CaseYears { get; set; }
+        public DbSet<CaseYearIndicator> CaseYearIndicators { get; set; }
+
+
 
         public static ApplicationDbContext Create()
         {

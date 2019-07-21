@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Marsad.Models.DataSource>
+
+@{
+    ViewBag.Title = "DataSourceDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>إستعلام مصادر البيانات</h2>
+        </div>
+    </div>
+    
+        @{ 
+            var i = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <h4>@(i++) / @Model.Count()</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        <dt>رمز المصدر</dt>
+                        <dd>@item.Code</dd>
+                        <dt>إسم المصدر</dt>
+                        <dd>@item.Name</dd>
+                        <dt>إسم الناشر</dt>
+                        <dd>@item.PublisherName</dd>
+                        <dt>دورية المصدر</dt>
+                        <dd>@item.PeriodicString</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        <dt>نوع المصدر</dt>
+                        <dd>@item.DataSourceType.Name</dd>
+                        <dt>إسم المؤلف</dt>
+                        <dd>@item.AuthorName</dd>
+                        <dt>تاريخ النشر</dt>
+                        <dd>@item.PublishDate</dd>
+                        <dt>رقم الطبعة</dt>
+                        <dd>@item.PublishNumber</dd>
+                    </dl>
+                </div>
+            </div>
+        }
+    <hr />
+    <a href="@Url.Action("DataSources","Query")" class="btn btn-primary">السابق</a>
+</div>

@@ -1,0 +1,68 @@
+﻿@using Marsad.Models.Controls
+@{
+    ViewBag.Title = "Indicator";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>إستعلام المؤشرات</h2>
+        </div>
+    </div>
+    <div class="row">
+        <form action="@Url.Action("Indicators","Query")" method="get">
+            <div class="col-md-6">
+                @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "bundles", Data = ViewBag.Bundles, Title = "الحزم", Name = "bundleIds" ,Selected=ViewBag.bundleIds })
+            </div>
+            <div class="col-md-6">
+                @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "indicatorGroups", Data = ViewBag.IndicatorGroups, Title = "المجموعة", Name = "indicatorGroupIds" ,Selected=ViewBag.indicatorGroupIds })
+            </div>
+            <div class="col-sm-9">
+                <br>
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="كلمات مفتاحية" name="keywords" value="@ViewBag.keywords">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit">بحث </button>
+                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <table class="table table-striped jambo_table">
+                <thead>
+                    <tr class="headings">
+                        <th class="column-title">كود المؤشر</th>
+                        <th class="column-title">أسم المؤشر</th>
+                        <th class="column-title">الحزمة التابع لها</th>
+                        <th class="column-title no-link last">
+                            <span class="nobr">عمليات</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        ushort i = 0;
+                    }
+                    @foreach (var item in Model)
+                    {
+                        <tr class="@(i++%2==0?"even_pointer":"odd_pointer") @(item.Indicators.Count>0?"text-danger":"")">
+                            <td>@item.Code</td>
+                            <td>@item.Name</td>
+                            <td>@item.Bundle.Name</td>
+                            <td class=" last">
+                                <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Indicator",item.ID)">عرض</a>
+                            </td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            <span class="text-danger">مؤشر رئيسي له مؤشرات فرعية</span>
+        </div>
+    </div>
+
+
+</div>
+

@@ -1,0 +1,27 @@
+﻿@model MultiSelectModel
+@using Marsad.Models.Controls
+<div class="">
+    @{ 
+        if (Model.Selected == null)
+        {
+            Model.Selected = new int[]{ };
+        }
+    }
+    <span>@Model.Title</span>
+    @if (Model.WithClearSelected)
+    {<span class="pull-right link" id="@(Model.ID+"_unselect")">إلغاء التحديد</span>}
+    <select multiple name="@Model.Name" id="@(Model.ID+"_list")" class="form-control" size="6">
+        @foreach (var key in Model.Data.Keys)
+        {
+            <option value="@key" @(Model.Selected.Contains(key)?"selected":"")>@Model.Data[key]</option>
+        }
+    </select>
+</div>
+
+    <script type="text/javascript" defer>
+        $(document).ready(function () {
+            $('#@(Model.ID+"_unselect")').click(function () {
+                $('#@(Model.ID+"_list")').val(null);
+            });
+        });
+    </script>

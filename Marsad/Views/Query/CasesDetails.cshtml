@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Marsad.Models.Case>
+
+@{
+    ViewBag.Title = "CasesDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>إستعلام القضايا </h2>
+        </div>
+    </div>
+
+    <table class="table table-striped jambo_table">
+        <thead>
+            <tr>
+                <th>القضية</th>
+                <th>التعريف بالقضية</th>
+                <th>سنة الطرح</th>
+                <th>سنوات التفعيل</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var _case in Model)
+            {
+                <tr>
+                    <td>@_case.Name</td>
+                    <td>@_case.Description</td>
+                    <td>@_case.Year</td>
+                    <td>
+                        <table class="table table-striped jambo_table">
+                            <thead>
+                                <tr>
+                                    <th>السنة</th>
+                                    <th>سياسة القضية لهذه السنة</th>
+                                    <th>المؤشرات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var caseYear in _case.CaseYears)
+                                {
+                                    <tr>
+                                        <td>@caseYear.Year</td>
+                                        <td>@caseYear.Description</td>
+                                        <td>
+                                            <table class="table table-striped jambo_table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>المؤشر</th>
+                                                        <th>النوع</th>
+                                                        <th>الإستراتيجية</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var cyi in caseYear.CaseYearIndicators)
+                                                    {
+                                                        <tr>
+                                                            <td>@cyi.Indicator.Name</td>
+                                                            <td>@cyi.IndicatorType</td>
+                                                            <td><a href="#" data-content="@cyi.Strategy" class="strategy">الإستراتيجية</a></td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+
+
+        </tbody>
+    </table>
+
+    <hr />
+    <a href="@Url.Action("Cases","Query")" class="btn btn-primary">السابق</a>
+</div>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">الإستراتيجية</h4>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">إغلاق</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.strategy').click(function () {
+                $('.modal-body').text(this.getAttribute('data-content'));
+                $('#myModal').modal({ show: true });
+            });
+        });
+    </script>
+
+}

@@ -8,7 +8,10 @@ namespace Marsad.Models
 {
     public class IndicatorGroup
     {
-
+        public IndicatorGroup()
+        {
+            this.Indicators = new List<Indicator>();
+        }
         [Key]
         public int ID { get; set; }
 
@@ -21,5 +24,7 @@ namespace Marsad.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+
+        public List<Indicator> Indicators { get; set; }
     }
 }

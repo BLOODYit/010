@@ -48,6 +48,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
+    <Reference Include="PagedList.Mvc, Version=4.5.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
+      <HintPath>..\packages\PagedList.Mvc.4.5.0.0\lib\net40\PagedList.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -170,17 +176,21 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BundlesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Migrations\201907181231316_start.cs" />
     <Compile Include="Migrations\201907181231316_start.Designer.cs">
       <DependentUpon>201907181231316_start.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Controls\MultiSelectModel.cs" />
     <Compile Include="Models\DataSource.cs" />
     <Compile Include="Models\Indicator.cs" />
     <Compile Include="Models\Period.cs" />
@@ -215,6 +225,7 @@
     <Content Include="Content\build\images\loading.gif" />
     <Content Include="Content\build\js\custom.js" />
     <Content Include="Content\build\js\custom.min.js" />
+    <Content Include="Content\PagedList.css" />
     <Content Include="Content\vendors\cropper\dist\cropper.css" />
     <Content Include="Content\vendors\cropper\dist\cropper.js" />
     <Content Include="Content\vendors\cropper\dist\cropper.min.css" />
@@ -2513,6 +2524,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\rtl.css" />
+    <Content Include="Images\user.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -2560,6 +2572,17 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Query\Indicators.cshtml" />
+    <Content Include="Views\Shared\Controls\_MultiSelect.cshtml" />
+    <Content Include="Views\Query\DataSources.cshtml" />
+    <Content Include="Views\Query\DataSourceDetails.cshtml" />
+    <Content Include="Views\Query\CasesDetails.cshtml" />
+    <Content Include="Views\Query\Cases.cshtml" />
+    <Content Include="Views\Bundles\Create.cshtml" />
+    <Content Include="Views\Bundles\Delete.cshtml" />
+    <Content Include="Views\Bundles\Details.cshtml" />
+    <Content Include="Views\Bundles\Edit.cshtml" />
+    <Content Include="Views\Bundles\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,85 @@
+﻿<#@ template language="C#" HostSpecific="True" #>
+<#@ output extension=".cshtml" #>
+<#@ include file="Imports.include.t4" #>
+@model <#= ViewDataTypeName #>
+<#
+// The following chained if-statement outputs the file header code and markup for a partial view, a view using a layout page, or a regular view.
+if(IsPartialView) {
+#>
+
+<#
+} else if(IsLayoutPageSelected) {
+#>
+
+@{
+    ViewBag.Title = "<#= ViewName#>";
+<#
+if (!String.IsNullOrEmpty(LayoutPageFile)) {
+#>
+    Layout = "<#= LayoutPageFile#>";
+<#
+}
+#>
+}
+
+<#
+} else {
+}
+#>
+
+<div class="container">
+<div class="row">
+<div class="col-xs-12">
+<div>
+
+    <h4>تفاصيل <#= ViewDataTypeShortName #></h4>
+    <hr />
+    <dl class="dl-horizontal">
+<#
+foreach (PropertyMetadata property in ModelMetadata.Properties) {
+    if (property.Scaffold && !property.IsPrimaryKey && !property.IsForeignKey) {
+#>
+<#
+        // We do not want to show any association properties for which there is
+        // no associated foreign key.
+        if (property.IsAssociation && GetRelatedModelMetadata(property) == null) {
+            continue;
+        }
+#>
+        <dt>
+            @Html.DisplayNameFor(model => model.<#= GetValueExpression(property) #>)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.<#= GetValueExpression(property) #>)
+        </dd>
+
+<#
+    }
+}
+#>
+    </dl>
+</div>
+<p>
+<#
+string pkName = GetPrimaryKeyName();
+if (pkName != null) {
+#>
+    @Html.ActionLink("تعديل", "Edit", new { id = Model.<#= pkName #> },new {@class="btn btn-primary"})
+    @Html.ActionLink("الرئيسية", "Index",null,new {@class="btn btn-default"})
+<#
+} else {
+#>
+    @Html.ActionLink("تعديل", "Edit", new { /* id = Model.PrimaryKey */ },new {@class="btn btn-primary"})
+    @Html.ActionLink("الرئيسية", "Index",null,new {@class="btn btn-default"})
+<#
+}
+#>
+</p>
+<#
+// The following code closes the tag used in the case of a view using a layout page and the body and html tags in the case of a regular view page
+#>
+</div>
+</div>
+</div>
+<#@ include file="ModelMetadataFunctions.cs.include.t4" #>
