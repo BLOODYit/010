@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="images/favicon.ico" type="image/ico" />
 
-    <title>المرصد الحضري بالمنطقة الشرقية</title>
+    <title>@ViewBag.Title - المرصد الحضري بالمنطقة الشرقية</title>
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -72,8 +72,8 @@
                                     <a><i class="fa fa-table"></i> مدخلات القاعدة <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
                                         <li><a href="@Url.Action("Index","Bundles")">إدارة الحزم</a></li>
-                                        <li><a href="#">إدارة المؤشرات الحضرية</a></li>
-                                        <li><a href="#">إدارة العناصر والقيم</a></li>
+                                        <li><a href="@Url.Action("Index","Indicators")">إدارة المؤشرات الحضرية</a></li>
+                                        <li><a href="@Url.Action("Index","Elements")">إدارة العناصر والقيم</a></li>
 
 
                                         <li><a href="#">إدارة مجموعات المؤشرات</a></li>
@@ -81,10 +81,10 @@
                                         <li>
                                             <a>مصادر البيانات<span class="fa fa-chevron-down"></span></a>
                                             <ul class="nav child_menu">
-                                                <li><a href="#">إدارة الجهات</a></li>
-                                                <li><a href="#">إدارة نوع مصادر البيانات</a></li>
-                                                <li><a href="#">إدارة الفترات</a></li>
-                                                <li><a href="#">إدارة مصادر البيانات</a></li>
+                                                <li><a href="@Url.Action("Index","Entities")">إدارة الجهات</a></li>
+                                                <li><a href="@Url.Action("Index","DataSourceTypes")">إدارة نوع مصادر البيانات</a></li>
+                                                <li><a href="@Url.Action("Index","Periods")">إدارة الفترات</a></li>
+                                                <li><a href="@Url.Action("Index","DataSources")">إدارة مصادر البيانات</a></li>
                                                 <li><a href="#">إدارة مجوعة مصادر البيانات</a></li>
                                             </ul>
                                         </li>
@@ -245,10 +245,8 @@
             <!-- /footer content -->
         </div>
     </div>
-
-  
     @Scripts.Render("~/bundles/main")    
+    @Scripts.Render("~/bundles/jqueryval")
     @RenderSection("scripts", required: false)
-
 </body>
 </html>

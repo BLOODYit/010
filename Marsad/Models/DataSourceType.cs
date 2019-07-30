@@ -16,11 +16,9 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required]
-        public int Code { get; set; }
-
-        [Required]
-        [MaxLength(255)]        
+        [Required(ErrorMessage ="برجاء إدخال نوع مصدر البيانات")]
+        [MaxLength(255,ErrorMessage ="نوع مصدر البيانات يجب الا يتعدى 255 حرف")]
+        [Display(Name = "نوع مصدر البيانات")]
         public string Name { get; set; }
 
         public List<DataSource> DataSources { get; set; }

@@ -105,7 +105,9 @@ namespace <#= Namespace #>
 <#		if (UseAsync) { #>
             return View(await <#= entitySetVar #>.ToListAsync());
 <#		} else { #>
-            return View(<#= entitySetVar #>.ToList());
+			int pageSize = 10;
+			int pageNumber = (page ?? 1);	
+			return View(<#= entitySetVar #>.ToPagedList(pageNumber, pageSize));            
 <#		} #>
 <# } else { #>
 <#		if (UseAsync) { #>
@@ -297,7 +299,8 @@ namespace <#= Namespace #>
         }
 
 			private IQueryable<<#= ModelTypeName #>> SortParams(string sortOrder,IQueryable<<#= ModelTypeName #>> <#= entitySetVar #>,string searchString){
-			<#= entitySetVar #> = <#= entitySetVar #>.Where(x=>x.Name.Contains(searchString));
+			if (!String.IsNullOrWhiteSpace(searchString))
+				<#= entitySetVar #> = <#= entitySetVar #>.Where(x=>x.Name.Contains(searchString));
 			ViewBag.IDSortParm = String.IsNullOrEmpty(sortOrder) ? "IDDesc" : "";
 <#
 foreach (PropertyMetadata property in ModelMetadata.Properties) {
@@ -328,6 +331,7 @@ foreach (PropertyMetadata property in ModelMetadata.Properties) {
 		#>			
 		case "IDDesc":
 				<#= entitySetVar #> = <#= entitySetVar #>.OrderByDescending(s => s.ID);
+				break;
 			default:
 				<#= entitySetVar #> = <#= entitySetVar #>.OrderBy(s => s.ID);
 			break;

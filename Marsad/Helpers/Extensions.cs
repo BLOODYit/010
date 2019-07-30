@@ -33,5 +33,17 @@ namespace Marsad.Helpers
             return acceptedActions.Contains(currentAction) && acceptedControllers.Contains(currentController) ?
                 cssClass : String.Empty;
         }
+
+        public static string GetSortingClass(this HtmlHelper html,object currentSort,string column)
+        {
+            if (currentSort == null)
+                return "fa fa-sort";
+            if (currentSort.ToString().Equals(column, StringComparison.CurrentCultureIgnoreCase))
+                return "fa fa-sort-amount-asc";
+            else if (currentSort.ToString().Equals(column+"Desc", StringComparison.CurrentCultureIgnoreCase))
+                return "fa fa-sort-amount-desc";
+            return "fa fa-sort";
+
+        }
     }
 }

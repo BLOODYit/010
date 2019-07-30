@@ -1,0 +1,129 @@
+﻿@model Marsad.Models.DataSource
+
+@{
+    ViewBag.Title = "بيانات مصدر بيانات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div>
+
+                <h4>بيانات مصدر بيانات</h4>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.DataSourceType.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.DataSourceType.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Entity.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Entity.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Period.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Period.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Code)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Code)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PublishDate)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PublishDate)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IsHijri)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.IsHijri)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PublishNumber)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PublishNumber)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.PublisherName)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.PublisherName)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AuthorName)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.AuthorName)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IsPeriodic)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.IsPeriodic)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.HasEntity)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.HasEntity)
+                    </dd>
+
+                    <dt>
+                        @Html.DisplayNameFor(model => model.IsPart)
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.IsPart)
+                    </dd>
+
+                </dl>
+            </div>
+            <p>
+                @Html.ActionLink("تعديل", "Edit", new { id = Model.ID }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("الرئيسية", "Index", null, new { @class = "btn btn-default" })
+            </p>
+        </div>
+    </div>
+</div>

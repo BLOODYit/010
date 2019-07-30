@@ -295,3 +295,7 @@ textarea {
 .pagination{
     margin:auto !important;
 }
+.img-circle.profile_img{
+    margin-right:15%;
+    margin-left:0px;
+}

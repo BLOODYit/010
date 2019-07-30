@@ -43,5 +43,9 @@ namespace Marsad.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<Marsad.Models.Element> Elements { get; set; }
+
+        public System.Data.Entity.DbSet<Marsad.Models.Entity> Entities { get; set; }
     }
 }

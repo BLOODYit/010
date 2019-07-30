@@ -3,6 +3,7 @@
 <#@ include file="Imports.include.t4" #>
 @model PagedList.IPagedList<#= "<" + ViewDataTypeName + ">" #>
 @using PagedList.Mvc;
+@using Marsad.Helpers;
 
 <#
 // The following chained if-statement outputs the file header code and markup for a partial view, a view using a layout page, or a regular view.
@@ -26,14 +27,25 @@ if (!String.IsNullOrEmpty(LayoutPageFile)) {
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-<h2><#= ViewName#></h2>
+<h1><#= ViewName#></h1>
+<hr />
 
 <#
 } else {}
 #>
-<p>
-    @Html.ActionLink("إنشاء جديد", "Create",null,new { @class="btn btn-success"})
-</p>
+			<div class="col-sm-2">
+                @Html.ActionLink("إنشاء جديد", "Create", null, new { @class = "btn btn-success" })
+            </div>
+            <div class="col-sm-8">
+                <form action="@Url.Action("Index")">
+                    <div class="input-group">
+                        <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث" />
+                        <span class="input-group-btn">
+                            <input type="submit" value="بحث" class="btn btn-primary" />
+                        </span>
+                    </div>                   
+                </form>
+            </div>
 <table class="table table-striped jambo_table">
 	<thead>
     <tr>
@@ -50,7 +62,9 @@ foreach (PropertyMetadata property in properties) {
         }
 #>
         <th>
-            @Html.DisplayNameFor(model => model.FirstOrDefault().<#= GetValueExpression(property) #>)
+			<a href="@Url.Action("Index",new { sortOrder=ViewBag.<#= GetValueExpression(property) #>SortParm,currentFilter=ViewBag.CurrentFilter})">
+				<i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"<#= GetValueExpression(property) #>")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().<#= GetValueExpression(property) #>)
+			</a>            
         </th>
 <#
     }
@@ -85,7 +99,7 @@ if (pkName != null) {
 #>
         <td>
             @Html.ActionLink("تعديل", "Edit", new { id=item.<#= pkName #> },new {@class="btn btn-primary"})
-            @Html.ActionLink("تفاصيل", "Details", new { id=item.<#= pkName #> },new {@class="btn btn-default"})
+            @Html.ActionLink("بيانات", "Details", new { id=item.<#= pkName #> },new {@class="btn btn-default"})
             @Html.ActionLink("حذف", "Delete", new { id=item.<#= pkName #> },new {@class="btn btn-danger"})
         </td>
 <#
@@ -93,7 +107,7 @@ if (pkName != null) {
 #>
         <td>
             @Html.ActionLink("تعديل", "Edit", new { /* id=item.PrimaryKey */ },new {@class="btn btn-primary"})
-            @Html.ActionLink("تفاصيل", "Details", new { /* id=item.PrimaryKey */ },new {@class="btn btn-default"})
+            @Html.ActionLink("بيانات", "Details", new { /* id=item.PrimaryKey */ },new {@class="btn btn-default"})
             @Html.ActionLink("حذف", "Delete", new { /* id=item.PrimaryKey */ },new {@class="btn btn-danger"})
         </td>
 <#
@@ -108,9 +122,12 @@ if (pkName != null) {
 #>
 
  <div class="col-md-2">صفحة @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount</div>
-            <div class="col-md-8">
-                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-            </div>
+   @if (Model.PageCount > 1)
+            {
+                <div class="col-md-8">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                </div>
+            }           
 
      </div>
     </div>

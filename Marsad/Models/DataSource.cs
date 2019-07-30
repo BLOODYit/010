@@ -18,43 +18,57 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="برجاء إخال رمز المصدر")]
+        [Display(Name="رمز المصدر")]
         public int Code { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "برجاء إخال مصدر البيانات")]
         [MaxLength(255)]
+        [Display(Name="مصدر البيانات")]
         public string Name { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "برجاء إخال تاريخ النشر")]
+        [Display(Name = "تاريخ النشر")]
         public DateTime PublishDate { get; set; }
 
-        public string PublishNumber { get; set; }
-
-        public string PublisherName { get; set; }
-
-        public string AuthorName { get; set; }
-
-        public string OtherDataSourceType { get; set; }
-
-        [Required]
-        public bool IsPeriodic { get; set; }
-
-        public int? PeriodID { get; set; }
-        public Period Period { get; set; }
-
-        public int? DataSourceID { get; set; }
-        public DataSource ParentDataSource { get; set; }
-
-        [Required]
-        public bool IsPart { get; set; }
-
-        [Required]
+        [Required(ErrorMessage ="برجاء إختيار نوع التاريخ")]
+        [Display(Name ="نوع التاريخ")]
         public bool IsHijri { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="برجاء إختيار نوع المصدر")]
+        [Display(Name = "نوع المصدر")]
         public int DataSourceTypeID { get; set; }
         public DataSourceType DataSourceType { get; set; }
 
+        [Display(Name = "رقم الطبعة")]
+        [MaxLength(255)]
+        public string PublishNumber { get; set; }
+
+        [Display(Name = "الناشر")]
+        public string PublisherName { get; set; }
+
+        [Display(Name = "المؤلف")]
+        public string AuthorName { get; set; }
+        
+        [Required]
+        [Display(Name="الفترة")]
+        public bool IsPeriodic { get; set; }
+
+        [Display(Name = "الفترة")]
+        public int? PeriodID { get; set; }
+        public Period Period { get; set; }
+
+        [Display(Name="الجهة")]
+        public bool HasEntity { get; set; }
+
+        [Display(Name = "الجهة")]
+        public int? EntityID { get; set; }
+        public Entity Entity { get; set; }
+
+        [Required]
+        [Display(Name="عدد جديد / جزء")]
+        public bool IsPart { get; set; }
+          
         [NotMapped]
         public string PeriodicString
         {
@@ -67,6 +81,7 @@ namespace Marsad.Models
                 return "";
             }
         }
+
         public List<DataSourceGroup> DataSourceGroups { get; set; }
         public List<Element> Elements { get; set; }
     }

@@ -1,31 +1,46 @@
 ﻿@model PagedList.IPagedList<Marsad.Models.Bundle>
 @using PagedList.Mvc;
+@using Marsad.Helpers;
 <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "إدارة الحزم";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-
-
-            <h2>Index</h2>
-
-            <p>
+            <h1>إدارة الحزم</h1>
+            <hr />
+            <div class="col-sm-2">
                 @Html.ActionLink("إنشاء جديد", "Create", null, new { @class = "btn btn-success" })
-            </p>
+            </div>
+            <div class="col-sm-8">
+                <form action="@Url.Action("Index")">
+                    <div class="input-group">
+                        <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث" />
+                        <span class="input-group-btn">
+                            <input type="submit" value="بحث" class="btn btn-primary" />
+                        </span>
+                    </div>
+                </form>
+            </div>
             <table class="table table-striped jambo_table">
                 <thead>
                     <tr>
                         <th>
-                            @Html.DisplayNameFor(model => model.FirstOrDefault().Code)
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Code")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Code)
+                            </a>
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+                            </a>
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.DescriptionSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Description")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+                            </a>
                         </th>
                         <th width="250"></th>
                     </tr>
@@ -45,7 +60,7 @@
                             </td>
                             <td>
                                 @Html.ActionLink("تعديل", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" })
-                                @Html.ActionLink("تفاصيل", "Details", new { id = item.ID }, new { @class = "btn btn-default" })
+                                @Html.ActionLink("بيانات", "Details", new { id = item.ID }, new { @class = "btn btn-default" })
                                 @Html.ActionLink("حذف", "Delete", new { id = item.ID }, new { @class = "btn btn-danger" })
                             </td>
                         </tr>
@@ -54,9 +69,12 @@
             </table>
             <br />
             <div class="col-md-2">صفحة @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount</div>
-            <div class="col-md-8">
-                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
-            </div>
+            @if (Model.PageCount > 1)
+            {
+                <div class="col-md-8">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                </div>
+            }
         </div>
     </div>
 </div>

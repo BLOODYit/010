@@ -55,7 +55,7 @@
 
             context.DataSourceTypes.AddRange(new List<DataSourceType>()
             {
-                new DataSourceType(){ Code=1,Name="جهة دولية"
+                new DataSourceType(){ Name="جهة دولية"
                     ,DataSources = new List<DataSource>(){
                         new DataSource(){
                             Code=1,Name ="شركاء التنمية بمجلس المرصد",PublishDate=new DateTime(2018,1,1),IsPeriodic=true,PeriodID=1,IsHijri=true
@@ -68,17 +68,17 @@
                         }
                     }
                 },
-                new DataSourceType(){ Code=2,Name="تقرير دوري"},
-                new DataSourceType(){ Code=3,Name="إجتماعات مع مندوبي الإدارة"},
-                new DataSourceType(){ Code=4,Name="فاكس"},
-                new DataSourceType(){ Code=5,Name="موقع إليكتروني"},
-                new DataSourceType(){ Code=6,Name="مكتب إستشاري"},
-                new DataSourceType(){ Code=7,Name="حسابات الإستشاري"},
-                new DataSourceType(){ Code=8,Name="كتاب إحصائي"},
-                new DataSourceType(){ Code=9,Name="إسطوانة مدمجة"},
-                new DataSourceType(){ Code=10,Name="خطاب"},
+                new DataSourceType(){ Name="تقرير دوري"},
+                new DataSourceType(){ Name="إجتماعات مع مندوبي الإدارة"},
+                new DataSourceType(){ Name="فاكس"},
+                new DataSourceType(){ Name="موقع إليكتروني"},
+                new DataSourceType(){ Name="مكتب إستشاري"},
+                new DataSourceType(){ Name="حسابات الإستشاري"},
+                new DataSourceType(){ Name="كتاب إحصائي"},
+                new DataSourceType(){ Name="إسطوانة مدمجة"},
+                new DataSourceType(){ Name="خطاب"},
                 new DataSourceType(){
-                    Code =11,Name="إدارة حكومية",
+                    Name="إدارة حكومية",
                     DataSources = new List<DataSource>(){
                         new DataSource(){
                             Code=2,Name="التربية والتعليم",IsPeriodic=false,IsHijri=true,
@@ -105,7 +105,7 @@
                         },
                     }
                 },
-                new DataSourceType(){ Code=12,Name="مسح ميداني"}
+                new DataSourceType(){ Name="مسح ميداني"}
             });
             context.IndicatorGroups.AddRange(new List<IndicatorGroup>() {
                 new IndicatorGroup(){Code="2128",Name="المجموعة الاختبارية",Description="الفقد في المياه"},

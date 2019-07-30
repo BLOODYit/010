@@ -20,40 +20,59 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required]
-        [MaxLength(1024)]
+        [Required(ErrorMessage = "برجاء إدخال رمز المؤشر")]
+        [MaxLength(1024, ErrorMessage = "رمز المؤشر يجب الا يتعدى 1024 حرف")]
+        [Display(Name = "رمز المؤشر")]
         public string Code { get; set; }
 
-        [Required]
-        [MaxLength(1024)]        
+        [Required(ErrorMessage = "برجاء إدخال إسم المؤشر")]
+        [MaxLength(1024, ErrorMessage = "إسم المؤشر يجب الا يتعدى 1024 حرف")]
+        [Display(Name = "إسم المؤشر")]
         public string Name { get; set; }
 
-        public string Description { get; set; }
+        [Required(ErrorMessage = "برجاء إدخال عدد العناصر")]
+        [Range(0, int.MaxValue, ErrorMessage = "يجب ان يكون عدد العناصر رقم موجب")]
+        [Display(Name = "عدد العناصر")]
+        public int ElementCount { get; set; }
 
-        [Required]
-        public int BundleID { get; set; }
-        public Bundle Bundle { get; set; }
-
-        [Required]
-        public uint ElementCount { get; set; }
-
+        [Display(Name = "وحدة القياس")]
         public string MeasureUnit { get; set; }
-        
+
+        [Display(Name ="نوع المؤشر")]
+        public bool HasParent { get; set; }
+
+        [Display(Name ="المؤشر الرئيسي")]
         public int? IndicatorID { get; set; }
         public Indicator ParentIndicator { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="برجاء أختيار تصنيف المؤشر")]
+        [Display(Name="تصنيف المؤشر")]
         public int IndicatorTypeID { get; set; }
-        public IndicatorType IndicatorType  { get; set; }
+        public IndicatorType IndicatorType { get; set; }
 
-        public string TargetMillCorrelation { get; set; }
-        public string Importance { get; set; }
-        public string ApplyLevel { get; set; }
-        public string GenderCorrelation { get; set; }
-        public string EvaluationInDevAxis { get; set; }
-        public string Links { get; set; }
-        public string RefreshMethod { get; set; }
+        [Required(ErrorMessage ="برجاء إختيار الحزمة")]
+        [Display(Name="الحزمة")]
+        public int BundleID { get; set; }
+        public Bundle Bundle { get; set; }
+
+        [Display(Name = "تعريف المؤشر")]
+        [DataType(DataType.MultilineText)]
+        public string Description { get; set; }
+
+        [Display(Name = "إرتباط المؤشر")]
+        [DataType(DataType.MultilineText)]
+        public string Correlation { get; set; }
+
+        [Display(Name = "النطاق الجغرافي للمؤشر")]
+        [DataType(DataType.MultilineText)]
+        public string GeoArea { get; set; }
+
+        [Display(Name = "المرجعية")]
+        [DataType(DataType.MultilineText)]
         public string References { get; set; }
+
+        [Display(Name = "إسلوب حساب المؤشر")]
+        [DataType(DataType.MultilineText)]
         public string CalculationMethod { get; set; }
 
 

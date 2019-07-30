@@ -145,7 +145,7 @@ namespace Marsad.Controllers
         private IQueryable<Bundle> SortParams(string sortOrder, IQueryable<Bundle> bundles, string searchString)
         {
             if (!string.IsNullOrWhiteSpace(searchString))
-                bundles = bundles.Where(x => x.Name.Contains(searchString));
+                bundles = bundles.Where(x => x.Name.Contains(searchString) || x.Code.Contains(searchString));
             ViewBag.IDSortParm = String.IsNullOrEmpty(sortOrder) ? "IDDesc" : "";
             ViewBag.CodeSortParm = sortOrder == "Code" ? "CodeDesc" : "Code";
             ViewBag.NameSortParm = sortOrder == "Name" ? "NameDesc" : "Name";

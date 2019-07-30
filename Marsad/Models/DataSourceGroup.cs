@@ -15,12 +15,12 @@ namespace Marsad.Models
 
         [Key]
         public int ID { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "برجاء إدخال الكود")]
+        [Display(Name="الكود")]
         public int Code { get; set; }
-
-        [Required]
-        [MaxLength(255)]
+        [Required(ErrorMessage ="برجاء إدخال الإسم")]
+        [MaxLength(255,ErrorMessage ="يجب الا يتعدى الإسم 255 حرف")]
+        [Display(Name = "مجموعة مصدر البيانات")]
         public string Name { get; set; }
 
         public List<DataSource> DataSources { get; set; }

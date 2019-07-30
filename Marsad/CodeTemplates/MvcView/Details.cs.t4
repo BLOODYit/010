@@ -32,7 +32,7 @@ if (!String.IsNullOrEmpty(LayoutPageFile)) {
 <div class="col-xs-12">
 <div>
 
-    <h4>تفاصيل <#= ViewDataTypeShortName #></h4>
+    <h4>بيانات <#= ViewDataTypeShortName #></h4>
     <hr />
     <dl class="dl-horizontal">
 <#

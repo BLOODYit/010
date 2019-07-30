@@ -80,7 +80,7 @@ foreach (PropertyMetadata property in ModelMetadata.Properties) {
 <#
         if (property.IsForeignKey) {
 #>
-            @Html.LabelFor(model => model.<#= property.PropertyName #>, "<#= GetAssociationName(property) #>", htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+            @Html.LabelFor(model => model.<#= property.PropertyName #>, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
 <#
         } else {
 #>

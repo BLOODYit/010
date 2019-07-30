@@ -177,8 +177,14 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BundlesController.cs" />
+    <Compile Include="Controllers\DataSourcesController.cs" />
+    <Compile Include="Controllers\DataSourceTypesController.cs" />
+    <Compile Include="Controllers\ElementsController.cs" />
+    <Compile Include="Controllers\EntitiesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -192,6 +198,7 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Controls\MultiSelectModel.cs" />
     <Compile Include="Models\DataSource.cs" />
+    <Compile Include="Models\ُEntity.cs" />
     <Compile Include="Models\Indicator.cs" />
     <Compile Include="Models\Period.cs" />
     <Compile Include="Models\IndicatorType.cs" />
@@ -2583,6 +2590,37 @@
     <Content Include="Views\Bundles\Details.cshtml" />
     <Content Include="Views\Bundles\Edit.cshtml" />
     <Content Include="Views\Bundles\Index.cshtml" />
+    <Content Include="Views\Indicators\Create.cshtml" />
+    <Content Include="Views\Indicators\Delete.cshtml" />
+    <Content Include="Views\Indicators\Details.cshtml" />
+    <Content Include="Views\Indicators\Edit.cshtml" />
+    <Content Include="Views\Indicators\Index.cshtml" />
+    <Content Include="Views\Indicators\GetCreateIndicator.cshtml" />
+    <Content Include="Views\Elements\Create.cshtml" />
+    <Content Include="Views\Elements\Delete.cshtml" />
+    <Content Include="Views\Elements\Details.cshtml" />
+    <Content Include="Views\Elements\Edit.cshtml" />
+    <Content Include="Views\Elements\Index.cshtml" />
+    <Content Include="Views\DataSourceTypes\Create.cshtml" />
+    <Content Include="Views\DataSourceTypes\Delete.cshtml" />
+    <Content Include="Views\DataSourceTypes\Details.cshtml" />
+    <Content Include="Views\DataSourceTypes\Edit.cshtml" />
+    <Content Include="Views\DataSourceTypes\Index.cshtml" />
+    <Content Include="Views\Periods\Create.cshtml" />
+    <Content Include="Views\Periods\Delete.cshtml" />
+    <Content Include="Views\Periods\Details.cshtml" />
+    <Content Include="Views\Periods\Edit.cshtml" />
+    <Content Include="Views\Periods\Index.cshtml" />
+    <Content Include="Views\Entities\Create.cshtml" />
+    <Content Include="Views\Entities\Delete.cshtml" />
+    <Content Include="Views\Entities\Details.cshtml" />
+    <Content Include="Views\Entities\Edit.cshtml" />
+    <Content Include="Views\Entities\Index.cshtml" />
+    <Content Include="Views\DataSources\Create.cshtml" />
+    <Content Include="Views\DataSources\Delete.cshtml" />
+    <Content Include="Views\DataSources\Details.cshtml" />
+    <Content Include="Views\DataSources\Edit.cshtml" />
+    <Content Include="Views\DataSources\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
