@@ -58,7 +58,7 @@
                 new DataSourceType(){ Name="جهة دولية"
                     ,DataSources = new List<DataSource>(){
                         new DataSource(){
-                            Code=1,Name ="شركاء التنمية بمجلس المرصد",PublishDate=new DateTime(2018,1,1),IsPeriodic=true,PeriodID=1,IsHijri=true
+                            Code=1,Name ="شركاء التنمية بمجلس المرصد",PublishDate=new DateTime(2018,1,1),NoPeriod=true,PeriodID=1,IsHijri=true
                             ,Elements=new List<Element>(){
                                 new Element() {Code="1", Name="عدد حالات الزواج في سنة",MeasureUnit="حالة زواج"},
                                 new Element() {Code="2", Name="عدد حالات الطلاق في سنة",MeasureUnit="حالة طلاق"},
@@ -81,7 +81,7 @@
                     Name="إدارة حكومية",
                     DataSources = new List<DataSource>(){
                         new DataSource(){
-                            Code=2,Name="التربية والتعليم",IsPeriodic=false,IsHijri=true,
+                            Code=2,Name="التربية والتعليم",NoPeriod=false,IsHijri=true,
                             Elements = new List<Element>()
                             {
                                 new Element(){Name="اجمالي عدد الطلاب/الطالبات",MeasureUnit="طالب/طالبة" },
@@ -90,7 +90,7 @@
                             }
                         },
                           new DataSource(){
-                            Code=3,Name="المسح الميدانى لمدن أمانة المنطقة الشرقية",IsPeriodic=true,PeriodID=2,IsHijri=true,
+                            Code=3,Name="المسح الميدانى لمدن أمانة المنطقة الشرقية",NoPeriod=true,PeriodID=2,IsHijri=true,
                             Elements = new List<Element>()
                             {
                                 new Element(){Name="عدد الأسر التي يقل دخلها عن 2500 ريال شهريا",MeasureUnit="عدد" },
@@ -101,7 +101,7 @@
                             }
                         },
                             new DataSource(){
-                            Code=4,Name="وزارة العدل",IsPeriodic=true,PeriodID=2,IsHijri=true
+                            Code=4,Name="وزارة العدل",NoPeriod=true,PeriodID=2,IsHijri=true
                         },
                     }
                 },

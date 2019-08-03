@@ -1,5 +1,5 @@
 ﻿@model Marsad.Models.DataSource
-
+@using Marsad.Models.Controls
 @{
     ViewBag.Title = "تعديل مصدر بيانات";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -22,10 +22,11 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                         <div class="col-sm-10 col-xs-12">
-                            @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" ,@disabled="disabled"} })
+                            @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @readonly = "@readonly" } })
                             @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                         </div>
                     </div>
+
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
@@ -37,19 +38,13 @@
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.PublishDate, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            @Html.EditorFor(model => model.PublishDate, new { htmlAttributes = new { @class = "form-control" } })
+                        <div class="col-sm-7 col-xs-12">
+                            @Html.EditorFor(model => model.PublishDate, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                             @Html.ValidationMessageFor(model => model.PublishDate, "", new { @class = "text-danger" })
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.IsHijri, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            <div class="checkbox">
-                                @Html.EditorFor(model => model.IsHijri)
-                                @Html.ValidationMessageFor(model => model.IsHijri, "", new { @class = "text-danger" })
-                            </div>
+                        <div class="col-sm-3 col-xs-12">
+                            @Html.RadioButtonFor(model => model.IsHijri, false, new { @checked = "checked" }) <span>ميلادي</span>
+                            @Html.RadioButtonFor(model => model.IsHijri, true) <span>هجري</span>
                         </div>
                     </div>
 
@@ -86,38 +81,24 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.IsPeriodic, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            <div class="checkbox">
-                                @Html.EditorFor(model => model.IsPeriodic)
-                                @Html.ValidationMessageFor(model => model.IsPeriodic, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         @Html.LabelFor(model => model.PeriodID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            @Html.DropDownList("PeriodID", null, htmlAttributes: new { @class = "form-control" })
+                        <div class="col-sm-7 col-xs-12">
+                            @Html.DropDownList("PeriodID", null, htmlAttributes: new { @class = "form-control", @id = "PeriodID" })
                             @Html.ValidationMessageFor(model => model.PeriodID, "", new { @class = "text-danger" })
                         </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.HasEntity, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            <div class="checkbox">
-                                @Html.EditorFor(model => model.HasEntity)
-                                @Html.ValidationMessageFor(model => model.HasEntity, "", new { @class = "text-danger" })
-                            </div>
+                        <div class="col-sm-3 col-xs-12">
+                            @Html.EditorFor(model => model.NoPeriod, null, new { @id = "NoPeriod" }) غير دوري
                         </div>
                     </div>
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.EntityID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            @Html.DropDownList("EntityID", null, htmlAttributes: new { @class = "form-control" })
+                        <div class="col-sm-7 col-xs-12">
+                            @Html.DropDownList("EntityID", null, htmlAttributes: new { @class = "form-control", @id = "EntityID" })
                             @Html.ValidationMessageFor(model => model.EntityID, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="col-sm-3 col-xs-12">
+                            @Html.EditorFor(model => model.NoEntity, null, new { @id = "NoEntity" }) بدون جهة
                         </div>
                     </div>
 
@@ -125,9 +106,16 @@
                         @Html.LabelFor(model => model.IsPart, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                         <div class="col-sm-10 col-xs-12">
                             <div class="checkbox">
-                                @Html.EditorFor(model => model.IsPart)
-                                @Html.ValidationMessageFor(model => model.IsPart, "", new { @class = "text-danger" })
+                                @Html.RadioButtonFor(model => model.IsPart, false, new { @checked = "checked" }) <span>عدد جديد</span>
+                                @Html.RadioButtonFor(model => model.IsPart, true) <span>جزء</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 col-xs-12">مجموعات المصدر</label>
+                        <div class="col-sm-10 col-xs-12">
+                            @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "dataSourceGroupIds", Data = ViewBag.DataSourceGroups, Title = "", Name = "dataSourceGroupIds", Selected = ViewBag.dataSourceGroupIds })
                         </div>
                     </div>
 
@@ -147,3 +135,28 @@
 </div>
 
 
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#NoPeriod').change(function () {
+                if ($(this).prop('checked')) {
+                    $('#PeriodID').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#PeriodID').attr('disabled', false);
+                }
+            });
+
+            $('#NoEntity').change(function () {
+                if ($(this).prop('checked')) {
+                    $('#EntityID').attr('disabled', 'disabled');
+                }
+                else {
+                    $('#EntityID').attr('disabled', false);
+                }
+            });
+            $('#NoPeriod').change();
+            $('#NoEntity').change();
+        });
+    </script>
+}

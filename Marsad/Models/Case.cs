@@ -11,6 +11,8 @@ namespace Marsad.Models
         public Case()
         {
             this.CaseYears = new List<CaseYear>();
+            this.Indicators = new List<Indicator>();
+            this.Entities = new List<Entity>();
         }
 
         [Key]
@@ -21,15 +23,24 @@ namespace Marsad.Models
         [Display(Name ="إسم القضية",ShortName ="القضية")]
         public string Name { get; set; }
 
-        [Required(ErrorMessage ="برجاء إدخال سنة القضية")]
-        [Display(Name="سنة القضية",ShortName ="السنة")]
-        public int Year { get; set; }
-
-        [Display(Name ="وصف القضية")]
+        [Display(Name = "التعريف القضية")]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        public List<CaseYear> CaseYears{ get; set; }
+
+        [Required(ErrorMessage = "برجاء إدخال سنة القضية")]
+        [Display(Name = "سنة القضية", ShortName = "السنة")]
+        public int Year { get; set; }
+
+        
+        [Display(Name = "فترة دراسة القضية")]
+        public int? PeriodID { get; set; }
+        public Period Period { get; set; }
+
+
+        public List<CaseYear> CaseYears { get; set; }
+        public List<Indicator> Indicators { get; set; }
+        public List<Entity> Entities { get; set; }
 
     }
 }

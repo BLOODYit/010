@@ -177,11 +177,16 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BundlesController.cs" />
+    <Compile Include="Controllers\CasesController.cs" />
+    <Compile Include="Controllers\DataSourceGroupsController.cs" />
     <Compile Include="Controllers\DataSourcesController.cs" />
     <Compile Include="Controllers\DataSourceTypesController.cs" />
     <Compile Include="Controllers\ElementsController.cs" />
     <Compile Include="Controllers\EntitiesController.cs" />
+    <Compile Include="Controllers\EquationsController.cs" />
+    <Compile Include="Controllers\GeoAreasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\IndicatorGroupsController.cs" />
     <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeriodsController.cs" />
@@ -195,9 +200,11 @@
       <DependentUpon>201907181231316_start.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\GeoArea.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Controls\MultiSelectModel.cs" />
     <Compile Include="Models\DataSource.cs" />
+    <Compile Include="Models\Validations\RequiredButNull.cs" />
     <Compile Include="Models\ُEntity.cs" />
     <Compile Include="Models\Indicator.cs" />
     <Compile Include="Models\Period.cs" />
@@ -2621,6 +2628,31 @@
     <Content Include="Views\DataSources\Details.cshtml" />
     <Content Include="Views\DataSources\Edit.cshtml" />
     <Content Include="Views\DataSources\Index.cshtml" />
+    <Content Include="Views\DataSourceGroups\Create.cshtml" />
+    <Content Include="Views\DataSourceGroups\Delete.cshtml" />
+    <Content Include="Views\DataSourceGroups\Details.cshtml" />
+    <Content Include="Views\DataSourceGroups\Edit.cshtml" />
+    <Content Include="Views\DataSourceGroups\Index.cshtml" />
+    <Content Include="Views\IndicatorGroups\Create.cshtml" />
+    <Content Include="Views\IndicatorGroups\Delete.cshtml" />
+    <Content Include="Views\IndicatorGroups\Details.cshtml" />
+    <Content Include="Views\IndicatorGroups\Edit.cshtml" />
+    <Content Include="Views\IndicatorGroups\Index.cshtml" />
+    <Content Include="Views\Cases\Create.cshtml" />
+    <Content Include="Views\Cases\Delete.cshtml" />
+    <Content Include="Views\Cases\Details.cshtml" />
+    <Content Include="Views\Cases\Edit.cshtml" />
+    <Content Include="Views\Cases\Index.cshtml" />
+    <Content Include="Views\Equations\Create.cshtml" />
+    <Content Include="Views\Equations\Delete.cshtml" />
+    <Content Include="Views\Equations\Details.cshtml" />
+    <Content Include="Views\Equations\Edit.cshtml" />
+    <Content Include="Views\Equations\Index.cshtml" />
+    <Content Include="Views\GeoAreas\Create.cshtml" />
+    <Content Include="Views\GeoAreas\Delete.cshtml" />
+    <Content Include="Views\GeoAreas\Details.cshtml" />
+    <Content Include="Views\GeoAreas\Edit.cshtml" />
+    <Content Include="Views\GeoAreas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

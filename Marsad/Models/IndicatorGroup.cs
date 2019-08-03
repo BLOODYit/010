@@ -15,14 +15,17 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="برجاء إدخال رمز المجموعة")]
         [MaxLength(255)]
+        [Display(Name ="رمز المجموعة")]
         public string Code { get; set; }
-
-        [Required]
-        [MaxLength(255)]        
+        
+        [MaxLength(255)]
+        [Required(ErrorMessage = "برجاء إدخال المجموعة")]
+        [Display(Name = "المجموعة")]
         public string Name { get; set; }
 
+        [Display(Name = "الوصف")]
         public string Description { get; set; }
 
         public List<Indicator> Indicators { get; set; }

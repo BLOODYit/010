@@ -1,6 +1,6 @@
 ﻿@using Marsad.Helpers
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -30,7 +30,7 @@
                     <!-- menu profile quick info -->
                     <div class="profile clearfix">
                         <div class="profile_pic">
-                            <img src="~/Images/user.png" alt="..." class="img-circle profile_img">
+                            <img src="~/Images/user.png" alt="" class="img-circle profile_img">
                         </div>
                         <div class="profile_info">
                             <span>مرحباً</span>
@@ -43,7 +43,7 @@
 
                     <!-- sidebar menu -->
                     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                        <div class="menu_section">                            
+                        <div class="menu_section">
                             <ul class="nav side-menu">
                                 <li class="@Html.IsSelected("Home","Index")">
                                     <a href="@Url.Action("Index","Home")"><i class="fa fa-home"></i> الرئيسية</a>
@@ -76,7 +76,7 @@
                                         <li><a href="@Url.Action("Index","Elements")">إدارة العناصر والقيم</a></li>
 
 
-                                        <li><a href="#">إدارة مجموعات المؤشرات</a></li>
+                                        <li><a href="@Url.Action("Index","IndicatorGroups")">إدارة مجموعات المؤشرات</a></li>
 
                                         <li>
                                             <a>مصادر البيانات<span class="fa fa-chevron-down"></span></a>
@@ -85,22 +85,21 @@
                                                 <li><a href="@Url.Action("Index","DataSourceTypes")">إدارة نوع مصادر البيانات</a></li>
                                                 <li><a href="@Url.Action("Index","Periods")">إدارة الفترات</a></li>
                                                 <li><a href="@Url.Action("Index","DataSources")">إدارة مصادر البيانات</a></li>
-                                                <li><a href="#">إدارة مجوعة مصادر البيانات</a></li>
+                                                <li><a href="@Url.Action("Index","DataSourceGroups")">إدارة مجوعة مصادر البيانات</a></li>
                                             </ul>
                                         </li>
 
-                                        <li><a href="#">قضايا التنمية</a></li>
-                                        <li><a href="#">المعادلات الحسابية</a></li>
+                                        <li><a href="@Url.Action("Index","Cases")">قضايا التنمية</a></li>
+                                        <li><a href="@Url.Action("Index","Equations")">المعادلات الحسابية</a></li>
                                         <li>
                                             <a>النظاقات الجغرافية<span class="fa fa-chevron-down"></span></a>
                                             <ul class="nav child_menu">
-                                                <li><a href="#">مملكة</a></li>
-                                                <li><a href="#">مناطق</a></li>
-                                                <li><a href="#">حاضرة</a></li>
-                                                <li><a href="#">محافظات</a></li>
-                                                <li><a href="#">بلديات</a></li>
-                                                <li><a href="#">مدن</a></li>
-                                                <li><a href="#">أحياء</a></li>
+                                                <li><a href="@Url.Action("Index","GeoAreas",new { type="Region"})">مناطق</a></li>
+                                                <li><a href="@Url.Action("Index","GeoAreas",new { type="SubRegion"})">حاضرة</a></li>
+                                                <li><a href="@Url.Action("Index","GeoAreas",new { type="Governorate"})">محافظات</a></li>
+                                                <li><a href="@Url.Action("Index","GeoAreas",new { type="Town"})">بلديات</a></li>
+                                                <li><a href="@Url.Action("Index","GeoAreas",new { type="City"})">مدن</a></li>
+                                                <li><a href="@Url.Action("Index","GeoAreas",new { type="District"})">أحياء</a></li>
                                                 <li><a href="#">نظاقات جغرافية معرفة</a></li>
                                             </ul>
                                         </li>
@@ -114,7 +113,7 @@
                                     </ul>
                                 </li>
                             </ul>
-                        </div>                      
+                        </div>
                     </div>
                     <!-- /sidebar menu -->
                     <!-- /menu footer buttons -->
@@ -153,10 +152,10 @@
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                                     <li><a href="javascript:;"> البيانات الشخصية</a></li>
                                     <li>
-                                        <a href="javascript:;">                                            
+                                        <a href="javascript:;">
                                             <span>الإعدادات</span>
                                         </a>
-                                    </li>                                    
+                                    </li>
                                     <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> تسجيل خروج</a></li>
                                 </ul>
                             </li>
@@ -245,7 +244,7 @@
             <!-- /footer content -->
         </div>
     </div>
-    @Scripts.Render("~/bundles/main")    
+    @Scripts.Render("~/bundles/main")
     @Scripts.Render("~/bundles/jqueryval")
     @RenderSection("scripts", required: false)
 </body>

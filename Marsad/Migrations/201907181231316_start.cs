@@ -118,7 +118,7 @@ namespace Marsad.Migrations
                         PublisherName = c.String(),
                         AuthorName = c.String(),
                         OtherDataSourceType = c.String(),
-                        IsPeriodic = c.Boolean(nullable: false),
+                        NoPeriod = c.Boolean(nullable: false),
                         PeriodID = c.Int(),
                         DataSourceID = c.Int(),
                         IsPart = c.Boolean(nullable: false),

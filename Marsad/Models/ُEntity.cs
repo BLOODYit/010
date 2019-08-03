@@ -11,6 +11,7 @@ namespace Marsad.Models
         public Entity()
         {
             this.DataSources = new List<DataSource>();
+            this.Cases = new List<Case>();
         }
 
         [Key]
@@ -25,5 +26,6 @@ namespace Marsad.Models
         public string Description { get; set; }
 
         public List<DataSource> DataSources { get; set; }
+        public List<Case> Cases{ get; set; }
     }
 }

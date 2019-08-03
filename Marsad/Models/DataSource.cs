@@ -52,14 +52,14 @@ namespace Marsad.Models
         
         [Required]
         [Display(Name="الفترة")]
-        public bool IsPeriodic { get; set; }
+        public bool NoPeriod { get; set; }
 
         [Display(Name = "الفترة")]
         public int? PeriodID { get; set; }
         public Period Period { get; set; }
 
-        [Display(Name="الجهة")]
-        public bool HasEntity { get; set; }
+        [Display(Name="بدون جهة")]
+        public bool NoEntity { get; set; }
 
         [Display(Name = "الجهة")]
         public int? EntityID { get; set; }
@@ -74,7 +74,7 @@ namespace Marsad.Models
         {
             get
             {
-                if (!IsPeriodic)                
+                if (!NoPeriod)                
                     return "غير دوري";
                 if (Period != null)
                     return Period.Name;

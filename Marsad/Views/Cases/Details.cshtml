@@ -1,0 +1,57 @@
+﻿@model Marsad.Models.Case
+
+@{
+    ViewBag.Title = "بيانات قضية";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+<div class="row">
+<div class="col-xs-12">
+<div>
+
+    <h4>بيانات قضية</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Period.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Period.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Year)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Year)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("تعديل", "Edit", new { id = Model.ID },new {@class="btn btn-primary"})
+    @Html.ActionLink("الرئيسية", "Index",null,new {@class="btn btn-default"})
+</p>
+</div>
+</div>
+</div>

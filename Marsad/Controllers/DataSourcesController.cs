@@ -59,6 +59,7 @@ namespace Marsad.Controllers
             ViewBag.DataSourceTypeID = new SelectList(db.DataSourceTypes, "ID", "Name");
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name");
             ViewBag.PeriodID = new SelectList(db.Periods, "ID", "Name");
+            ViewBag.DataSourceGroups = db.DataSourceGroups.ToDictionary(x => x.ID, x => x.Name);
             return View();
         }
 
@@ -67,12 +68,23 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,PublishDate,IsHijri,DataSourceTypeID,PublishNumber,PublisherName,AuthorName,IsPeriodic,PeriodID,HasEntity,EntityID,IsPart")] DataSource dataSource)
+        public ActionResult Create([Bind(Include = "ID,Name,PublishDate,IsHijri,DataSourceTypeID,PublishNumber,PublisherName,AuthorName,NoPeriod,PeriodID,NoEntity,EntityID,IsPart")] DataSource dataSource, int[] dataSourceGroupIds)
         {
             if (ModelState.IsValid)
             {
-                var code = db.DataSources.Max(x => x.Code)+1;
-                dataSource.Code = code;
+                int? code = db.DataSources.Max(x => (int?)x.Code);
+                dataSource.Code = code.HasValue ? code.Value : 0 + 1;
+
+
+                var dataSourceGroups = db.DataSourceGroups.Where(x => dataSourceGroupIds.Contains(x.ID));
+                foreach (var dsg in dataSourceGroups)
+                {
+                    dataSource.DataSourceGroups.Add(dsg);
+                }
+                if (dataSource.NoEntity)
+                    dataSource.EntityID = null;
+                if (dataSource.NoPeriod)
+                    dataSource.PeriodID = null;
                 db.DataSources.Add(dataSource);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -81,6 +93,8 @@ namespace Marsad.Controllers
             ViewBag.DataSourceTypeID = new SelectList(db.DataSourceTypes, "ID", "Name", dataSource.DataSourceTypeID);
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name", dataSource.EntityID);
             ViewBag.PeriodID = new SelectList(db.Periods, "ID", "Name", dataSource.PeriodID);
+            ViewBag.DataSourceGroups = db.DataSourceGroups.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.dataSourceGroupIds = dataSourceGroupIds;
             return View(dataSource);
         }
 
@@ -91,7 +105,7 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            DataSource dataSource = db.DataSources.Find(id);
+            DataSource dataSource = db.DataSources.Include(x=>x.DataSourceGroups).Where(x=>x.ID==id).FirstOrDefault();
             if (dataSource == null)
             {
                 return HttpNotFound();
@@ -99,6 +113,8 @@ namespace Marsad.Controllers
             ViewBag.DataSourceTypeID = new SelectList(db.DataSourceTypes, "ID", "Name", dataSource.DataSourceTypeID);
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name", dataSource.EntityID);
             ViewBag.PeriodID = new SelectList(db.Periods, "ID", "Name", dataSource.PeriodID);
+            ViewBag.DataSourceGroups = db.DataSourceGroups.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.dataSourceGroupIds = dataSource.DataSourceGroups.Select(x => x.ID).ToArray();
             return View(dataSource);
         }
 
@@ -107,17 +123,33 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,PublishDate,IsHijri,DataSourceTypeID,PublishNumber,PublisherName,AuthorName,IsPeriodic,PeriodID,HasEntity,EntityID,IsPart")] DataSource dataSource)
+        public ActionResult Edit([Bind(Include = "ID,Code,Name,PublishDate,IsHijri,DataSourceTypeID,PublishNumber,PublisherName,AuthorName,NoPeriod,PeriodID,NoEntity,EntityID,IsPart")] DataSource dataSource, int[] dataSourceGroupIds)
         {
             if (ModelState.IsValid)
             {
+                
                 db.Entry(dataSource).State = EntityState.Modified;
+                var tmpDs = db.DataSources.Include(x => x.DataSourceGroups).Where(x => x.ID == dataSource.ID).FirstOrDefault();
+                dataSource.DataSourceGroups = tmpDs.DataSourceGroups;
+                dataSource.DataSourceGroups.Clear();
+                dataSource.Code = tmpDs.Code;
+                var dataSourceGroups = db.DataSourceGroups.Where(x => dataSourceGroupIds.Contains(x.ID));
+                foreach (var dsg in dataSourceGroups)
+                {
+                    dataSource.DataSourceGroups.Add(dsg);
+                }
+                if (dataSource.NoEntity)
+                    dataSource.EntityID = null;
+                if (dataSource.NoPeriod)
+                    dataSource.PeriodID = null;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
             ViewBag.DataSourceTypeID = new SelectList(db.DataSourceTypes, "ID", "Name", dataSource.DataSourceTypeID);
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name", dataSource.EntityID);
             ViewBag.PeriodID = new SelectList(db.Periods, "ID", "Name", dataSource.PeriodID);
+            ViewBag.DataSourceGroups = db.DataSourceGroups.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.dataSourceGroupIds = dataSource.DataSourceGroups.Select(x => x.ID).ToArray();
             return View(dataSource);
         }
 
@@ -173,9 +205,9 @@ namespace Marsad.Controllers
             ViewBag.PublishNumberSortParm = sortOrder == "PublishNumber" ? "PublishNumberDesc" : "PublishNumber";
             ViewBag.PublisherNameSortParm = sortOrder == "PublisherName" ? "PublisherNameDesc" : "PublisherName";
             ViewBag.AuthorNameSortParm = sortOrder == "AuthorName" ? "AuthorNameDesc" : "AuthorName";
-            ViewBag.IsPeriodicSortParm = sortOrder == "IsPeriodic" ? "IsPeriodicDesc" : "IsPeriodic";
+            ViewBag.NoPeriodSortParm = sortOrder == "NoPeriod" ? "NoPeriodDesc" : "NoPeriod";
             ViewBag.PeriodIDSortParm = sortOrder == "PeriodID" ? "PeriodIDDesc" : "PeriodID";
-            ViewBag.HasEntitySortParm = sortOrder == "HasEntity" ? "HasEntityDesc" : "HasEntity";
+            ViewBag.NoEntitySortParm = sortOrder == "NoEntity" ? "NoEntityDesc" : "NoEntity";
             ViewBag.EntityIDSortParm = sortOrder == "EntityID" ? "EntityIDDesc" : "EntityID";
             ViewBag.IsPartSortParm = sortOrder == "IsPart" ? "IsPartDesc" : "IsPart";
 
@@ -231,11 +263,11 @@ namespace Marsad.Controllers
                 case "AuthorName":
                     dataSources = dataSources.OrderBy(s => s.AuthorName);
                     break;
-                case "IsPeriodicDesc":
-                    dataSources = dataSources.OrderByDescending(s => s.IsPeriodic);
+                case "NoPeriodDesc":
+                    dataSources = dataSources.OrderByDescending(s => s.NoPeriod);
                     break;
-                case "IsPeriodic":
-                    dataSources = dataSources.OrderBy(s => s.IsPeriodic);
+                case "NoPeriod":
+                    dataSources = dataSources.OrderBy(s => s.NoPeriod);
                     break;
                 case "PeriodIDDesc":
                     dataSources = dataSources.OrderByDescending(s => s.PeriodID);
@@ -243,11 +275,11 @@ namespace Marsad.Controllers
                 case "PeriodID":
                     dataSources = dataSources.OrderBy(s => s.PeriodID);
                     break;
-                case "HasEntityDesc":
-                    dataSources = dataSources.OrderByDescending(s => s.HasEntity);
+                case "NoEntityDesc":
+                    dataSources = dataSources.OrderByDescending(s => s.NoEntity);
                     break;
-                case "HasEntity":
-                    dataSources = dataSources.OrderBy(s => s.HasEntity);
+                case "NoEntity":
+                    dataSources = dataSources.OrderBy(s => s.NoEntity);
                     break;
                 case "EntityIDDesc":
                     dataSources = dataSources.OrderByDescending(s => s.Entity.Name);

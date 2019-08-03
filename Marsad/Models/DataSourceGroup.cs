@@ -16,7 +16,7 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
         [Required(ErrorMessage = "برجاء إدخال الكود")]
-        [Display(Name="الكود")]
+        [Display(Name= "رمز المجموعة")]
         public int Code { get; set; }
         [Required(ErrorMessage ="برجاء إدخال الإسم")]
         [MaxLength(255,ErrorMessage ="يجب الا يتعدى الإسم 255 حرف")]

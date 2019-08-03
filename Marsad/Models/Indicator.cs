@@ -15,6 +15,7 @@ namespace Marsad.Models
             this.IndicatorGroups = new List<IndicatorGroup>();
             this.Equations = new List<Equation>();
             this.Indicators = new List<Indicator>();
+            this.Cases = new List<Case>();
         }
 
         [Key]
@@ -80,5 +81,6 @@ namespace Marsad.Models
         public List<IndicatorGroup> IndicatorGroups { get; set; }
         public List<Equation> Equations { get; set; }
         public List<Indicator> Indicators { get; set; }
+        public List<Case> Cases { get; set; }
     }
 }

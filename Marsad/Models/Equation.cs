@@ -23,18 +23,7 @@ namespace Marsad.Models
         [Required]
         public int Year { get; set; }
 
-        public string EquationText { get; set; }
-
-        [Required]
-        [MaxLength(255)]
-        public string Name { get; set; }
-        
-        [MaxLength(255)]
-        public string MeasureUnit { get; set; }
-
-        [Required]
-        public int DataSourceID { get; set; }
-        public DataSource DataSource { get; set; }
+        public string EquationText { get; set; }        
 
         public List<Element> Elements { get; set; }
     }

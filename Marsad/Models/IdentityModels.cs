@@ -47,5 +47,9 @@ namespace Marsad.Models
         public System.Data.Entity.DbSet<Marsad.Models.Element> Elements { get; set; }
 
         public System.Data.Entity.DbSet<Marsad.Models.Entity> Entities { get; set; }
+
+        public System.Data.Entity.DbSet<Marsad.Models.Equation> Equations { get; set; }
+
+        public System.Data.Entity.DbSet<Marsad.Models.GeoArea> GeoAreas { get; set; }
     }
 }

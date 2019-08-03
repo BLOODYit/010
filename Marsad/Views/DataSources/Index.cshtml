@@ -40,8 +40,8 @@
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.PublishDateSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"PublishDate")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().PublishDate)
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.EntityIDSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"EntityID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Entity.Name)
                             </a>
                         </th>
                         <th>
@@ -49,11 +49,8 @@
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"DataSourceTypeID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().DataSourceType.Name)
                             </a>
                         </th>
-                        <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.EntityIDSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"EntityID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Entity.Name)
-                            </a>
-                        </th>
+
+                      
                         <th>
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.PublisherNameSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"PublisherName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().PublisherName)
@@ -63,7 +60,7 @@
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.AuthorNameSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"AuthorName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().AuthorName)
                             </a>
-                        </th>                   
+                        </th>
                         <th width="250"></th>
                     </tr>
                 </thead>
@@ -83,9 +80,7 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Entity.Name)
                         </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.PublishDate)
-                        </td>
+                      
                         <td>
                             @Html.DisplayFor(modelItem => item.PublisherName)
                         </td>
