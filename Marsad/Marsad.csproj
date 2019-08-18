@@ -192,6 +192,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Controllers\QueryController.cs" />
+    <Compile Include="Controllers\UserGroupsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2666,6 +2667,11 @@
     <Content Include="Views\GeoAreaBundles\Details.cshtml" />
     <Content Include="Views\GeoAreaBundles\Edit.cshtml" />
     <Content Include="Views\GeoAreaBundles\Index.cshtml" />
+    <Content Include="Views\UserGroups\Create.cshtml" />
+    <Content Include="Views\UserGroups\Delete.cshtml" />
+    <Content Include="Views\UserGroups\Details.cshtml" />
+    <Content Include="Views\UserGroups\Edit.cshtml" />
+    <Content Include="Views\UserGroups\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

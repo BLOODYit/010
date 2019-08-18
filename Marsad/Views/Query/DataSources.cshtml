@@ -39,7 +39,7 @@
                             <th class="column-title">أسم المصدر</th>
                             <th class="column-title">نوع المصدر</th>
                             <th class="column-title">إسم الناشر</th>
-                            <th class="column-title">تاريخ الناشر</th>
+                            @*<th class="column-title">تاريخ الناشر</th>*@
                             <th class="column-title no-link last">
                                 <span class="nobr">عمليات</span>
                             </th>
@@ -57,7 +57,7 @@
                             <td>@item.Name</td>
                             <td>@item.DataSourceType.Name</td>
                             <td>@item.PublisherName</td>
-                            <td>@item.PublisherDate</td>
+                            @*<td>@item.PublisherDate</td>*@
                             <td class=" last">
                                 <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","DataSources",item.ID)">عرض</a>
                             </td>
