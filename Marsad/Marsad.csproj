@@ -184,6 +184,7 @@
     <Compile Include="Controllers\ElementsController.cs" />
     <Compile Include="Controllers\EntitiesController.cs" />
     <Compile Include="Controllers\EquationsController.cs" />
+    <Compile Include="Controllers\GeoAreaBundlesController.cs" />
     <Compile Include="Controllers\GeoAreasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IndicatorGroupsController.cs" />
@@ -199,7 +200,14 @@
     <Compile Include="Migrations\201907181231316_start.Designer.cs">
       <DependentUpon>201907181231316_start.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908052153403_userGroups.cs" />
+    <Compile Include="Migrations\201908052153403_userGroups.Designer.cs">
+      <DependentUpon>201908052153403_userGroups.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Claim.cs" />
+    <Compile Include="Models\GeoAreaBundle.cs" />
+    <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Models\GeoArea.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Controls\MultiSelectModel.cs" />
@@ -2653,6 +2661,11 @@
     <Content Include="Views\GeoAreas\Details.cshtml" />
     <Content Include="Views\GeoAreas\Edit.cshtml" />
     <Content Include="Views\GeoAreas\Index.cshtml" />
+    <Content Include="Views\GeoAreaBundles\Create.cshtml" />
+    <Content Include="Views\GeoAreaBundles\Delete.cshtml" />
+    <Content Include="Views\GeoAreaBundles\Details.cshtml" />
+    <Content Include="Views\GeoAreaBundles\Edit.cshtml" />
+    <Content Include="Views\GeoAreaBundles\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2673,6 +2686,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201907181231316_start.resx">
       <DependentUpon>201907181231316_start.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908052153403_userGroups.resx">
+      <DependentUpon>201908052153403_userGroups.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

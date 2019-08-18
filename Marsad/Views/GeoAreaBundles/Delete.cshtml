@@ -1,7 +1,7 @@
-﻿@model Marsad.Models.GeoArea
+﻿@model Marsad.Models.GeoAreaBundle
 
 @{
-    ViewBag.Title = "حذف "+ViewBag.TypeName;
+    ViewBag.Title = "حذف منطقة معرفة";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -12,7 +12,7 @@
 
 <h3>هل تريد فعلاً حذف السجل ؟</h3>
 <div>
-    <h4>حذف @ViewBag.TypeName</h4>
+    <h4>حذف منطقة معرفة</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -29,14 +29,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            النطاق التابع
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ParentGeoArea.Name)
         </dd>
 
     </dl>

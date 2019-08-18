@@ -51,6 +51,8 @@ namespace Marsad.Controllers
             {
                 return HttpNotFound();
             }
+
+            SetType(geoArea.Type);
             return View(geoArea);
         }
 
@@ -59,7 +61,7 @@ namespace Marsad.Controllers
         {
             type = SetType(type);
             var parentName = GeoArea.GetParentName(type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentName)), "ID", "Code");
+            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentName)), "ID", "Name");
             return View();
         }
 
@@ -78,7 +80,7 @@ namespace Marsad.Controllers
             }
             string type = SetType(geoArea.Type);
             string parentName = GeoArea.GetParentName(type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentName)), "ID", "Code", geoArea.GeoAreaID);
+            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentName)), "ID", "Name", geoArea.GeoAreaID);
             return View(geoArea);
         }
 
@@ -95,7 +97,8 @@ namespace Marsad.Controllers
                 return HttpNotFound();
             }
             string type = SetType(geoArea.Type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(GeoArea.GetParentName(type))), "ID", "Code", geoArea.GeoAreaID);
+            string parentType = GeoArea.GetParentName(type);
+            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentType)), "ID", "Name", geoArea.GeoAreaID);
             return View(geoArea);
         }
 
@@ -113,8 +116,9 @@ namespace Marsad.Controllers
                 return RedirectToAction("Index");
             }
             string type = SetType(geoArea.Type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(GeoArea.GetParentName(type))), "ID", "Code", geoArea.GeoAreaID);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas, "ID", "Code", geoArea.GeoAreaID);
+            string parentType = GeoArea.GetParentName(type);
+            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentType)), "ID", "Name", geoArea.GeoAreaID);
+            ViewBag.GeoAreaID = new SelectList(db.GeoAreas, "ID", "Name", geoArea.GeoAreaID);
             return View(geoArea);
         }
 
@@ -130,6 +134,7 @@ namespace Marsad.Controllers
             {
                 return HttpNotFound();
             }
+            SetType(geoArea.Type);
             return View(geoArea);
         }
 
@@ -159,7 +164,7 @@ namespace Marsad.Controllers
         private IQueryable<GeoArea> SortParams(string sortOrder, IQueryable<GeoArea> geoAreas, string searchString)
         {
             if (!String.IsNullOrWhiteSpace(searchString))
-                geoAreas = geoAreas.Where(x => x.Name.Contains(searchString));
+                geoAreas = geoAreas.Where(x => x.Name.Contains(searchString) || x.ParentGeoArea.Name.Contains(searchString));
             ViewBag.IDSortParm = String.IsNullOrEmpty(sortOrder) ? "IDDesc" : "";
             ViewBag.CodeSortParm = sortOrder == "Code" ? "CodeDesc" : "Code";
             ViewBag.NameSortParm = sortOrder == "Name" ? "NameDesc" : "Name";
@@ -183,10 +188,10 @@ namespace Marsad.Controllers
                     geoAreas = geoAreas.OrderBy(s => s.Name);
                     break;
                 case "GeoAreaIDDesc":
-                    geoAreas = geoAreas.OrderByDescending(s => s.GeoAreaID);
+                    geoAreas = geoAreas.OrderByDescending(s => s.ParentGeoArea.Name);
                     break;
                 case "GeoAreaID":
-                    geoAreas = geoAreas.OrderBy(s => s.GeoAreaID);
+                    geoAreas = geoAreas.OrderBy(s => s.ParentGeoArea.Name);
                     break;
                 case "TypeDesc":
                     geoAreas = geoAreas.OrderByDescending(s => s.Type);

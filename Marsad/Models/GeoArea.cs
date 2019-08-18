@@ -23,7 +23,7 @@ namespace Marsad.Models
         [Display(Name = "النطاق التابع")]     
         [RequiredNullable]
         public int? GeoAreaID { get; set; }
-        public GeoArea ParentGeoArea { get; set; }
+        public virtual GeoArea ParentGeoArea { get; set; }
 
         [Required]
         public string Type { get; set; }
@@ -49,7 +49,7 @@ namespace Marsad.Models
         };
 
         public static string GetParentName(string name)
-        {
+        {            
             if (name.Equals("District"))
                 return "City";
             else if (name.Equals("City"))

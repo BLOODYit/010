@@ -1,20 +1,20 @@
-﻿@model PagedList.IPagedList<Marsad.Models.GeoArea>
+﻿@model PagedList.IPagedList<Marsad.Models.GeoAreaBundle>
 @using PagedList.Mvc;
 @using Marsad.Helpers;
 
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "المناطق المعرفة";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <h1>@ViewBag.TypeName</h1>
+            <h1>المناطق المعرفة</h1>
             <hr />
 
             <div class="col-sm-2">
-                @Html.ActionLink("إنشاء جديد", "Create", new { type = ViewBag.Type }, new { @class = "btn btn-success" })
+                @Html.ActionLink("إنشاء جديد", "Create", null, new { @class = "btn btn-success" })
             </div>
             <div class="col-sm-8">
                 <form action="@Url.Action("Index")">
@@ -36,12 +36,7 @@
                         </th>
                         <th>
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> @ViewBag.TypeName
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.GeoAreaIDSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"GeoAreaID")"></i> @ViewBag.ParentName
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
                             </a>
                         </th>
                         <th width="250"></th>
@@ -56,11 +51,6 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-
-                                @Html.DisplayFor(modelItem => item.ParentGeoArea.Name)
-
                             </td>
                             <td>
                                 @Html.ActionLink("تعديل", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" })
