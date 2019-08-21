@@ -63,11 +63,13 @@ namespace Marsad.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name")] UserGroup userGroup)
+      //  [ValidateAntiForgeryToken]
+        public ActionResult Create( UserGroup userGroup)
         {
+           // [Bind(Include = "ID,Name")]
             if (ModelState.IsValid)
             {
+               
                 db.UserGroups.Add(userGroup);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -95,12 +97,24 @@ namespace Marsad.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name")] UserGroup userGroup)
+       // [ValidateAntiForgeryToken]
+        public ActionResult Edit( UserGroup userGroup)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(userGroup).State = EntityState.Modified;
+                var tempUG = db.UserGroups.Find(userGroup.ID);
+                var tempClaims = tempUG.Claims.ToList();
+                tempUG.Name = userGroup.Name;
+                tempUG.Claims =null;
+                tempUG.Claims = userGroup.Claims;
+                foreach (var c in userGroup.Claims)
+                {
+                    tempUG.Claims.Add(c);
+
+                }
+
+
+                //db.Entry(userGroup).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

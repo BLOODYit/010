@@ -146,7 +146,7 @@
         }
 
         private void AddUsers(Marsad.Models.ApplicationDbContext context)
-        {            
+        {
 
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
@@ -160,7 +160,7 @@
             {
                 var store = new UserStore<ApplicationUser>(context);
                 var manager = new UserManager<ApplicationUser>(store);
-                var user = new ApplicationUser { UserName = "admin@emarsd.com"};
+                var user = new ApplicationUser { UserName = "admin@emarsd.com" };
 
                 manager.Create(user, "123456");
                 manager.AddToRole(user.Id, "admin");
