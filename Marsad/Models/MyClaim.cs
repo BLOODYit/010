@@ -6,9 +6,9 @@ using System.Web;
 
 namespace Marsad.Models
 {
-    public class Claim
+    public class MyClaim
     {
-        public Claim()
+        public MyClaim()
         {
         }
 
@@ -16,8 +16,6 @@ namespace Marsad.Models
         public int ID { get; set; }
         public string Key { get; set; }
         public string Name { get; set; }
-
-        public int UserGroupID { get; set; }
-        public virtual UserGroup UserGroup { get; set; }
+        public virtual List<UserGroup> UserGroups { get; set; }
     }
 }

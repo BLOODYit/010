@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+
 using System.Web;
+
 
 namespace Marsad.Models
 {
@@ -10,7 +12,7 @@ namespace Marsad.Models
     {
         public UserGroup()
         {
-            this.Claims = new List<Claim>();
+            this.Claims = new List<MyClaim>();
             this.ApplicationUsers = new List<ApplicationUser>();
         }
 
@@ -23,6 +25,9 @@ namespace Marsad.Models
         public string Name { get; set; }
 
         public virtual List<ApplicationUser> ApplicationUsers { get; set; }
-        public virtual List<Claim> Claims { get; set; }
+     
+        public virtual List<MyClaim> Claims { get; set; }
+
+        
     }
 }
