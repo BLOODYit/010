@@ -192,6 +192,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Controllers\QueryController.cs" />
+    <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Controllers\UserGroupsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -205,9 +206,18 @@
     <Compile Include="Migrations\201908052153403_userGroups.Designer.cs">
       <DependentUpon>201908052153403_userGroups.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908241754287_equationelemens.cs" />
+    <Compile Include="Migrations\201908241754287_equationelemens.Designer.cs">
+      <DependentUpon>201908241754287_equationelemens.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CaseYearIndicatorValue.cs" />
     <Compile Include="Models\Claim.cs" />
+    <Compile Include="Models\Controls\EquationModel.cs" />
+    <Compile Include="Models\EquationElement.cs" />
     <Compile Include="Models\GeoAreaBundle.cs" />
+    <Compile Include="Models\GeoAreaBundleValue .cs" />
+    <Compile Include="Models\GeoAreaValue.cs" />
     <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Models\GeoArea.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -2672,9 +2682,11 @@
     <Content Include="Views\UserGroups\Details.cshtml" />
     <Content Include="Views\UserGroups\Edit.cshtml" />
     <Content Include="Views\UserGroups\Index.cshtml" />
+    <Content Include="Views\Shared\Controls\_Equation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Update\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -2695,6 +2707,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908052153403_userGroups.resx">
       <DependentUpon>201908052153403_userGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908241754287_equationelemens.resx">
+      <DependentUpon>201908241754287_equationelemens.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

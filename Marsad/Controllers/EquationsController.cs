@@ -56,7 +56,8 @@ namespace Marsad.Controllers
         // GET: Equations/Create
         public ActionResult Create()
         {
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Code");
+            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name");
+            ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
             return View();
         }
 
@@ -65,7 +66,7 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,IndicatorID,Year,EquationText")] Equation equation)
+        public ActionResult Create([Bind(Include = "ID,IndicatorID,Year,EquationText")] Equation equation,int[] elementIds)
         {
             if (ModelState.IsValid)
             {
@@ -74,7 +75,9 @@ namespace Marsad.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Code", equation.IndicatorID);
+            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", equation.IndicatorID);
+            ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.ElementIds = elementIds;
             return View(equation);
         }
 
@@ -90,7 +93,8 @@ namespace Marsad.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Code", equation.IndicatorID);
+            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", equation.IndicatorID);
+            ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
             return View(equation);
         }
 
@@ -99,7 +103,7 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,IndicatorID,Year,EquationText")] Equation equation)
+        public ActionResult Edit([Bind(Include = "ID,IndicatorID,Year,EquationText")] Equation equation,int[] elementIds)
         {
             if (ModelState.IsValid)
             {
@@ -107,7 +111,9 @@ namespace Marsad.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Code", equation.IndicatorID);
+            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", equation.IndicatorID);
+            ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.ElementIds = elementIds;
             return View(equation);
         }
 

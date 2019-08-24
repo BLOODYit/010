@@ -152,7 +152,7 @@
             {
                 var store = new RoleStore<IdentityRole>(context);
                 var manager = new RoleManager<IdentityRole>(store);
-                var role = new IdentityRole { Name = "Admin" };
+                var role = new IdentityRole { Name = "Admin" };                
                 manager.Create(role);
             }
 
@@ -161,7 +161,8 @@
                 var store = new UserStore<ApplicationUser>(context);
                 var manager = new UserManager<ApplicationUser>(store);
                 var user = new ApplicationUser { UserName = "admin@emarsd.com"};
-
+                
+                
                 manager.Create(user, "123456");
                 manager.AddToRole(user.Id, "admin");
             }

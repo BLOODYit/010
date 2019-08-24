@@ -10,7 +10,7 @@ namespace Marsad.Models
     {
         public Element()
         {
-            this.Equations = new List<Equation>();
+            this.EquationElements = new List<EquationElement>();
         }
 
         [Key]
@@ -35,6 +35,6 @@ namespace Marsad.Models
         public int DataSourceID { get; set; }
         public DataSource DataSource { get; set; }
 
-        public List<Equation> Equations { get; set; }
+        public List<EquationElement> EquationElements { get; set; }
     }
 }

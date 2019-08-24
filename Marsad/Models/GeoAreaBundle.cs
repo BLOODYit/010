@@ -24,7 +24,7 @@ namespace Marsad.Models
         [Required(ErrorMessage = "برجاء إدخال الإسم")]
         public string Name { get; set; }
 
-        public virtual ICollection<GeoArea> GeoAreas { get; set; }
+        public virtual ICollection<GeoArea> GeoAreas { get; set; }        
     }
 
 }

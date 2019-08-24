@@ -8,6 +8,10 @@ namespace Marsad.Models
 {
     public class CaseYearIndicator
     {
+        public CaseYearIndicator()
+        {
+            this.CaseYearIndicatorValues = new List<CaseYearIndicatorValue>();
+        }
 
         [Key]
         public int ID { get; set; }
@@ -24,6 +28,8 @@ namespace Marsad.Models
         public short IndicatorType { get; set; }
 
         public string Strategy { get; set; }
+
+        public virtual List<CaseYearIndicatorValue> CaseYearIndicatorValues { get; set; }
 
     }
 }
