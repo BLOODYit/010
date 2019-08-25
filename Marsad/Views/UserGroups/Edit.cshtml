@@ -1,4 +1,4 @@
-﻿@model Marsad.Models.UserGroup
+﻿@model UserGroup
 
 @{
     ViewBag.Title = "Edit";
@@ -30,7 +30,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
             <div class="col-sm-10 col-xs-12">
-                <input type="text" class="form-control" id="userGroupNameEdit" placeholder="ادخل اسم المجموعة" />
+                <input type="text" class="form-control" id="userGroupNameEdit" value="@Model.Name" placeholder="ادخل اسم المجموعة" x="@Model.ID" />
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                 @foreach (var item in Dumyclaims)
                 {
@@ -79,7 +79,8 @@
         $("#btnSubmitUGEdit").click(function () {
             let Roles=[];
             var UG = new Object();
-            let  CC = [];
+            let CC = [];
+            UG.Id = $("#userGroupNameEdit").attr("x")
             UG.Name = $('#userGroupNameEdit').val();
             $.each($("input[name='Role']:checked"), function () {
                 Roles.push($(this).val());

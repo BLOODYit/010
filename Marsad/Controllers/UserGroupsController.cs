@@ -97,28 +97,28 @@ namespace Marsad.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-       // [ValidateAntiForgeryToken]
-        public ActionResult Edit( UserGroup userGroup)
+        //[ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include= "ID,Name,Claims")] UserGroup userGroup)
         {
             if (ModelState.IsValid)
             {
-                var tempUG = db.UserGroups.Find(userGroup.ID);
-                var tempClaims = tempUG.Claims.ToList();
-                tempUG.Name = userGroup.Name;
-                tempUG.Claims =null;
-                tempUG.Claims = userGroup.Claims;
-                foreach (var c in userGroup.Claims)
+                var oldUG = db.UserGroups.Find(userGroup.ID);
+                var oldClaims = oldUG.Claims.ToList();
+               // db.Entry(userGroup).State = EntityState.Modified;
+                foreach (var claim in oldClaims)
                 {
-                    tempUG.Claims.Add(c);
-
+                    db.MyClaims.Remove(claim);
                 }
-
-
-                //db.Entry(userGroup).State = EntityState.Modified;
+                oldUG.Name = userGroup.Name;
+                oldUG.Claims = userGroup.Claims;
                 db.SaveChanges();
                 return RedirectToAction("Index");
+
             }
-            return View(userGroup);
+              return View(userGroup);
+    
+
+
         }
 
         // GET: UserGroups/Delete/5
@@ -183,6 +183,8 @@ namespace Marsad.Controllers
             }
             return userGroups;
         }
+
+       
 
     }
 
