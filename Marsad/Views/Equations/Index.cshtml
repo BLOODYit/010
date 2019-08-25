@@ -30,8 +30,8 @@
 	<thead>
     <tr>
         <th>
-			<a href="@Url.Action("Index",new { sortOrder=ViewBag.Indicator.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
-				<i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Indicator.Code")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Code)
+			<a href="@Url.Action("Index",new { sortOrder=ViewBag.IndicatorIDSortParm,currentFilter=ViewBag.CurrentFilter})">
+				<i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"IndicatorID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Code)
 			</a>            
         </th>
         <th>

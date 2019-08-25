@@ -10,21 +10,24 @@ namespace Marsad.Models
     {
         public Equation()
         {
-            this.Elements = new List<Element>();
+            this.EquationElements = new List<EquationElement>();
         }
 
         [Key]
         public int ID { get; set; }
 
         [Required]
+        [Display(Name ="المؤشر")]
         public int IndicatorID { get; set; }
         public Indicator Indicator { get; set; }
 
         [Required]
+        [Display(Name ="السنة")]
         public int Year { get; set; }
 
+        [Display(Name = "المعادلة")]
         public string EquationText { get; set; }        
 
-        public List<Element> Elements { get; set; }
+        public List<EquationElement> EquationElements { get; set; }
     }
 }

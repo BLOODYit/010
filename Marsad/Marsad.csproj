@@ -193,18 +193,32 @@
     <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\UpdateController.cs" />
     <Compile Include="Controllers\UserGroupsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Migrations\201908201718229_init.cs" />
-    <Compile Include="Migrations\201908201718229_init.Designer.cs">
-      <DependentUpon>201908201718229_init.cs</DependentUpon>
+    <Compile Include="Migrations\201907181231316_start.cs" />
+    <Compile Include="Migrations\201907181231316_start.Designer.cs">
+      <DependentUpon>201907181231316_start.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908052153403_userGroups.cs" />
+    <Compile Include="Migrations\201908052153403_userGroups.Designer.cs">
+      <DependentUpon>201908052153403_userGroups.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201908241754287_equationelemens.cs" />
+    <Compile Include="Migrations\201908241754287_equationelemens.Designer.cs">
+      <DependentUpon>201908241754287_equationelemens.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\MyClaim.cs" />
+    <Compile Include="Models\CaseYearIndicatorValue.cs" />
+    <Compile Include="Models\Claim.cs" />
+    <Compile Include="Models\Controls\EquationModel.cs" />
+    <Compile Include="Models\EquationElement.cs" />
     <Compile Include="Models\GeoAreaBundle.cs" />
+    <Compile Include="Models\GeoAreaBundleValue .cs" />
+    <Compile Include="Models\GeoAreaValue.cs" />
     <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Models\GeoArea.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -2671,9 +2685,11 @@
     <Content Include="Views\UserGroups\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Create.cshtml" />
+    <Content Include="Views\Shared\Controls\_Equation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Update\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -2689,12 +2705,18 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+    <EmbeddedResource Include="Migrations\201907181231316_start.resx">
+      <DependentUpon>201907181231316_start.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908052153403_userGroups.resx">
+      <DependentUpon>201908052153403_userGroups.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908241754287_equationelemens.resx">
+      <DependentUpon>201908241754287_equationelemens.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201908201718229_init.resx">
-      <DependentUpon>201908201718229_init.cs</DependentUpon>
-    </EmbeddedResource>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

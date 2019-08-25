@@ -66,10 +66,11 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Code,Name")] GeoAreaBundle geoAreaBundle)
-        {
+        public ActionResult Create([Bind(Include = "ID,Code,Name")] GeoAreaBundle geoAreaBundle,int[] geo_area_ids)
+        {            
             if (ModelState.IsValid)
-            {
+            {                
+                geoAreaBundle.GeoAreas = db.GeoAreas.Where(x => geo_area_ids.Contains(x.ID)).ToList();
                 db.GeoAreaBundles.Add(geoAreaBundle);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -103,11 +104,20 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Code,Name")] GeoAreaBundle geoAreaBundle)
+        public ActionResult Edit([Bind(Include = "ID,Code,Name")] GeoAreaBundle geoAreaBundle, int[] geo_area_ids)
         {
             if (ModelState.IsValid)
             {
+                
                 db.Entry(geoAreaBundle).State = EntityState.Modified;
+                geoAreaBundle.GeoAreas = db.GeoAreaBundles.Where(x => x.ID == geoAreaBundle.ID).Include(x => x.GeoAreas).FirstOrDefault().GeoAreas;
+                geoAreaBundle.GeoAreas.Clear();
+                var gareas = db.GeoAreas.Where(x => geo_area_ids.Contains(x.ID)).ToList();
+                foreach (var ga in gareas)
+                {
+                    geoAreaBundle.GeoAreas.Add(ga);
+                }                
+                
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

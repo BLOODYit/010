@@ -48,7 +48,7 @@
                     <div class="col-md-5">
                         <div class="col-md-6"><button id="add" type="button" class="btn btn-success">إضافة</button></div>
                         <div class="col-md-6"><button id="delete" type="button" class="btn btn-danger pull-right">حذف</button></div>
-                        <select class="form-control" id="geo-areas" multiple></select>
+                        <select name="geo_area_ids" class="form-control" id="geo-areas" multiple></select>
                     </div>
                 </div>
                 <div class="form-group">
@@ -58,6 +58,7 @@
                     </div>
                 </div>
             </div>
+
         }
 
     </div>
@@ -78,16 +79,37 @@
                     geo_areas.forEach(function (i) {
                         if (i.Type == self.val()) {
                             $('#geo-area').append("<option value='"+i.ID+"'>"+i.Name+"</option>");
-                        }                        
+                        }
                     });
                 });
 
                 $('#add').click(function () {
-                    
+                    $('#geo-area > option:selected').each(function () {
+                        var val = $(this).val();
+                        var found = false;
+                        $('#geo-areas > option').each(function () {
+                            if ($(this).val() == val) {
+                                found = true;
+                            }
+                        });
+                        if(!found) {
+                            $('#geo-areas').append("<option value='"+$(this).val()+"'>"+$(this).text()+"</option>");
+                        }
+                    });
                 });
 
                 $('#delete').click(function () {
+                    $('#geo-areas > option:selected').each(function () {
+                        $(this).remove();
+                    });
+                });
 
+                $('form').submit(function () {
+                    var self = $(this);
+                    $('input[name="geo_area_ids[]"]').remove();
+                    $('#geo-areas > option').each(function () {
+                        self.append("<input type='hidden' name='geo_area_ids[]' value='"+$(this).val()+"' />");
+                    });                    
                 });
                 $('#geo-type').change();
             });

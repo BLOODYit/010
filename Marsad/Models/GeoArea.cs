@@ -62,6 +62,9 @@ namespace Marsad.Models
                 return "Region";
             return "Kingdom";
         }
+
+        public virtual List<GeoAreaValue> GeoAreaValues { get; set; }
+
     }
 
     internal class RequiredNullableAttribute : Attribute, IValidatableObject
