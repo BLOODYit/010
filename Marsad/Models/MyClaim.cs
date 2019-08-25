@@ -10,12 +10,14 @@ namespace Marsad.Models
     {
         public MyClaim()
         {
+
         }
 
         [Key]
         public int ID { get; set; }
-        public string Key { get; set; }
-        public string Name { get; set; }
-        public virtual List<UserGroup> UserGroups { get; set; }
+        public int Key { get; set; }
+        public int Name { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
     }
 }
+
