@@ -57,5 +57,7 @@ namespace Marsad.Models
         public System.Data.Entity.DbSet<Marsad.Models.GeoAreaBundle> GeoAreaBundles { get; set; }
 
         public System.Data.Entity.DbSet<Marsad.Models.UserGroup> UserGroups { get; set; }
+        public System.Data.Entity.DbSet<Marsad.Models.MyClaim> MyClaims { get; set; }
+
     }
 }

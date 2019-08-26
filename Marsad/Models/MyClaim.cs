@@ -16,6 +16,8 @@ namespace Marsad.Models
         public int ID { get; set; }
         public string Key { get; set; }
         public string Name { get; set; }
+        //public string Type { get; set; }
+        //public string Value { get; set; }
         public virtual List<UserGroup> UserGroups { get; set; }
     }
 }

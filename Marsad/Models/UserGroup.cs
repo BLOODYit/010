@@ -10,11 +10,13 @@ namespace Marsad.Models
 {
     public class UserGroup
     {
+      
         public UserGroup()
         {
             //this.Claims = new List<MyClaim>();
             this.ApplicationUsers = new List<ApplicationUser>();
         }
+
 
         [Key]
         public int ID { get; set; }
