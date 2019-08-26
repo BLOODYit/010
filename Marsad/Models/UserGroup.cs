@@ -12,7 +12,7 @@ namespace Marsad.Models
     {
         public UserGroup()
         {
-            this.Claims = new List<MyClaim>();
+            //this.Claims = new List<MyClaim>();
             this.ApplicationUsers = new List<ApplicationUser>();
         }
 
@@ -26,7 +26,7 @@ namespace Marsad.Models
 
         public virtual List<ApplicationUser> ApplicationUsers { get; set; }
      
-        public virtual List<MyClaim> Claims { get; set; }
+        //public virtual List<MyClaim> Claims { get; set; }
 
         
     }
