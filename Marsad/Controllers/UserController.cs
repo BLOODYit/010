@@ -138,7 +138,7 @@ namespace Marsad.Controllers
                 string[] str = model.UserGroup.Split(':');
                 int userGroupId = Convert.ToInt32(str[0]);
                 var tempUserGroup = db.UserGroups.Find(userGroupId);
-                var newClaims = tempUserGroup.Claims;
+                var newClaimss = tempUserGroup.Claims;
 
                 var userId = model.Id;
                 var tempUser = db.Users.Find(model.Id);
@@ -149,7 +149,7 @@ namespace Marsad.Controllers
                     manger.RemoveClaim(userId, c);
 
                 }
-                foreach (var c in newClaims)
+                foreach (var c in newClaimss)
                 {
                     var value = c.Name;
                     manger.AddClaim(userId, new Claim("Claim", value));
