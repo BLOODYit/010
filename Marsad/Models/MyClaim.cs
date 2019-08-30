@@ -10,6 +10,7 @@ namespace Marsad.Models
     {
         public MyClaim()
         {
+
         }
 
         [Key]
@@ -21,3 +22,4 @@ namespace Marsad.Models
         public virtual List<UserGroup> UserGroups { get; set; }
     }
 }
+

@@ -8,6 +8,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Marsad.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity;
+using System.Security.Claims;
 
 namespace Marsad.Controllers
 {
@@ -102,15 +105,51 @@ namespace Marsad.Controllers
         {
             if (ModelState.IsValid)
             {
+                var store = new UserStore<ApplicationUser>(db);
+                var manger = new UserManager<ApplicationUser>(store);
                 var oldUG = db.UserGroups.Find(userGroup.ID);
                 var oldClaims = oldUG.Claims.ToList();
-               // db.Entry(userGroup).State = EntityState.Modified;
+                //Remove old claims from userGroup
                 foreach (var claim in oldClaims)
                 {
                     db.MyClaims.Remove(claim);
                 }
                 oldUG.Name = userGroup.Name;
                 oldUG.Claims = userGroup.Claims;
+                //get users assigned to userGroup
+                var users_UG = db.Users.Where(u => u.UserGroupID == userGroup.ID).ToList();
+                //Remove all IdentityClaims from users assigned to userGroup
+                foreach (var u in users_UG)
+                {
+                    var x = u.Id;
+                    var claims = manger.GetClaims(x);
+                    if (claims!=null)
+                    {
+                        foreach (var c in claims)
+                        {
+                            manger.RemoveClaim(u.Id, c);
+
+                        }
+
+                    }
+
+                }
+               
+                //set new claims from userGroup to his users
+                if (oldUG.Claims!=null)
+                {
+                    foreach (var u in users_UG)
+                    {
+                        foreach (var c in oldUG.Claims)
+                        {
+                            var value = c.Name;
+                            manger.AddClaim(u.Id, new Claim("Claim", value));
+
+                        }
+
+                    }
+
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
 
@@ -142,7 +181,18 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             UserGroup userGroup = db.UserGroups.Find(id);
+            var guClaims = userGroup.Claims.ToList();
+            foreach (var c in guClaims)
+            {
+                db.MyClaims.Remove(c);      
+            }
             db.UserGroups.Remove(userGroup);
+           
+            var users = db.Users.Where(u => u.UserGroupID == id).ToList();
+            foreach (var u in users)
+            {
+                db.Users.Remove(u);
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }

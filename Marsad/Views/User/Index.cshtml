@@ -16,7 +16,7 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <h1>Index</h1>
+            <h1> المستخدمين </h1>
             <hr />
 
             <div class="col-sm-2">
@@ -49,10 +49,12 @@
                         <tr>
                             <td>
                                 @Html.DisplayFor(modelItem => item.UserName)
+                                
+                               
                             </td>
                             <td>
                                 @Html.ActionLink("تعديل", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
-                                @Html.ActionLink("بيانات", "Details", new { id = item.Id }, new { @class = "btn btn-default" })
+                                @*@Html.ActionLink("بيانات", "Details", new { id = item.Id }, new { @class = "btn btn-default" })*@
                                 @Html.ActionLink("حذف", "Delete", new { id = item.Id}, new { @class = "btn btn-danger" })
                             </td>
                         </tr>

@@ -11,6 +11,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Marsad.Models.ViewModels;
 using System.Security.Claims;
+using System.Net;
 
 namespace Marsad.Controllers
 {
@@ -70,14 +71,8 @@ namespace Marsad.Controllers
         {
             UserViewModel userVM = new UserViewModel();
             var userGroups = db.UserGroups.ToList();
-            //var userGroupsNames = new List<string>();
-            //foreach (var item in userGroups)
-            //{
-            //    userGroupsNames.Add(item.Name);
-            //}
             var sl = userGroups.Select(s => new SelectListItem { Value = s.ID.ToString(),Text=s.Name })
                 .ToList();
-            //  ViewBag.userGroups = userGroupsNames;
             userVM.UserGroups = sl;
             return View(userVM);
         }
@@ -92,37 +87,24 @@ namespace Marsad.Controllers
             {
                 var store = new UserStore<ApplicationUser>(db);
                 var manger = new UserManager<ApplicationUser>(store);
-
-                
                 string[] str = model.UserGroup.Split(':');
-                int userGroupId =Convert.ToInt32(str[0]);
-                var tempUserGroup = db.UserGroups.Find(userGroupId);
-                var myClaims = tempUserGroup.Claims;
+                int userGroupId =Convert.ToInt32(str[0]);             
+                var tempUserGroup = db.UserGroups.Find(userGroupId);             
+                var myClaims = tempUserGroup.Claims; 
                 var user = new ApplicationUser { UserName = model.RegisterVM.Email, Email = model.RegisterVM.Email };
-                //var ident = UserManager.CreateIdentity(user,DefaultAuthenticationTypes.ApplicationCookie);
-                //List<Claim> claims = new List<Claim>();
-                //for (int i = 0; i < myClaims.Count; i++)
-                //{
-                //    claims.Add(new Claim(myClaims[i].Name, myClaims[i].Key));
-                //}
-                //ident.AddClaims(claims);
-                var result = await UserManager.CreateAsync(user, model.RegisterVM.Password);
-                manger.Create(user, model.RegisterVM.Password);
-                var userID = "";
-                manger.AddClaim(userID, new Claim("claim","CanReadImages"));
+                await manger.CreateAsync(user, model.RegisterVM.Password);
+                tempUserGroup.ApplicationUsers.Add(user);
+                db.SaveChanges();
+                var userId = user.Id;
+                foreach (var c in myClaims)
+                {
+                    var value = c.Name;
+                    manger.AddClaim(userId, new Claim("Claim", value));
+
+                }
                 return RedirectToAction("Index");
-                //if (result.Succeeded)
-                //{
-                //    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
-                //    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                //    // Send an email with this link
-                //    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                //    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                //    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                //    return RedirectToAction("Index", "Home");
-                //}
+              
 
             }
 
@@ -130,22 +112,73 @@ namespace Marsad.Controllers
             return View(model);
         }
 
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string id)
         {
             UserViewModel userVM = new UserViewModel();
             var userGroups = db.UserGroups.ToList();
             var user = db.Users.Find(id);
-            //var userGroupsNames = new List<string>();
-            //foreach (var item in userGroups)
-            //{
-            //    userGroupsNames.Add(item.Name);
-            //}
+          
             var sl = userGroups.Select(s => new SelectListItem { Value = s.ID.ToString(), Text = s.Name })
                 .ToList();
-            //  ViewBag.userGroups = userGroupsNames;
             userVM.UserGroups = sl;
-            userVM.RegisterVM.Email = user.Email;
+            userVM.UserName = user.Email;
+            userVM.Id = id;
             return View(userVM);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(UserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var store = new UserStore<ApplicationUser>(db);
+                var manger = new UserManager<ApplicationUser>(store);
+                string[] str = model.UserGroup.Split(':');
+                int userGroupId = Convert.ToInt32(str[0]);
+                var tempUserGroup = db.UserGroups.Find(userGroupId);
+                var newClaimss = tempUserGroup.Claims;
+
+                var userId = model.Id;
+                var tempUser = db.Users.Find(model.Id);
+                tempUser.UserName = model.UserName;
+                var claims =  manger.GetClaims(userId);
+                foreach (var c in claims)
+                {
+                    manger.RemoveClaim(userId, c);
+
+                }
+                foreach (var c in newClaimss)
+                {
+                    var value = c.Name;
+                    manger.AddClaim(userId, new Claim("Claim", value));
+
+                }
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        public ActionResult Delete(string id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var user = db.Users.Find(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            db.Users.Remove(user);
+            db.SaveChanges();
+
+            return RedirectToAction("Index");
         }
         protected override void Dispose(bool disposing)
         {
