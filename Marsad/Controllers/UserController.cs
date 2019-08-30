@@ -92,6 +92,8 @@ namespace Marsad.Controllers
             {
                 var store = new UserStore<ApplicationUser>(db);
                 var manger = new UserManager<ApplicationUser>(store);
+
+                
                 string[] str = model.UserGroup.Split(':');
                 int userGroupId =Convert.ToInt32(str[0]);
                 var tempUserGroup = db.UserGroups.Find(userGroupId);
@@ -106,7 +108,8 @@ namespace Marsad.Controllers
                 //ident.AddClaims(claims);
                 var result = await UserManager.CreateAsync(user, model.RegisterVM.Password);
                 manger.Create(user, model.RegisterVM.Password);
-
+                var userID = "";
+                manger.AddClaim(userID, new Claim("claim","CanReadImages"));
                 return RedirectToAction("Index");
                 //if (result.Succeeded)
                 //{
