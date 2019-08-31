@@ -13,7 +13,9 @@ namespace Marsad.Models.ViewModels
         public string UserName { get; set; }
         public string Id { get; set; }
         public string UserGroup { get; set; }
+        public int UGId { get; set; }
         [Display(Name="مستخدمى مجموعة")]
-        public IEnumerable<SelectListItem> UserGroups { get; set; }
+        //public IEnumerable<SelectListItem> UserGroups { get; set; }
+        public List<UserGroup> UserGroups { get; set; }
     }
 }

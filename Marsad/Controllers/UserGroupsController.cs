@@ -11,6 +11,7 @@ using Marsad.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
 using System.Security.Claims;
+using Marsad.Models.ViewModels;
 
 namespace Marsad.Controllers
 {
@@ -75,7 +76,8 @@ namespace Marsad.Controllers
                
                 db.UserGroups.Add(userGroup);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return Json(new { redirectToUrl = Url.Action("Index", "UserGroups") });
+                //return RedirectToAction("Index");
             }
 
             return View(userGroup);
@@ -89,11 +91,20 @@ namespace Marsad.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             UserGroup userGroup = db.UserGroups.Find(id);
+            UserGroupViewModel UGVM = new UserGroupViewModel();
+            var claimsString = new List<string>();
+            foreach (var claim in userGroup.Claims)
+            {
+                claimsString.Add(claim.Name);
+            }
+            UGVM.SelectedClaims = claimsString;
+            UGVM.UserGroup = userGroup;
             if (userGroup == null)
             {
                 return HttpNotFound();
             }
-            return View(userGroup);
+
+            return View(UGVM);
         }
 
         // POST: UserGroups/Edit/5
@@ -101,33 +112,46 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include= "ID,Name,Claims")] UserGroup userGroup)
+        public ActionResult Edit(/*[Bind(Include= "ID,Name,Claims")]*/ UserGroupViewModel userGroupVM)
         {
             if (ModelState.IsValid)
             {
                 var store = new UserStore<ApplicationUser>(db);
                 var manger = new UserManager<ApplicationUser>(store);
-                var oldUG = db.UserGroups.Find(userGroup.ID);
+                var oldUG = db.UserGroups.Find(userGroupVM.UserGroup.ID);
                 var oldClaims = oldUG.Claims.ToList();
+                string[] selectedClaims = userGroupVM.SelectedClaims[0].Split(',');
+                for (int i = 0; i < selectedClaims.Length; i++)
+                {
+                    userGroupVM.UserGroup.Claims.Add(new MyClaim(i.ToString(),selectedClaims[i]));
+                }
+               
+                //var selectedClaims = userGroupVM.SelectedClaims;
+
                 //Remove old claims from userGroup
                 foreach (var claim in oldClaims)
                 {
                     db.MyClaims.Remove(claim);
                 }
-                oldUG.Name = userGroup.Name;
-                oldUG.Claims = userGroup.Claims;
+                oldUG.Name = userGroupVM.UserGroup.Name;
+                oldUG.Claims = userGroupVM.UserGroup.Claims;
+
                 //get users assigned to userGroup
-                var users_UG = db.Users.Where(u => u.UserGroupID == userGroup.ID).ToList();
+                var users_UG = db.Users.Where(u => u.UserGroupID == userGroupVM.UserGroup.ID).ToList();
                 //Remove all IdentityClaims from users assigned to userGroup
-                foreach (var u in users_UG)
+                if (users_UG !=null)
                 {
-                    var x = u.Id;
-                    var claims = manger.GetClaims(x);
-                    if (claims!=null)
+                    foreach (var u in users_UG)
                     {
-                        foreach (var c in claims)
+                        var x = u.Id;
+                        var claims = manger.GetClaims(x);
+                        if (claims!=null)
                         {
-                            manger.RemoveClaim(u.Id, c);
+                            foreach (var c in claims)
+                            {
+                                manger.RemoveClaim(u.Id, c);
+
+                            }
 
                         }
 
@@ -136,26 +160,39 @@ namespace Marsad.Controllers
                 }
                
                 //set new claims from userGroup to his users
-                if (oldUG.Claims!=null)
+                if (oldUG.Claims!=null&& users_UG!=null)
                 {
                     foreach (var u in users_UG)
                     {
-                        foreach (var c in oldUG.Claims)
-                        {
-                            var value = c.Name;
-                            manger.AddClaim(u.Id, new Claim("Claim", value));
+                        //foreach (var c in oldUG.Claims)
+                        //{
+                        //    var value = c.Name;
+                        //    manger.AddClaim(u.Id, new Claim("Claim", value));
 
+                        //}
+                        foreach (var claim in selectedClaims)
+                        {
+                            manger.AddClaim(u.Id, new Claim("Claim", claim));
                         }
 
                     }
 
                 }
                 db.SaveChanges();
+                //return Json(new { redirectToUrl = Url.Action("Index", "UserGroups") });
                 return RedirectToAction("Index");
 
             }
-              return View(userGroup);
-    
+            //var claimsString = new List<string>();
+            //foreach (var claim in userGroup.Claims)
+            //{
+            //    claimsString.Add(claim.Name);
+            //}
+            //ViewBag.claims = claimsString;
+            //return Json(new { redirectToUrl = Url.Action("Index", "UserGroups") });
+            return View(userGroupVM);
+
+
 
 
         }

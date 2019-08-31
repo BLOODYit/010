@@ -36,28 +36,37 @@
                 <thead>
                     <tr>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                @*<i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Name)*@
-                            </a>
+                            @*<a href="@Url.Action("Index",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
+                            </a>*@
+                            اسم المستخدم
                         </th>
-                        <th width="250"></th>
+                        <th>
+                            مجموعة المستخدمين
+                        </th>
+                        <th ></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.UserName)
-                                
-                               
-                            </td>
-                            <td>
-                                @Html.ActionLink("تعديل", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
-                                @*@Html.ActionLink("بيانات", "Details", new { id = item.Id }, new { @class = "btn btn-default" })*@
-                                @Html.ActionLink("حذف", "Delete", new { id = item.Id}, new { @class = "btn btn-danger" })
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+
+
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserGroup.Name)
+
+
+                        </td>
+                        <td>
+                            @Html.ActionLink("تعديل", "Edit", new { id = item.Id }, new { @class = "btn btn-primary" })
+                            @*@Html.ActionLink("بيانات", "Details", new { id = item.Id }, new { @class = "btn btn-default" })*@
+                            @Html.ActionLink("حذف", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

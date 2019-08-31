@@ -11,6 +11,11 @@
 
 @using (Html.BeginForm("Create", "User", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
+    var UserGroupsList = new List<SelectListItem>();
+    foreach (var userGroup in Model.UserGroups)
+    {
+        UserGroupsList.Add(new SelectListItem() { Value = userGroup.ID.ToString(), Text = userGroup.Name });
+    }
     @Html.AntiForgeryToken()
     <h4>إنشاء مستخدم جديد</h4>
     <hr />
@@ -38,13 +43,15 @@
             @Html.LabelFor(m => m.UserGroups, new { @class = "col-md-2 control-label" })
         </div>
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.UserGroup, Model.UserGroups, "اختار مستخدم مجموعة", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.UserGroup, UserGroupsList, "اختار مستخدم مجموعة", new { @class = "form-control" })
         </div>
         
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="إنشاء" />
+            <input type="submit" class="btn btn-primary" value="إنشاء" />
+            @Html.ActionLink("رجوع", "Index", null, new { @class = "btn btn-danger" })
+
         </div>
     </div>
 

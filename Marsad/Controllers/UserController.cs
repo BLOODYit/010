@@ -59,6 +59,7 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
+            //var users = db.Users.Where(u=>u.UserName != "admin@emarsd.com").AsQueryable();
             var users = db.Users.AsQueryable();
             users = SortParams(sortOrder, users, searchString);
             int pageSize = 10;
@@ -73,7 +74,7 @@ namespace Marsad.Controllers
             var userGroups = db.UserGroups.ToList();
             var sl = userGroups.Select(s => new SelectListItem { Value = s.ID.ToString(),Text=s.Name })
                 .ToList();
-            userVM.UserGroups = sl;
+            userVM.UserGroups = userGroups;
             return View(userVM);
         }
 
@@ -117,32 +118,30 @@ namespace Marsad.Controllers
             UserViewModel userVM = new UserViewModel();
             var userGroups = db.UserGroups.ToList();
             var user = db.Users.Find(id);
-          
-            var sl = userGroups.Select(s => new SelectListItem { Value = s.ID.ToString(), Text = s.Name })
-                .ToList();
-            userVM.UserGroups = sl;
+            userVM.UserGroups = userGroups;
             userVM.UserName = user.Email;
             userVM.Id = id;
+            userVM.UserGroup = user.UserGroup.Name;
             return View(userVM);
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(UserViewModel model)
+        public ActionResult Edit(UserViewModel userVM)
         {
             if (ModelState.IsValid)
             {
                 var store = new UserStore<ApplicationUser>(db);
                 var manger = new UserManager<ApplicationUser>(store);
-                string[] str = model.UserGroup.Split(':');
-                int userGroupId = Convert.ToInt32(str[0]);
-                var tempUserGroup = db.UserGroups.Find(userGroupId);
+                //string[] str = userVM.UserGroup.Split(':');
+                //int userGroupId = Convert.ToInt32(str[0]);
+                var tempUserGroup = db.UserGroups.Find(userVM.UGId);
                 var newClaimss = tempUserGroup.Claims;
-
-                var userId = model.Id;
-                var tempUser = db.Users.Find(model.Id);
-                tempUser.UserName = model.UserName;
+                //string userGroup = Request.Form["ddlUserGroups"].ToString();
+                var userId = userVM.Id;
+                var tempUser = db.Users.Find(userVM.Id);
+                tempUser.UserGroup = tempUserGroup;
                 var claims =  manger.GetClaims(userId);
                 foreach (var c in claims)
                 {
@@ -161,7 +160,7 @@ namespace Marsad.Controllers
 
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            return View(userVM);
         }
 
         public ActionResult Delete(string id)

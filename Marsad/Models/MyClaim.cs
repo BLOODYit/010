@@ -12,6 +12,11 @@ namespace Marsad.Models
         {
 
         }
+        public MyClaim(string i,string claim)
+        {
+            Key = i;
+            Name = claim;
+        }
 
         [Key]
         public int ID { get; set; }

@@ -1,4 +1,4 @@
-﻿@model UserGroup
+﻿@model UserGroupViewModel
 
 @{
     ViewBag.Title = "Edit";
@@ -19,38 +19,51 @@
 <div class="col-xs-12">
 @using (Html.BeginForm())
 {
-   // @Html.AntiForgeryToken()
+   //@Html.AntiForgeryToken()
     
     <div class="form-horizontal">
-        <h2>تعديل UserGroup</h2>
+        <h2>تعديل مجموعةالمستخدمين</h2>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ID)
-
+        @*@Html.ValidationSummary(true, "", new { @class = "text-danger" })*@
+        @Html.HiddenFor(model => model.UserGroup.ID)
+        @Html.HiddenFor(model => model.SelectedClaims, new { id = "SelectedClaims" });
         <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
             <div class="col-sm-10 col-xs-12">
-                <input type="text" class="form-control" id="userGroupNameEdit" value="@Model.Name" placeholder="ادخل اسم المجموعة" x="@Model.ID" />
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.UserGroup.Name, new { @class = "control-label col-sm-2 col-xs-12" })
+                @Html.TextBoxFor(model => model.UserGroup.Name, new { @class = "form-control", id="userGroupNameEdit",placeholder="ادخل اسم المجموعة"})
+                @*<input type="text" class="form-control" id="userGroupNameEdit" value="@Model.UserGroup.Name" placeholder="ادخل اسم المجموعة" x="@Model.UserGroup.ID" />*@
+
+                @*@Html.ValidationMessageFor(model => model.UserGroup.Name, "ادخل اسم المجموعة", new { @class = "text-danger" })*@
                 @foreach (var item in Dumyclaims)
                 {
+
                     <div class="checkbox">
                         <label>
-                            <input class="alignleft" type="checkbox" id=`@Dumyclaims.IndexOf(item)`
+                            <input class="alignleft"
+                                   type="checkbox"
+                                   id=`checkbox_@Dumyclaims.IndexOf(item)`
                                    name="Role"
-                                   value="@item" />
-                            <span class="alignleft"> @item</span>
+                                   value="@item"
+                                   @if(Model.SelectedClaims.Contains(item))
+                                   {
+                                        <text> checked </text>
+                                   }
+                                    /> @item
+
 
                         </label>
                     </div>
-                }
+
+        }
+                @*@Html.ValidationMessageFor(model => model.SelectedClaims, "اختر نوع على الاقل", new { @class = "text-danger" })*@
+
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-sm-10 col-xs-12">
-                <input id="btnSubmitUGEdit" type="submit" value="حفظ" class="btn btn-primary" disabled />
-				@Html.ActionLink("الرئيسية", "Index",null ,new {@class="btn btn-default"})
+                <input id="btnSubmitUGEdit" type="submit" value="حفظ" class="btn btn-primary"  />
+				@*@Html.ActionLink("الرئيسية", "Index",null ,new {@class="btn btn-default"})*@
             </div>
         </div>
     </div>
@@ -64,55 +77,64 @@
 
 @section scripts{
     <script>
-        $("#userGroupNameEdit").keyup(function () {
+        //$("#userGroupNameEdit").keyup(function () {
              
-               if ($("#userGroupNameEdit").val() != "") {
-                   $("#btnSubmitUGEdit").prop('disabled', false);
-                   $("#btnSubmitUGEdit").removeClass("disabled");
-            }
-            else {
-                   $("#btnSubmitUGEdit").prop('disabled', true);
-                   $("#btnSubmitUGEdit").addClass("disabled");
-            }
-        });
+        //       if ($("#userGroupNameEdit").val() != "") {
+        //           $("#btnSubmitUGEdit").prop('disabled', false);
+        //           $("#btnSubmitUGEdit").removeClass("disabled");
+        //    }
+        //    else {
+        //           $("#btnSubmitUGEdit").prop('disabled', true);
+        //           $("#btnSubmitUGEdit").addClass("disabled");
+        //    }
+        //});
 
         $("#btnSubmitUGEdit").click(function () {
-            let Roles=[];
-            var UG = new Object();
-            let CC = [];
-            UG.Id = $("#userGroupNameEdit").attr("x")
-            UG.Name = $('#userGroupNameEdit').val();
-            $.each($("input[name='Role']:checked"), function () {
-                Roles.push($(this).val());
-            });
-            for (let i = 0;i<Roles.length ;i++){
-                let c = {
-                          "Key": i,
-                           "Name": Roles[i],
-                }
-                CC.push(c);
+            var sList = [];
+                $('input[type=checkbox]').each(function () {
+                    if (this.checked) {
+                        sList.push(this.value);
+                    }
+                });
+            $("#SelectedClaims").val(sList);
 
-            }
-            UG.Claims = CC;
-            console.log(UG);
-            $.ajax({
-                type: "POST",
-                url: "/UserGroups/Edit",
-                data: UG,
+            //let Roles=[];
+            //var UG = new Object();
+            //let CC = [];
+            //UG.Id = $("#userGroupNameEdit").attr("x")
+            //UG.Name = $('#userGroupNameEdit').val();
+            //$.each($("input[name='Role']:checked"), function () {
+            //    Roles.push($(this).val());
+            //});
+            //for (let i = 0;i<Roles.length ;i++){
+            //    let c = {
+            //              "Key": i,
+            //               "Name": Roles[i],
+            //    }
+            //    CC.push(c);
+
+            //}
+            //UG.Claims = CC;
+            //$.ajax({
+            //    type: "POST",
+            //    url: "/UserGroups/Edit",
+            //    data: UG,
 
 
-                success: function (response) {
-
-                },
-                error: function (response) {
-                    console(response.responseText);
-                }
-            });
+            //    success: function (response) {
+            //        window.location.href = response.redirectToUrl;
+            //        console.log(window.location.href = response.redirectToUrl);
+            //    },
+            //    error: function (response) {
+            //        console(response.responseText);
+            //    }
+            //});
 
 
 
 
         });
+        
 
     </script>
 }
