@@ -30,7 +30,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Year, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                         <div class="col-sm-10 col-xs-12">
-                            @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control year", @type = "text" } })
                             @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -47,6 +47,7 @@
                                 }
                             </select>
                             <button type="button" class="btn btn-primary" id="add-element">إضافة</button>
+                            <button type="button" class="btn btn-primary" id="add-new-element">إضافة عنصر جديد</button>
                         </div>
                     </div>
 
@@ -70,6 +71,21 @@
 </div>
 
 
+<div class="modal fade" id="addElementModel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">إضافة عنصر جديد</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts{
     <script type="text/javascript">
@@ -77,7 +93,23 @@
 
             $('#add-element').click(function () {
                 $('#elements option:selected').each(function () {
-                    $('#equation_text').val($('#equation_text').val() + "["+$(this).text()+"]");
+                    $('#equation_text').val($('#equation_text').val() + "[" + $(this).text() + "]");
+                });
+            });
+
+
+            $('.year').datepicker({
+            format: 'yyyy',
+            viewMode: "years",
+            minViewMode: "years",
+            yearRange: '1300:1500'
+        });
+
+         $('#add-new-element').click(function () {
+                $.get('@Url.Action("GetCreateElement","Elements")').done(function (res) {
+                    $mymodal = $("#addElementModel");
+                    $mymodal.find("div.modal-body").html(res);
+                    $mymodal.modal("show");
                 });
             });
         });

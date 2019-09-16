@@ -17,7 +17,8 @@
         padding: 0px !important;
     }
     #equation_text{
-        direction:ltr;
+        direction:rtl;
+        text-align:right;
     }
 </style>
 <div class="row">
@@ -79,7 +80,7 @@
                 <td><button id="previous" type="button" class="eq_btn">تراجع</button></td>
             </tr>
         </table>
-        <textarea name="EquationText" class="form-control" id="equation_text" rows="8"></textarea>
+        <textarea name="EquationText" class="form-control" id="equation_text" rows="8">@Model.Value</textarea>
     </div>
 </div>
 
@@ -113,8 +114,8 @@
     $(document).ready(function () {
         $('#divide').click(function () { addItem("/"); });
         $('#sign').click(function () { toogleItem("-") });
-        $('#start_brace').click(function () { addItem(")") });
-        $('#end_brace').click(function () { addItem("(") });
+        $('#start_brace').click(function () { addItem("(") });
+        $('#end_brace').click(function () { addItem(")") });
         $('#pow').click(function () { addItem("POW(,)", 4) });
         $('#pow2').click(function () { addItem("POW(,2)", 4) });
         $('#pow3').click(function () { addItem("POW(,3)", 4) });

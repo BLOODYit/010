@@ -195,6 +195,30 @@ namespace Marsad.Controllers
             return elements;
         }
 
+
+
+        [HttpGet]
+        public ActionResult GetCreateElement()
+        {
+            ViewBag.DataSourceID = new SelectList(db.DataSources, "ID", "Name");
+            return PartialView();
+        }
+
+        [HttpPost]
+        public JsonResult PostCreateElement([Bind(Include = "ID,Code,Name,MeasureUnit,DataSourceID")] Element element)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Elements.Add(element);
+                db.SaveChanges();
+                return Json(new { success = true, data = element });
+            }
+            else
+            {
+                return Json(new { success = false, data = element, errors = ModelState.Values.Where(i => i.Errors.Count > 0) });
+            }
+        }
+
     }
 
 

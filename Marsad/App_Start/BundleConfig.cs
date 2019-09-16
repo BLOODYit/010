@@ -13,7 +13,8 @@ namespace Marsad
                       "~/Content/bootstrap.css",
                       "~/Content/vendors/font-awesome/css/font-awesome.min.css",
                       "~/Content/build/css/custom.min.css",
-                      "~/Content/rtl.css"));
+                      "~/Content/rtl.css",
+                      "~/Content/bootstrap-datepicker3.min.css"));
 
             bundles.Add(new StyleBundle("~/Content/NProgress").Include(
                       "~/Content/vendors/nprogress/nprogress.css"));
@@ -31,7 +32,8 @@ namespace Marsad
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                           "~/Scripts/bootstrap.js"
                         , "~/Content/vendors/fastclick/lib/fastclick.js"
-                        , "~/Content/build/js/custom.min.js"));
+                        , "~/Content/build/js/custom.js"
+                        , "~/Content/bootstrap-datepicker.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));

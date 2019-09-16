@@ -28,8 +28,8 @@
                 <thead>
                     <tr>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Code")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Code)
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.IDSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"ID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().ID)
                             </a>
                         </th>
                         <th>
@@ -38,9 +38,13 @@
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.DescriptionSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Description")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
+                            <a href="@Url.Action(" Index",new { sortOrder=ViewBag.DescriptionSortParm,currentFilter =ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," Description")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Description)
                             </a>
+                        </th>
+                        <th>                            
+                                @Html.DisplayNameFor(model => model.FirstOrDefault().Color)
+                            
                         </th>
                         <th width="250"></th>
                     </tr>
@@ -48,22 +52,26 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Code)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Description)
-                            </td>
-                            <td>
-                                @Html.ActionLink("تعديل", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" })
-                                @Html.ActionLink("بيانات", "Details", new { id = item.ID }, new { @class = "btn btn-default" })
-                                @Html.ActionLink("حذف", "Delete", new { id = item.ID }, new { @class = "btn btn-danger" })
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ID)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+
+                        <td>
+                            <div style="background:@item.GetColor()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+                        </td>
+                        <td>
+                            @Html.ActionLink("تعديل", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" })
+                            @Html.ActionLink("بيانات", "Details", new { id = item.ID }, new { @class = "btn btn-default" })
+                            @Html.ActionLink("حذف", "Delete", new { id = item.ID }, new { @class = "btn btn-danger" })
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>

@@ -159,7 +159,7 @@ namespace Marsad.Controllers
         private IQueryable<Indicator> SortParams(string sortOrder, IQueryable<Indicator> indicators, string searchString)
         {
             if (!String.IsNullOrWhiteSpace(searchString))
-                indicators = indicators.Where(x => x.Name.Contains(searchString) || x.Code.Contains(searchString) || (x.Bundle != null && x.Bundle.Name.Contains(searchString)));
+                indicators = indicators.Where(x => x.Name.Contains(searchString) || x.Code.ToString().Contains(searchString) || (x.Bundle != null && x.Bundle.Name.Contains(searchString)));
 
 
             ViewBag.IDSortParm = String.IsNullOrEmpty(sortOrder) ? "IDDesc" : "";
@@ -234,12 +234,6 @@ namespace Marsad.Controllers
                 case "Correlation":
                     indicators = indicators.OrderBy(s => s.Correlation);
                     break;
-                case "GeoAreaDesc":
-                    indicators = indicators.OrderByDescending(s => s.GeoArea);
-                    break;
-                case "GeoArea":
-                    indicators = indicators.OrderBy(s => s.GeoArea);
-                    break;
                 case "ReferencesDesc":
                     indicators = indicators.OrderByDescending(s => s.References);
                     break;
@@ -284,6 +278,12 @@ namespace Marsad.Controllers
             {
                 return Json(new { success = false, data = indicator, errors = ModelState.Values.Where(i => i.Errors.Count > 0) });
             }
+        }
+
+
+        public JsonResult IsExist(int Code)
+        {
+            return Json(!db.Indicators.Where(x => x.Code == Code).Any(), JsonRequestBehavior.AllowGet);            
         }
     }
 

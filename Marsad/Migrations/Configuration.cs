@@ -29,14 +29,14 @@
 
         private void AddStartData(Marsad.Models.ApplicationDbContext context)
         {
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "1", Name = "مؤشرت الخلفية العامة" });
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "2", Name = "التنمية الاجتماعية والاقتصادية" });
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "3", Name = "النقل" });
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "4", Name = "البنية التحتية" });
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "5", Name = "المأوي" });
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "6", Name = "ادارة البيئة" });
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "7", Name = "الادارة المحلية" });
-            context.Bundles.AddOrUpdate(x => x.Code, new Bundle() { Code = "8", Name = "نسب الرضا" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "مؤشرت الخلفية العامة" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "التنمية الاجتماعية والاقتصادية" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "النقل" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "البنية التحتية" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "المأوي" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "ادارة البيئة" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "الادارة المحلية" });
+            context.Bundles.AddOrUpdate(x => x.ID, new Bundle() { Name = "نسب الرضا" });
 
             context.DataSourceGroups.AddOrUpdate(x => x.Code, new DataSourceGroup() { Code = 1, Name = "مجموعة المصادر الخاصة بالدراسات السكانية" });
 
@@ -146,26 +146,26 @@
         }
 
         private void AddUsers(Marsad.Models.ApplicationDbContext context)
-        {            
+        {
 
             if (!context.Roles.Any(r => r.Name == "Admin"))
             {
                 var store = new RoleStore<IdentityRole>(context);
                 var manager = new RoleManager<IdentityRole>(store);
-                var role = new IdentityRole { Name = "Admin" };                
+                var role = new IdentityRole { Name = "Admin" };
                 manager.Create(role);
             }
 
-            if (!context.Users.Any(u => u.UserName == "admin@emarsd.com"))
-            {
-                var store = new UserStore<ApplicationUser>(context);
-                var manager = new UserManager<ApplicationUser>(store);
-                var user = new ApplicationUser { UserName = "admin@emarsd.com"};
-                
-                
-                manager.Create(user, "123456");
-                manager.AddToRole(user.Id, "admin");
-            }
+            //if (!context.Users.Any(u => u.UserName == "admin@emarsd.com"))
+            //{
+            //    var store = new UserStore<ApplicationUser>(context);
+            //    var manager = new UserManager<ApplicationUser>(store);
+            //    var user = new ApplicationUser { UserName = "admin@emarsd.com"};
+
+
+            //    manager.Create(user, "123456");
+            //    manager.AddToRole(user.Id, "admin");
+            //}
         }
     }
 }

@@ -13,6 +13,7 @@
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/nprogress")
     @RenderSection("css", required: false)
 </head>
 
@@ -21,8 +22,14 @@
         <div class="main_container">
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
-                    <div class="navbar nav_title" style="border: 0;">
-                        <a href="@Url.Action("Index","Home")" class="site_title"><i class="fa fa-bar-chart"></i> <span>المرصد الحضري بالمنطقة الشرقية</span></a>
+                    <div class="navbar nav_title" style="border: 0;background:#ededed;height:100px;">
+                        <a href="@Url.Action("Index","Home")" class="site_title">
+                            <span>
+                                <img src="~/Images/logo.png" style="width:100%;" />
+                            </span>
+                            
+                                <img class="logo-sm" src="~/Images/mini-logo.png" style="width:100%;" />                            
+                        </a>
                     </div>
 
                     <div class="clearfix"></div>
@@ -65,7 +72,13 @@
                                 <li class="@Html.IsSelected("Update","")">
                                     <a><i class="fa fa-refresh"></i> التحديث <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="#">تحديث</a></li>
+                                        <li><a href="@Url.Action("GeoAreas","Update",new { type="Region"})">مناطق</a></li>
+                                        <li><a href="@Url.Action("GeoAreas","Update",new { type="SubRegion"})">حاضرة</a></li>
+                                        <li><a href="@Url.Action("GeoAreas","Update",new { type="Governorate"})">محافظات</a></li>
+                                        <li><a href="@Url.Action("GeoAreas","Update",new { type="Town"})">بلديات</a></li>
+                                        <li><a href="@Url.Action("GeoAreas","Update",new { type="City"})">مدن</a></li>
+                                        <li><a href="@Url.Action("GeoAreas","Update",new { type="District"})">أحياء</a></li>
+                                        <li><a href="@Url.Action("GeoAreaBundles","Update")">نظاقات جغرافية معرفة</a></li>
                                     </ul>
                                 </li>
                                 <li>
@@ -109,7 +122,9 @@
                                 <li class="@Html.IsSelected("Security","")">
                                     <a><i class="fa fa-refresh"></i> أنظمة أمن البيانات <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="#">تحديث</a></li>
+
+                                        <li><a href="@Url.Action("Index","User")">المستخدمين</a></li>
+                                        <li><a href="@Url.Action("Index","UserGroups")">ممجموعات المستخدمين</a></li>
                                     </ul>
                                 </li>
                             </ul>
@@ -165,64 +180,6 @@
                                     <i class="fa fa-envelope-o"></i>
                                     <span class="badge bg-green">6</span>
                                 </a>
-                                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a>
-                                            <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
-                                            <span>
-                                                <span>John Smith</span>
-                                                <span class="time">3 mins ago</span>
-                                            </span>
-                                            <span class="message">
-                                                Film festivals used to be do-or-die moments for movie makers. They were where...
-                                            </span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="text-center">
-                                            <a>
-                                                <strong>See All Alerts</strong>
-                                                <i class="fa fa-angle-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                </ul>
                             </li>
                         </ul>
                     </nav>

@@ -15,14 +15,6 @@
                 <hr />
                 <dl class="dl-horizontal">
                     <dt>
-                        @Html.DisplayNameFor(model => model.Code)
-                    </dt>
-
-                    <dd>
-                        @Html.DisplayFor(model => model.Code)
-                    </dd>
-
-                    <dt>
                         @Html.DisplayNameFor(model => model.Name)
                     </dt>
 
@@ -36,6 +28,13 @@
 
                     <dd>
                         @Html.DisplayFor(model => model.Description)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Color)
+                    </dt>
+
+                    <dd>
+                        <span style="background:@Model.GetColor()">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     </dd>
 
                 </dl>

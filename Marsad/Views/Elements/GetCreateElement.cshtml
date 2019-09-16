@@ -1,0 +1,98 @@
+﻿@model Marsad.Models.Element
+
+
+<div class="container">
+    <div class="row">
+        @using (Html.BeginForm("PostCreateElement", "Elements", FormMethod.Post, new { @id = "elementForm" }))
+        {
+            @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DataSourceID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    @Html.DropDownList("DataSourceID", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.DataSourceID, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.MeasureUnit, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    @Html.EditorFor(model => model.MeasureUnit, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.MeasureUnit, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <hr />
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10 col-xs-12">
+                    <input id="submit" type="submit" value="إنشاء" class="btn btn-success" />
+                    <input id="cancel" type="button" value="الغاء" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+        }
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $mymodal = $("#addElementModel");
+        $('#cancel').click(function () {
+            $mymodal.modal("hide");
+        });
+
+        var $form = $('#elementForm');
+        $form.submit(function (e) {
+            var $form = $(this);
+            if ($form.valid()) {
+                $.ajax({
+                    url: $form.attr('action'),
+                    async: true,
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    beforeSend: function (xhr, opts) { },                    
+                    complete: function () {},
+                    success: function (data) {
+                        if (data.success) {
+                            $('#elements').append('<option value="'+data.data.ID+'">'+data.data.Name+'</option>');
+                            $mymodal.modal("hide");
+                        }
+                        else {
+                            alert("حدث خطأ");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr);
+                        alert("حدث خطأ");
+                    }
+                });
+            }
+            return false;
+        });
+
+        $("form").removeData("validator");
+        $("form").removeData("unobtrusiveValidation");
+        $.validator.unobtrusive.parse($('form'));
+    });
+
+</script>

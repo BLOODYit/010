@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Marsad.Models
 {
@@ -21,10 +22,10 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "برجاء إدخال رمز المؤشر")]
-        [MaxLength(1024, ErrorMessage = "رمز المؤشر يجب الا يتعدى 1024 حرف")]
+        [Required(ErrorMessage = "برجاء إدخال رمز المؤشر")]        
         [Display(Name = "رمز المؤشر")]
-        public string Code { get; set; }
+        [Remote("IsExist","Indicators", ErrorMessage ="رمز المؤشر يجب الا يتكرر")]
+        public int Code { get; set; }
 
         [Required(ErrorMessage = "برجاء إدخال إسم المؤشر")]
         [MaxLength(1024, ErrorMessage = "إسم المؤشر يجب الا يتعدى 1024 حرف")]
@@ -63,11 +64,7 @@ namespace Marsad.Models
         [Display(Name = "إرتباط المؤشر")]
         [DataType(DataType.MultilineText)]
         public string Correlation { get; set; }
-
-        [Display(Name = "النطاق الجغرافي للمؤشر")]
-        [DataType(DataType.MultilineText)]
-        public string GeoArea { get; set; }
-
+        
         [Display(Name = "المرجعية")]
         [DataType(DataType.MultilineText)]
         public string References { get; set; }

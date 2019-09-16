@@ -289,13 +289,26 @@ textarea {
         border-top-left-radius: 4px !important;
         border-bottom-left-radius: 4px !important;
     }
-.pagination-container{
-    text-align:center;
+
+.pagination-container {
+    text-align: center;
 }
-.pagination{
-    margin:auto !important;
+
+.pagination {
+    margin: auto !important;
 }
-.img-circle.profile_img{
-    margin-right:15%;
-    margin-left:0px;
+
+.img-circle.profile_img {
+    margin-right: 15%;
+    margin-left: 0px;
+}
+
+.nav-sm .navbar.nav_title {
+    height: 60px !important;
+}
+.logo-sm{
+    display:none;
+}
+.nav-sm .navbar.nav_title a .logo-sm {
+    display:block;
 }

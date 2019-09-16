@@ -49,7 +49,8 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
+                        var bundle = item.Bundle;
+                        <tr style="color:@bundle.GetColor()">
                             <td>
                                 @Html.DisplayFor(modelItem => item.Code)
                             </td>
@@ -57,7 +58,7 @@
                                 @Html.DisplayFor(modelItem => item.Name)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.Bundle.Name)
+                                @bundle.Name
                             </td>
                             <td>
                                 @Html.ActionLink("تعديل", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" })

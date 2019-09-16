@@ -28,6 +28,6 @@ namespace Marsad.Models
         [Display(Name = "المعادلة")]
         public string EquationText { get; set; }        
 
-        public List<EquationElement> EquationElements { get; set; }
+        public virtual List<EquationElement> EquationElements { get; set; }
     }
 }
