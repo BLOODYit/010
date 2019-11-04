@@ -27,13 +27,49 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Year, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control year", @type = "text" } })
-                            @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+                    @{
+                        var years = Model.EquationYears.Select(x=>x.Year).ToArray();
+                    }
+                <div id="years">
+                    @if (years.Length > 0)
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-sm-2 col-xs-12">السنة</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input name="years" class="form-control year" required value="@years[0]" />
+                            </div>
+                            <div>
+                                <button class="btn btn-success" type="button" id="add_year">+</button>
+                            </div>
                         </div>
-                    </div>
+
+                        for (int i = 1; i < years.Length; i++)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-sm-2 col-xs-12">السنة</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input name="years" class="form-control year" required value="@years[i]" />
+                                </div>
+                                <div>
+                                    <button class="btn btn-danger del_year" type="button" id="del_year">X</button>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <label class="control-label col-sm-2 col-xs-12">السنة</label>
+                            <div class="col-sm-9 col-xs-12">
+                                <input name="years" class="form-control year" required value="" />
+                            </div>
+                            <div>
+                                <button class="btn btn-success" type="button" id="add_year">+</button>
+                            </div>
+                        </div>
+                    }
+
+                </div>
 
 
 
@@ -91,28 +127,47 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-            $('#add-element').click(function () {
-                $('#elements option:selected').each(function () {
-                    $('#equation_text').val($('#equation_text').val() + "[" + $(this).text() + "]");
-                });
-            });
-
-
-            $('.year').datepicker({
-            format: 'yyyy',
-            viewMode: "years",
-            minViewMode: "years",
-            yearRange: '1300:1500'
-        });
-
          $('#add-new-element').click(function () {
                 $.get('@Url.Action("GetCreateElement","Elements")').done(function (res) {
                     $mymodal = $("#addElementModel");
                     $mymodal.find("div.modal-body").html(res);
                     $mymodal.modal("show");
                 });
-            });
+         });
+
+             $('#add_year').click(function () {
+                var add_year = '<div class="form-group">' +
+                    '<label class="control-label col-sm-2 col-xs-12" for="Year">السنة</label>' +
+                    '<div class="col-sm-9 col-xs-12">' +
+                    '<input name="years" class="form-control year" required/>' +
+                    '</div>' +
+                    '<div>' +
+                    '<button class="btn btn-danger del_year" type="button" >X</button>' +
+                    '</div>' +
+                    '</div>';
+                $('#years').append(add_year);
+                bindItems();
+             });
+
+            bindItems();
         });
 
+        function bindItems() {
+              $('.year').datepicker({
+                format: 'yyyy',
+                viewMode: "years",
+                minViewMode: "years",
+                yearRange: '1300:1500'
+            });
+            $('.year').click(function () {
+                if ($(this).val() == '') {
+                    $(this).val(@ViewBag.CurrentHijriYear);
+                    $(this).keyup();
+                }
+            });
+             $('.del_year').click(function () {
+                    $(this).parent().parent().remove();
+                });
+        }
     </script>
 }

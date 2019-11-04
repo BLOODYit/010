@@ -22,7 +22,7 @@
         <div class="main_container">
             <div class="col-md-3 left_col">
                 <div class="left_col scroll-view">
-                    <div class="navbar nav_title" style="border: 0;background:#ededed;height:100px;">
+                    <div class="navbar nav_title" style="border: 0;background:#ededed;height:125px;">
                         <a href="@Url.Action("Index","Home")" class="site_title">
                             <span>
                                 <img src="~/Images/logo.png" style="width:100%;" />
@@ -66,7 +66,14 @@
                                 <li class="@Html.IsSelected("Reports","")">
                                     <a><i class="fa fa-file"></i> التقارير <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li><a href="#">تقارير</a></li>
+                                        <li>
+                                            <a>تقارير المقارنة <span class="fa fa-chevron-down"></span></a>
+                                            <ul class="nav child_menu">
+                                                <li><a href="@Url.Action("Period","Reports")">لمؤشر في مدة زمنية</a></li>
+                                                <li><a href="@Url.Action("GeoArea","Reports")">لمؤشر في نطاق جغرافي</a></li>
+                                            </ul>   
+                                        </li>
+                                        
                                     </ul>
                                 </li>
                                 <li class="@Html.IsSelected("Update","")">
@@ -119,12 +126,22 @@
 
                                     </ul>
                                 </li>
-                                <li class="@Html.IsSelected("Security","")">
+                                <li class="@Html.IsSelected(" Security","")">
                                     <a><i class="fa fa-refresh"></i> أنظمة أمن البيانات <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
 
-                                        <li><a href="@Url.Action("Index","User")">المستخدمين</a></li>
-                                        <li><a href="@Url.Action("Index","UserGroups")">ممجموعات المستخدمين</a></li>
+                                        <li><a href="@Url.Action(" Index","User")">المستخدمين</a></li>
+                                        <li><a href="@Url.Action(" Index","UserGroups")">ممجموعات المستخدمين</a></li>
+                                    </ul>
+                                </li>
+
+                                <li class="@Html.IsSelected("Log","")">
+                                    <a><i class="fa fa-refresh"></i> نظام مراجعة البيانات <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+
+                                        <li><a href="@Url.Action("SystemLog","Logs")">مراجعة بيانات النظام</a></li>
+                                        <li><a href="@Url.Action("UpdateLog","Logs")">مراجعة الأرقام والتحديثات</a></li>
+                                        <li><a href="@Url.Action("PendingLog","Logs")">نظام مراجعة البيانات المعلقة</a></li>
                                     </ul>
                                 </li>
                             </ul>

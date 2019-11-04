@@ -155,6 +155,20 @@
                 var role = new IdentityRole { Name = "Admin" };
                 manager.Create(role);
             }
+            if (!context.Roles.Any(r => r.Name == "User"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "User" };
+                manager.Create(role);
+            }
+            if (!context.Roles.Any(r => r.Name == "Visitor"))
+            {
+                var store = new RoleStore<IdentityRole>(context);
+                var manager = new RoleManager<IdentityRole>(store);
+                var role = new IdentityRole { Name = "Visitor" };
+                manager.Create(role);
+            }
 
             //if (!context.Users.Any(u => u.UserName == "admin@emarsd.com"))
             //{

@@ -11,67 +11,85 @@
         <div class="col-xs-12">
             <h1>تحديث العناصر والقيم - @ViewBag.TypeName</h1>
             <hr />
-            <form action="@Url.Action("GeoAreas")">
+            <form action="@Url.Action("GeoAreas")" method="get">
                 <div class="form-group" id="IndicatorIDDiv">
                     @Html.LabelFor(model => model.GeoAreaID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                     <div class="col-sm-10 col-xs-12">
-                        @Html.DropDownList("GeoAreaID", null, htmlAttributes: new { @class = "form-control", @id = "IndicatorID" })
+                        @Html.DropDownList("GeoAreaID", null, htmlAttributes: new { @class = "form-control", @id = "GeoAreaID" })
                         @Html.ValidationMessageFor(model => model.GeoAreaID, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
                 <div class="form-group" id="">
-                    <label class="control-label col-sm-2 col-xs-12">المعادلات</label>
+                    <label class="control-label col-sm-2 col-xs-12">المؤشر</label>
                     <div class="col-sm-10 col-xs-12">
-                        <select name="EquationID" id="EquationID" class="form-control">
-                            @foreach (var eq in ViewBag.EquationID)
+                        <select name="IndicatorID" id="EquationID" class="form-control">
+                            @foreach (var _indicator in ViewBag.Indicators)
                             {
-                                <option value="@eq.ID">@(eq.Indicator.Name + " - " + eq.Year.ToString())</option>
+                                <option value="@_indicator.ID">@_indicator.Name</option>
                             }
                         </select>
                         @Html.ValidationMessageFor(model => model.GeoAreaID, "", new { @class = "text-danger" })
                     </div>
                 </div>
-
-                <table class="table">
-                    <tbody id="vals">
-                    </tbody>
-                </table>
-                <button class="btn btn-success">تحديث</button>
+                <button class="btn btn-success">عرض</button>
             </form>
+            @{
+                var indicator = ViewBag.Indicator as Indicator;
+                var i = 0;
+            }
+            @if (indicator != null)
+            {
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+
+                    @foreach (var e in indicator.Equations)
+                    {
+                        foreach (var y in e.EquationYears)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link @(i == 0 ? "active" : "")" id="t@(i.ToString())-tab" data-toggle="tab" href="#t@(i.ToString())" role="tab" aria-controls="t@(i.ToString())" aria-selected="@(i == 1 ? "true" : "false")">@y.Year.ToString()</a>
+                            </li>
+
+                        }
+                    }
+                </ul>
+                {
+                    i = 0;
+                }
+                <div class="tab-content" id="myTabContent">
+                    @foreach (var e in indicator.Equations)
+                    {
+                        foreach (var y in e.EquationYears)
+                        {
+                            <div class="tab-pane @(i++ == 0 ? "active" : "")" id="t@(i.ToString())" role="tabpanel" aria-labelledby="t@(i.ToString())-tab">
+                                <form action="@Url.Action("GeoArea")" method="post">
+                                    @foreach (var el in e.EquationElements)
+                                    {
+                                        <div class="form-group" id="">
+                                            <label class="control-label col-sm-2 col-xs-12">@el.Element.Name</label>
+                                            <div class="col-sm-10 col-xs-12">
+                                                <input type="text" name="ElementValue" class="form-control" />
+                                            </div>
+                                        </div>
+                                    }
+                                    <button type="button" class="btn-success">تحديث</button>
+                                    <button type="button" class="btn-danger">الغاء</button>
+                                </form>
+                            </div>
+                        }
+                    }
+
+
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                </div>
+            }
         </div>
     </div>
 </div>
 
 @section  scripts{
     <script>
-        var values = [];
-    @foreach (var eq in ViewBag.EquationID)
-    {
-        @String.Format("values[{0}]=[];", eq.ID);
-        foreach(var ee in eq.EquationElements)
-        {
-            <text>values[@eq.ID].push({"id":@ee.Element.ID,"Name":"@ee.Element.Name"})</text>            
-        }
-    }
-    $(document).ready(function () {
-        $('#EquationID').change(function () {
-        var val = $(this).val();
-        vals = values[val];
-            $('#vals').html("");
-            for (var i = 0; i < vals.length; i++) {
-                console.log(vals[i]);
-                $('#vals').append(
-                    '<tr>' +
-                    '<td>'+vals[i].Name+'</td>' +
-                    '<td><input name="elemets_"' + vals[i].id + ' class="form-control" /></td>' +
-                    '<td>برجاء إدخال بيانات العنصر</td>'+
-                    '</tr>'
-                );
-        }
-        });
 
-        $('#EquationID').change();
-    });
     </script>
 }

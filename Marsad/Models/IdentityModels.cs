@@ -8,9 +8,8 @@ namespace Marsad.Models
 {
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
-    {
-        public int? UserGroupID { get; set; }
-        public UserGroup UserGroup { get; set; }
+    {        
+        public string EntityName { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -38,7 +37,7 @@ namespace Marsad.Models
         public DbSet<Case> Cases { get; set; }
         public DbSet<CaseYear> CaseYears { get; set; }
         public DbSet<CaseYearIndicator> CaseYearIndicators { get; set; }
-
+        public DbSet<ElementValue> ElementValues { get; set; }
 
 
         public static ApplicationDbContext Create()
@@ -55,9 +54,13 @@ namespace Marsad.Models
         public System.Data.Entity.DbSet<Marsad.Models.GeoArea> GeoAreas { get; set; }
 
         public System.Data.Entity.DbSet<Marsad.Models.GeoAreaBundle> GeoAreaBundles { get; set; }
+        public System.Data.Entity.DbSet<Marsad.Models.SystemLog> SystemLogs { get; set; }
+        public System.Data.Entity.DbSet<Marsad.Models.UpdateLog> UpdateLogs { get; set; }
+        public System.Data.Entity.DbSet<Marsad.Models.PendingLog> PendingLogs { get; set; }
 
         public System.Data.Entity.DbSet<Marsad.Models.UserGroup> UserGroups { get; set; }
-        public System.Data.Entity.DbSet<Marsad.Models.EquationElement> EquationElements{ get; set; }
+        public System.Data.Entity.DbSet<Marsad.Models.EquationElement> EquationElements { get; set; }
+        public System.Data.Entity.DbSet<Marsad.Models.EquationYear> EquationYears { get; set; }
         public System.Data.Entity.DbSet<Marsad.Models.MyClaim> MyClaims { get; set; }
 
     }

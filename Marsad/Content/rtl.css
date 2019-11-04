@@ -248,7 +248,7 @@ textarea {
 .site_title {
     line-height: inherit;
     font-size: 22px;
-    height: 96px;
+    height: 125px;
     padding: 16px;
 }
 
@@ -311,4 +311,7 @@ textarea {
 }
 .nav-sm .navbar.nav_title a .logo-sm {
     display:block;
+}
+.nav-tabs > li{
+    float:right;
 }

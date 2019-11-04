@@ -41,7 +41,7 @@
                         </th>
                         <th>
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.YearSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Year")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Year)
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Year")"></i> السنة
                             </a>
                         </th>
                         <th>
@@ -63,7 +63,7 @@
                             @Html.DisplayFor(modelItem => item.Indicator.Name)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Year)
+                            @string.Join(" - ",item.EquationYears.Select(x=>x.Year.ToString()).ToArray())
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.EquationText)

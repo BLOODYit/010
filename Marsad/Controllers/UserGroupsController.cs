@@ -117,39 +117,7 @@ namespace Marsad.Controllers
                 oldUG.Name = userGroup.Name;
                 oldUG.Claims = userGroup.Claims;
                 //get users assigned to userGroup
-                var users_UG = db.Users.Where(u => u.UserGroupID == userGroup.ID).ToList();
-                //Remove all IdentityClaims from users assigned to userGroup
-                foreach (var u in users_UG)
-                {
-                    var x = u.Id;
-                    var claims = manger.GetClaims(x);
-                    if (claims!=null)
-                    {
-                        foreach (var c in claims)
-                        {
-                            manger.RemoveClaim(u.Id, c);
-
-                        }
-
-                    }
-
-                }
-               
-                //set new claims from userGroup to his users
-                if (oldUG.Claims!=null)
-                {
-                    foreach (var u in users_UG)
-                    {
-                        foreach (var c in oldUG.Claims)
-                        {
-                            var value = c.Name;
-                            manger.AddClaim(u.Id, new Claim("Claim", value));
-
-                        }
-
-                    }
-
-                }
+                               
                 db.SaveChanges();
                 return RedirectToAction("Index");
 
@@ -188,11 +156,6 @@ namespace Marsad.Controllers
             }
             db.UserGroups.Remove(userGroup);
            
-            var users = db.Users.Where(u => u.UserGroupID == id).ToList();
-            foreach (var u in users)
-            {
-                db.Users.Remove(u);
-            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }

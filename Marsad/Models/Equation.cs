@@ -11,6 +11,7 @@ namespace Marsad.Models
         public Equation()
         {
             this.EquationElements = new List<EquationElement>();
+            this.EquationYears = new List<EquationYear>();
         }
 
         [Key]
@@ -20,14 +21,12 @@ namespace Marsad.Models
         [Display(Name ="المؤشر")]
         public int IndicatorID { get; set; }
         public Indicator Indicator { get; set; }
-
-        [Required]
-        [Display(Name ="السنة")]
-        public int Year { get; set; }
-
+                
         [Display(Name = "المعادلة")]
         public string EquationText { get; set; }        
 
         public virtual List<EquationElement> EquationElements { get; set; }
+        
+        public virtual List<EquationYear> EquationYears { get; set; }
     }
 }

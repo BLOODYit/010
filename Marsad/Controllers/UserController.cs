@@ -33,6 +33,15 @@ namespace Marsad.Controllers
             }
         }
 
+        public RoleManager<IdentityRole> RoleManager
+        {
+            get
+            {
+                var store = new RoleStore<IdentityRole>(db);
+                return new RoleManager<IdentityRole>(store);
+            }
+        }
+
         public ApplicationSignInManager SignInManager
         {
             get
@@ -66,96 +75,61 @@ namespace Marsad.Controllers
 
             return View(users.ToPagedList(pageNumber, pageSize));
         }
-        
+
         public ActionResult Create()
         {
-            UserViewModel userVM = new UserViewModel();
-            var userGroups = db.UserGroups.ToList();
-            var sl = userGroups.Select(s => new SelectListItem { Value = s.ID.ToString(),Text=s.Name })
-                .ToList();
-            userVM.UserGroups = sl;
-            return View(userVM);
+            ViewBag.Roles = RoleManager.Roles.ToList();            
+            ViewBag.Claims = GetClaims();
+
+            return View();
         }
 
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(UserViewModel model)
+        public  ActionResult Create(UserViewModel model)
         {
             if (ModelState.IsValid)
-            {
-                var store = new UserStore<ApplicationUser>(db);
-                var manger = new UserManager<ApplicationUser>(store);
-                string[] str = model.UserGroup.Split(':');
-                int userGroupId =Convert.ToInt32(str[0]);             
-                var tempUserGroup = db.UserGroups.Find(userGroupId);             
-                var myClaims = tempUserGroup.Claims; 
-                var user = new ApplicationUser { UserName = model.RegisterVM.Email, Email = model.RegisterVM.Email };
-                await manger.CreateAsync(user, model.RegisterVM.Password);
-                tempUserGroup.ApplicationUsers.Add(user);
-                db.SaveChanges();
-                var userId = user.Id;
-                foreach (var c in myClaims)
-                {
-                    var value = c.Name;
-                    manger.AddClaim(userId, new Claim("Claim", value));
-
-                }
+            {               
                 return RedirectToAction("Index");
-
-              
-
             }
-
-            // If we got this far, something failed, redisplay form
+            ViewBag.Roles = RoleManager.Roles.ToList();
+            ViewBag.Claims = GetClaims();
             return View(model);
         }
 
         public ActionResult Edit(string id)
         {
-            UserViewModel userVM = new UserViewModel();
-            var userGroups = db.UserGroups.ToList();
-            var user = db.Users.Find(id);
-          
-            var sl = userGroups.Select(s => new SelectListItem { Value = s.ID.ToString(), Text = s.Name })
-                .ToList();
-            userVM.UserGroups = sl;
-            userVM.UserName = user.Email;
-            userVM.Id = id;
-            return View(userVM);
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ApplicationUser user = UserManager.FindById(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            
+            RegisterViewModel registerViewModel = new RegisterViewModel() {
+                Email=user.Email,
+                EntityName=user.EntityName,
+                UserName =user.UserName
+            };
+            ViewBag.Roles = RoleManager.Roles.ToList();
+            ViewBag.Claims = GetClaims();
+            ViewBag.UserRoles = user.Roles;
+            ViewBag.UserClaims = user.Claims;
+            return View(registerViewModel);
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(UserViewModel model)
+        public ActionResult Edit(RegisterViewModel model)
         {
             if (ModelState.IsValid)
-            {
-                var store = new UserStore<ApplicationUser>(db);
-                var manger = new UserManager<ApplicationUser>(store);
-                string[] str = model.UserGroup.Split(':');
-                int userGroupId = Convert.ToInt32(str[0]);
-                var tempUserGroup = db.UserGroups.Find(userGroupId);
-                var newClaimss = tempUserGroup.Claims;
-
-                var userId = model.Id;
-                var tempUser = db.Users.Find(model.Id);
-                tempUser.UserName = model.UserName;
-                var claims =  manger.GetClaims(userId);
-                foreach (var c in claims)
-                {
-                    manger.RemoveClaim(userId, c);
-
-                }
-                foreach (var c in newClaimss)
-                {
-                    var value = c.Name;
-                    manger.AddClaim(userId, new Claim("Claim", value));
-
-                }
-                db.SaveChanges();
+            {               
                 return RedirectToAction("Index");
             }
 
@@ -218,5 +192,23 @@ namespace Marsad.Controllers
             return users;
         }
 
+        private Dictionary<string, string> GetClaims()
+        {
+            return new Dictionary<string, string>() {
+                {"Query","الإستعلام"},
+                {"Reports","التقارير"},
+                {"Updates","التحديث"},
+                {"Bundles","إدارة الحزم"},
+                {"Indicators","إدارة المؤشرات"},
+                {"Elements","إدارة العناصر والقيم"},
+                {"IndicatorGroups","إدارة مجموعات المؤشات"},
+                {"DataSources","إدارة مصادر البيانات"},
+                {"Cases","إدارة قضايا التنمية"},
+                {"Equations","إدارة المعادلات الحسابية"},
+                {"GeoAreas","إدارة النظاقات الجغرافية"},
+                {"Security","إدارة انظمة أمن البيانات"},
+                {"Log","إدارة انظمة مراجعة البيانات"},
+            };
+        }
     }
 }

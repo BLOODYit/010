@@ -75,10 +75,18 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,IndicatorID,Year,EquationText")] Equation equation, int[] elementIds)
+        public ActionResult Create([Bind(Include = "ID,IndicatorID,EquationText")] Equation equation, int[] elementIds,int[] years)
         {
             if (ModelState.IsValid)
             {
+
+                Array.Sort(years);
+                foreach(int year in years)
+                {
+                    equation.EquationYears.Add(new EquationYear() {
+                        Year=year
+                    });
+                }                 
                 db.Equations.Add(equation);
                 var matches = Regex.Matches(equation.EquationText, @"\[(.*?)\]");
                 HashSet<string> element_names = new HashSet<string>();
@@ -102,6 +110,7 @@ namespace Marsad.Controllers
             ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", equation.IndicatorID);
             ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
             ViewBag.ElementIds = elementIds;
+            ViewBag.Years = years;
             return View(equation);
         }
 
@@ -127,14 +136,25 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,IndicatorID,Year,EquationText")] Equation equation, int[] elementIds)
+        public ActionResult Edit([Bind(Include = "ID,IndicatorID,EquationText")] Equation equation, int[] elementIds,int[] years)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(equation).State = EntityState.Modified;
-                var _equation = db.Equations.Include(x=>x.EquationElements).Where(x=>x.ID==equation.ID).First();
+                var _equation = db.Equations.Include(x => x.EquationElements).Include(x=>x.EquationYears).Where(x=>x.ID==equation.ID).First();
                 equation.EquationElements = _equation.EquationElements;
-                db.EquationElements.RemoveRange(equation.EquationElements);                
+                equation.EquationYears = _equation.EquationYears;
+                
+                db.EquationYears.RemoveRange(equation.EquationYears);
+                db.EquationElements.RemoveRange(equation.EquationElements);
+                Array.Sort(years);
+                foreach (int year in years)
+                {
+                    equation.EquationYears.Add(new EquationYear()
+                    {
+                        Year = year
+                    });
+                }
                 var matches = Regex.Matches(equation.EquationText, @"\[(.*?)\]");
                 HashSet<string> element_names = new HashSet<string>();
                 foreach(Match match in matches)
@@ -154,6 +174,7 @@ namespace Marsad.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.Years = years;
             ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", equation.IndicatorID);
             ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
             ViewBag.ElementIds = elementIds;
@@ -220,13 +241,7 @@ namespace Marsad.Controllers
                     break;
                 case "IndicatorName":
                     equations = equations.OrderBy(s => s.Indicator.Name);
-                    break;
-                case "YearDesc":
-                    equations = equations.OrderByDescending(s => s.Year);
-                    break;
-                case "Year":
-                    equations = equations.OrderBy(s => s.Year);
-                    break;
+                    break;                
                 case "EquationTextDesc":
                     equations = equations.OrderByDescending(s => s.EquationText);
                     break;

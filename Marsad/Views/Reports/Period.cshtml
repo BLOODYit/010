@@ -1,0 +1,71 @@
+﻿@model IEnumerable<Marsad.Models.Case>
+@using Marsad.Models.Controls
+@{
+    ViewBag.Title = "تقارير المقارنة لمؤشر في نطاق جغرافي";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>تقارير المقارنة لمؤشر في نطاق جغرافي</h2>
+        </div>
+    </div>
+    <div class="row">
+        <form action="@Url.Action("Period","Reports")" method="post">
+
+            <div class="col-md-12">
+                <select name="indicatorID" class="form-control" id="indicatorID" required>
+                    <option value="">-- المؤشر --</option>
+                    @foreach (var indicator in ViewBag.Indicators.Keys)
+                    {
+                        <option value="@indicator">@ViewBag.Indicators[indicator]</option>
+                    }
+                </select>
+                <br>
+            </div>
+            <div class="col-md-6">
+                <select class="form-control" name="period1" id="period1" required>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <select class="form-control" name="period2" id="period2" required>
+                </select>
+            </div>
+            <div class="col-md-12">
+                <br />
+                <button class="btn btn-primary" type="submit">عرض التقرير </button>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            @ViewBag.Result
+        </div>
+    </div>
+
+
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#indicatorID').change(function () {
+                $('#period1 option').remove();
+                $('#period2 option').remove();
+                var val = $(this).val();
+                if (val != undefined && val > 0) {
+                    var url = "@Url.Action("GetYears","Reports")/?indicatorID=" + val;
+                    $.ajax({
+                        url:url,
+                        success:function(data) {
+                            for (var i = 0; i < data.length; i++) {
+                                $('#period1').append("<option value='" + data[i] + "'>" + data[i] + "</option>");
+                                $('#period2').append("<option value='"+data[i]+"'>"+data[i]+"</option>");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

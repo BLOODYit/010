@@ -24,11 +24,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Year)
+            السنة
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Year)
+            @string.Join(" - ", Model.EquationYears.Select(x => x.Year.ToString()).ToArray())
         </dd>
 
         <dt>
