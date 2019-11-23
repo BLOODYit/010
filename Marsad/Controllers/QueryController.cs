@@ -1,4 +1,5 @@
 ﻿using Marsad.Models;
+using Marsad.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -35,8 +36,15 @@ namespace Marsad.Controllers
             {
                 indicators = indicators.Where(x => x.IndicatorGroups.Count(y => indicatorGroupIds.Contains(y.ID)) > 0);
             }
-            indicators = indicators.Include(x=>x.Bundle);
-            return View(indicators.ToList());
+            var result = indicators.Select(x => new IndicatorQuery
+            {
+                ID = x.ID,
+                Code = x.Code,
+                Name = x.Name,
+                BundleName = x.Bundle.Name,
+                IndicatorsCount = x.ChildIndicators.Count()
+            });
+            return View(result.ToList());
         }
 
         public ActionResult DataSources(string keywords, int[] dataSourceTypeIds, int[] datasourceGroupIds)
@@ -60,20 +68,32 @@ namespace Marsad.Controllers
             {
                 dataSources = dataSources.Where(x => x.DataSourceGroups.Count(y => datasourceGroupIds.Contains(y.ID)) > 0);
             }
-            
-            return View(dataSources.ToList());            
+
+            return View(dataSources.ToList());
         }
 
         public ActionResult DataSourceDetails(int[] ids)
         {
-            var dataSources = db.DataSources.Where(x=>ids.Contains(x.ID));
-            return View(dataSources);
+            var dataSources = db.DataSources.Where(x => ids.Contains(x.ID));
+            var result = dataSources.Select(x => new DataSourceDetails
+            {
+                ID = x.ID,
+                Code = x.Code,
+                Name = x.Name,
+                AuthorName = x.AuthorName,
+                DataSourceTypeName = x.DataSourceType.Name,
+                PeriodicString = x.NoPeriod?"": x.Period.Name,
+                PublishDate = x.PublishDate,
+                PublisherName = x.PublisherName,
+                PublishNumber = x.PublishNumber
+            }).ToList() ;
+            return View(result);
         }
 
         public ActionResult Cases(string keywords, int[] indicatorIds, int[] yearIds)
         {
-            ViewBag.Indicators = db.Indicators.Where(x=>x.CaseYearIndicators.Count>0).ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.Years = db.Cases.Select(x=>x.Year).Distinct().ToDictionary(x => x, x => x.ToString());
+            ViewBag.Indicators = db.Indicators.Where(x => x.CaseYearIndicators.Count > 0).ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Years = db.Cases.Select(x => x.Year).Distinct().ToDictionary(x => x, x => x.ToString());
             ViewBag.keywords = keywords;
             ViewBag.indicatorIds = indicatorIds;
             ViewBag.yearIds = yearIds;
@@ -85,7 +105,7 @@ namespace Marsad.Controllers
             }
             if (indicatorIds != null && indicatorIds.Length > 0)
             {
-                var caseYearIds = db.CaseYearIndicators.Where(x=>indicatorIds.Contains(x.IndicatorID)).Select(x=>x.CaseYearID).Distinct().ToArray();
+                var caseYearIds = db.CaseYearIndicators.Where(x => indicatorIds.Contains(x.IndicatorID)).Select(x => x.CaseYearID).Distinct().ToArray();
                 var caseIds = db.CaseYears.Where(x => caseYearIds.Contains(x.ID)).Select(x => x.CaseID).Distinct().ToArray();
                 cases = cases.Where(x => caseIds.Contains(x.ID));
             }
@@ -99,7 +119,7 @@ namespace Marsad.Controllers
         public ActionResult CasesDetails(int[] ids)
         {
             var cases = db.Cases.Where(x => ids.Contains(x.ID));
-            return View(cases);
+            return View(cases.ToList());
         }
     }
 }

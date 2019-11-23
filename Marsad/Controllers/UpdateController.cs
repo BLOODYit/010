@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 
 namespace Marsad.Controllers
 {
@@ -79,13 +80,21 @@ namespace Marsad.Controllers
                     string strValue = Request[evs];
                     if (float.TryParse(strValue, out float fValue))
                     {
-                        db.ElementValues.Add(new ElementValue()
+                        var elementValue = new ElementValue()
                         {
-                            EquationElementID= equationElement.ID,
-                            EquationYearID=equationYear.ID,
-                            GeoAreaID=geoArea.ID,
-                            Value=fValue
-                        });
+                            EquationElementID = equationElement.ID,
+                            EquationYearID = equationYear.ID,
+                            GeoAreaID = geoArea.ID,
+                            Value = fValue,
+                            ApplicationUserID = User.Identity.GetUserId(),                            
+                            CreatedAt = DateTime.Now,                            
+                        };
+                        if (User.IsInRole("Admin"))
+                        {
+                            elementValue.CommitedAt = DateTime.Now;
+                            elementValue.IsCommited = true;                            
+                        }
+                        db.ElementValues.Add(elementValue);
                     }
                     else
                     {

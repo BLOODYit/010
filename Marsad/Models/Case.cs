@@ -18,9 +18,9 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required(ErrorMessage ="برجاء إدخال إسم القضية")]
-        [MaxLength(255,ErrorMessage ="إسم القضية يجب الا يتعدى 255 حرف")]
-        [Display(Name ="إسم القضية",ShortName ="القضية")]
+        [Required(ErrorMessage = "برجاء إدخال إسم القضية")]
+        [MaxLength(255, ErrorMessage = "إسم القضية يجب الا يتعدى 255 حرف")]
+        [Display(Name = "إسم القضية", ShortName = "القضية")]
         public string Name { get; set; }
 
         [Display(Name = "التعريف القضية")]
@@ -32,15 +32,15 @@ namespace Marsad.Models
         [Display(Name = "سنة القضية", ShortName = "السنة")]
         public int Year { get; set; }
 
-        
+
         [Display(Name = "فترة دراسة القضية")]
         public int? PeriodID { get; set; }
         public Period Period { get; set; }
 
 
-        public List<CaseYear> CaseYears { get; set; }
-        public List<Indicator> Indicators { get; set; }
-        public List<Entity> Entities { get; set; }
+        public virtual  List<CaseYear> CaseYears { get; set; }
+        public virtual  List<Indicator> Indicators { get; set; }
+        public virtual List<Entity> Entities { get; set; }
 
     }
 }

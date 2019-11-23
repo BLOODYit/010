@@ -15,7 +15,7 @@ namespace Marsad.Models
             this.CaseYearIndicators = new List<CaseYearIndicator>();
             this.IndicatorGroups = new List<IndicatorGroup>();
             this.Equations = new List<Equation>();
-            this.Indicators = new List<Indicator>();
+            this.ChildIndicators = new List<Indicator>();
             this.Cases = new List<Case>();
             this.Users = new List<ApplicationUser>();
         }
@@ -46,6 +46,7 @@ namespace Marsad.Models
         public bool HasParent { get; set; }
 
         [Display(Name ="المؤشر الرئيسي")]
+        
         public int? IndicatorID { get; set; }
         public Indicator ParentIndicator { get; set; }
 
@@ -79,7 +80,7 @@ namespace Marsad.Models
         public List<CaseYearIndicator> CaseYearIndicators { get; set; }
         public List<IndicatorGroup> IndicatorGroups { get; set; }
         public List<Equation> Equations { get; set; }
-        public List<Indicator> Indicators { get; set; }
+        public List<Indicator> ChildIndicators { get; set; }
         public List<Case> Cases { get; set; }
         public List<ApplicationUser> Users { get; set; }
     }

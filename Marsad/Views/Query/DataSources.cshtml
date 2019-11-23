@@ -1,6 +1,6 @@
 ﻿@using Marsad.Models.Controls
 @{
-    ViewBag.Title = "Indicator";
+    ViewBag.Title = "اتسعلام مصادر البيانات";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
@@ -10,7 +10,7 @@
         </div>
     </div>
     <div class="row">
-        <form action="@Url.Action("Indicators","DataSources")" method="get">
+        <form action="@Url.Action("DataSources","Query")" method="get">
             <div class="col-md-6">
                 @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "datasourceTypes", Data = ViewBag.DataSourceTypes, Title = "نوع المصدر", Name = "dataSourceTypeIds", Selected = ViewBag.dataSourceTypeIds })
             </div>
@@ -30,7 +30,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <form action="@Url.Action()" method="get">
+            <form action="@Url.Action("DataSourceDetails","Query")" method="get">
                 <table class="table table-striped jambo_table">
                     <thead>
                         <tr class="headings">
@@ -59,7 +59,7 @@
                             <td>@item.PublisherName</td>
                             @*<td>@item.PublisherDate</td>*@
                             <td class=" last">
-                                <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","DataSources",item.ID)">عرض</a>
+                                <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","DataSources",new { item.ID })">عرض</a>
                             </td>
                         </tr>
 
@@ -87,6 +87,9 @@
             }
             $('#chkAll').click(function () {
                 $('.ids').prop('checked', $(this).prop('checked'));
+                setBtnStatus();
+            });
+            $('.ids').click(function () {
                 setBtnStatus();
             });
             setBtnStatus();

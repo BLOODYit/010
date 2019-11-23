@@ -77,6 +77,5 @@ namespace Marsad.Controllers
             elementValues = elementValues.OrderByDescending(x => x.CreatedAt);
             return View(elementValues.ToPagedList(pageNumber, pageSize));
         }
-
     }
 }

@@ -69,8 +69,7 @@ function init_sidebar() {
         $RIGHT_COL.css('min-height', contentHeight);
     };
 
-    $SIDEBAR_MENU.find('a').on('click', function (ev) {
-        console.log('clicked - sidebar_menu');
+    $SIDEBAR_MENU.find('a').on('click', function (ev) {        
         var $li = $(this).parent();
 
         if ($li.is('.active')) {
@@ -98,8 +97,7 @@ function init_sidebar() {
     });
 
     // toggle small or large menu 
-    $MENU_TOGGLE.on('click', function () {
-        console.log('clicked - menu toggle');
+    $MENU_TOGGLE.on('click', function () {        
 
         if ($BODY.hasClass('nav-md')) {
             $SIDEBAR_MENU.find('li.active ul').hide();
@@ -329,11 +327,6 @@ function gd(year, month, day) {
 function init_flot_chart() {
 
     if (typeof ($.plot) === 'undefined') { return; }
-
-    console.log('init_flot_chart');
-
-
-
     var arr_data1 = [
         [gd(2012, 1, 1), 17],
         [gd(2012, 1, 2), 74],
@@ -536,14 +529,13 @@ function init_flot_chart() {
 
 
     if ($("#chart_plot_01").length) {
-        console.log('Plot1');
+        
 
         $.plot($("#chart_plot_01"), [arr_data1, arr_data2], chart_plot_01_settings);
     }
 
 
-    if ($("#chart_plot_02").length) {
-        console.log('Plot2');
+    if ($("#chart_plot_02").length) {        
 
         $.plot($("#chart_plot_02"),
             [{
@@ -560,7 +552,7 @@ function init_flot_chart() {
     }
 
     if ($("#chart_plot_03").length) {
-        console.log('Plot3');
+        
 
 
         $.plot($("#chart_plot_03"), [{
@@ -584,7 +576,7 @@ function init_flot_chart() {
 function init_starrr() {
 
     if (typeof (starrr) === 'undefined') { return; }
-    console.log('init_starrr');
+    
 
     $(".stars").starrr();
 
@@ -605,11 +597,10 @@ function init_starrr() {
 
 function init_JQVmap() {
 
-    //console.log('check init_JQVmap [' + typeof (VectorCanvas) + '][' + typeof (jQuery.fn.vectorMap) + ']' );	
+    
 
     if (typeof (jQuery.fn.vectorMap) === 'undefined') { return; }
-
-    console.log('init_JQVmap');
+    
 
     if ($('#world-map-gdp').length) {
 
@@ -1836,8 +1827,7 @@ function init_PNotify() {
 /* CUSTOM NOTIFICATION */
 
 function init_CustomNotification() {
-
-    console.log('run_customtabs');
+    
 
     if (typeof (CustomTabs) === 'undefined') { return; }
     console.log('init_CustomTabs');
@@ -2358,8 +2348,6 @@ function init_charts() {
 function init_compose() {
 
     if (typeof ($.fn.slideToggle) === 'undefined') { return; }
-    console.log('init_compose');
-
     $('#compose, .compose-close').click(function () {
         $('.compose').slideToggle();
     });
@@ -2721,7 +2709,6 @@ function init_morris_charts() {
 function init_echarts() {
 
     if (typeof (echarts) === 'undefined') { return; }
-    console.log('init_echarts');
 
 
     var theme = {
@@ -5013,13 +5000,13 @@ $(document).ready(function () {
     init_daterangepicker_reservation();
     init_SmartWizard();
     init_EasyPieChart();
-    init_charts();
+    //init_charts();
     init_echarts();
     init_morris_charts();
     init_skycons();
     init_select2();
     init_validator();
-    init_DataTables();
+    //init_DataTables();
     init_chart_doughnut();
     init_gauge();
     init_PNotify();

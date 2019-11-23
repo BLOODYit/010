@@ -31,7 +31,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <form action="@Url.Action()" method="get">
+            <form action="@Url.Action("CasesDetails","Query")" method="get">
                 <table class="table table-striped jambo_table">
                     <thead>
                         <tr class="headings">
@@ -56,7 +56,7 @@
                                 <td>@item.Description</td>
                                 <td>@item.Year</td>                                
                                 <td class=" last">
-                                    <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Cases",item.ID)">عرض</a>
+                                    <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Cases",new { item.ID })">عرض</a>
                                 </td>
                             </tr>
 
@@ -84,6 +84,9 @@
             }
             $('#chkAll').click(function () {
                 $('.ids').prop('checked', $(this).prop('checked'));
+                setBtnStatus();
+            });
+            $('.ids').click(function () {
                 setBtnStatus();
             });
             setBtnStatus();

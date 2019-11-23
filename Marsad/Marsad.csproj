@@ -229,6 +229,7 @@
     <Compile Include="Models\Controls\MultiSelectModel.cs" />
     <Compile Include="Models\DataSource.cs" />
     <Compile Include="Models\Validations\RequiredButNull.cs" />
+    <Compile Include="Models\ViewModels\Query.cs" />
     <Compile Include="Models\ُEntity.cs" />
     <Compile Include="Models\Indicator.cs" />
     <Compile Include="Models\Period.cs" />
@@ -250,10 +251,8 @@
   <ItemGroup>
     <Content Include="Content\bootstrap-datepicker.min.js" />
     <Content Include="Content\bootstrap-datepicker3.min.css" />
-    <Content Include="Content\bootstrap-grid.css" />
-    <Content Include="Content\bootstrap-grid.min.css" />
-    <Content Include="Content\bootstrap-reboot.css" />
-    <Content Include="Content\bootstrap-reboot.min.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\build\css\custom.css" />
@@ -1434,6 +1433,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\rtl.css" />
+    <Content Include="Images\favicon.ico" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\mini-logo.png" />
     <Content Include="Images\user.png" />
@@ -1447,20 +1447,20 @@
     <Content Include="Content\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\vendors\bootstrap\dist\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Content\bootstrap-grid.css.map" />
-    <Content Include="Content\bootstrap-grid.min.css.map" />
-    <Content Include="Content\bootstrap-reboot.css.map" />
-    <Content Include="Content\bootstrap-reboot.min.css.map" />
     <Content Include="Content\fonts\SLXGc1nY6HkvalIhTps.woff2" />
     <Content Include="Content\fonts\SLXGc1nY6HkvalIkTpu0xg.woff2" />
     <Content Include="Content\fonts\SLXGc1nY6HkvalIvTpu0xg.woff2" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\canvasjs.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.canvasjs.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -1477,8 +1477,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />

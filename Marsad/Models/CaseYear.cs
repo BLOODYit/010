@@ -25,6 +25,6 @@ namespace Marsad.Models
 
         public string Description { get; set; }
 
-        public List<CaseYearIndicator> CaseYearIndicators { get; set; }        
+        public virtual List<CaseYearIndicator> CaseYearIndicators { get; set; }        
     }
 }

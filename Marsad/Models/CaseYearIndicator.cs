@@ -22,7 +22,7 @@ namespace Marsad.Models
 
         [Required]
         public int IndicatorID { get; set; }
-        public Indicator Indicator { get; set; }
+        public virtual Indicator Indicator { get; set; }
 
         [Required]
         public short IndicatorType { get; set; }

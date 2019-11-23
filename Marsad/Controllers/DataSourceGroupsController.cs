@@ -57,6 +57,8 @@ namespace Marsad.Controllers
         // GET: DataSourceGroups/Create
         public ActionResult Create()
         {
+            ViewBag.dataSourceIds = null;
+            ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
             return View();
         }
 
@@ -65,15 +67,16 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Code,Name")] DataSourceGroup dataSourceGroup)
+        public ActionResult Create([Bind(Include = "ID,Code,Name")] DataSourceGroup dataSourceGroup, int[] dataSources)
         {
             if (ModelState.IsValid)
             {
+                dataSourceGroup.DataSources.AddRange(db.DataSources.Where(x=>dataSources.Contains(x.ID)));
                 db.DataSourceGroups.Add(dataSourceGroup);
                 db.SaveChanges();
                 return RedirectToAction("Index");
-            }
-
+            }            
+            ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
             return View(dataSourceGroup);
         }
 
@@ -85,6 +88,8 @@ namespace Marsad.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DataSourceGroup dataSourceGroup = db.DataSourceGroups.Find(id);
+            ViewBag.dataSourceIds = db.DataSources.Where(x=>x.DataSourceGroups.Where(y=>y.ID==id).Any()).Select(x=>x.ID).ToArray();
+            ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
             if (dataSourceGroup == null)
             {
                 return HttpNotFound();
@@ -97,11 +102,17 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Code,Name")] DataSourceGroup dataSourceGroup)
+        public ActionResult Edit([Bind(Include = "ID,Code,Name")] DataSourceGroup dataSourceGroup,int[] dataSources)
         {
             if (ModelState.IsValid)
             {
+                
                 db.Entry(dataSourceGroup).State = EntityState.Modified;
+                var oldDataSourceGroup = db.DataSourceGroups.Where(x => x.ID == dataSourceGroup.ID).Include(x => x.DataSources).FirstOrDefault();
+                dataSourceGroup.DataSources = oldDataSourceGroup.DataSources;
+                dataSourceGroup.DataSources.Clear();
+
+                dataSourceGroup.DataSources.AddRange(db.DataSources.Where(x => dataSources.Contains(x.ID)));
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

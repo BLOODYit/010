@@ -19,6 +19,7 @@ namespace Marsad.Models
        
         [Required]
         [MaxLength(255)]        
+        [Display(Name="نوع المؤشر")]
         public string Name { get; set; }
 
         public List<Indicator> Indicators { get; set; }

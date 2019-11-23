@@ -290,9 +290,14 @@ namespace Marsad.Controllers
         }
 
 
-        public JsonResult IsExist(int Code,int ID)
+        public JsonResult IsExist(int Code, int? ID)
         {
-            return Json(!db.Indicators.Where(x => x.Code == Code && x.ID!=ID).Any(), JsonRequestBehavior.AllowGet);
+            bool isExists = false;
+            if (!ID.HasValue)
+                isExists = db.Indicators.Where(x => x.Code == Code).Any();
+            else
+                isExists = db.Indicators.Where(x => x.Code == Code && x.ID != ID.Value).Any();
+            return Json(!isExists, JsonRequestBehavior.AllowGet);
         }
     }
 

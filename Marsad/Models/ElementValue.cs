@@ -19,10 +19,10 @@ namespace Marsad.Models
         public GeoArea GeoArea { get; set; }
         public int? GeoAreaBundleID { get; internal set; }
         public GeoAreaBundle GeoAreaBundle { get; set; }
-        public int ApplicationUserID { get; set; }
+        public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? CommitedAt { get; set; }
-        public bool IsCommited { get; set; }
+        public bool IsCommited { get; set; }        
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Marsad.Models.DataSource>
+﻿@model IEnumerable<Marsad.Models.ViewModels.DataSourceDetails>
 
 @{
     ViewBag.Title = "DataSourceDetails";
@@ -35,7 +35,7 @@
                 <div class="col-md-6">
                     <dl class="dl-horizontal">
                         <dt>نوع المصدر</dt>
-                        <dd>@item.DataSourceType.Name</dd>
+                        <dd>@item.DataSourceTypeName</dd>
                         <dt>إسم المؤلف</dt>
                         <dd>@item.AuthorName</dd>
                         <dt>تاريخ النشر</dt>

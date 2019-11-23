@@ -25,7 +25,7 @@
                     <div class="navbar nav_title" style="border: 0;background:#ededed;height:125px;">
                         <a href="@Url.Action("Index","Home")" class="site_title">
                             <span>
-                                <img src="~/Images/logo.png" style="width:100%;" />
+                                <img src="~/Images/logo.png" style="width:90%;" />
                             </span>
 
                             <img class="logo-sm" src="~/Images/mini-logo.png" style="width:100%;" />
@@ -41,7 +41,7 @@
                         </div>
                         <div class="profile_info">
                             <span>مرحباً</span>
-                            <h2>محمد أمين</h2>
+                            <h2>@User.GetName()</h2>
                         </div>
                     </div>
                     <!-- /menu profile quick info -->
@@ -146,7 +146,7 @@
                     <!-- /sidebar menu -->
                     <!-- /menu footer buttons -->
                     <div class="sidebar-footer hidden-small">
-                        <a data-toggle="tooltip" data-placement="top" title="Settings">
+                        @*<a data-toggle="tooltip" data-placement="top" title="Settings">
                             <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                         </a>
                         <a data-toggle="tooltip" data-placement="top" title="FullScreen">
@@ -154,8 +154,8 @@
                         </a>
                         <a data-toggle="tooltip" data-placement="top" title="Lock">
                             <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                        </a>
-                        <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
+                        </a>*@
+                        <a data-toggle="tooltip" data-placement="top" title="تسجيل خروج" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">
                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                         </a>
                     </div>
@@ -174,26 +174,19 @@
                         <ul class="nav navbar-nav navbar-right">
                             <li class="">
                                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                    <img src="~/Images/user.png" alt="">محمد أمين
+                                    <img src="~/Images/user.png" alt="">@User.GetName()
                                     <span class=" fa fa-angle-down"></span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-usermenu pull-right">
-                                    <li><a href="javascript:;"> البيانات الشخصية</a></li>
+                                    @*<li><a href="javascript:;"> البيانات الشخصية</a></li>
                                     <li>
                                         <a href="javascript:;">
                                             <span>الإعدادات</span>
                                         </a>
-                                    </li>
-                                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> تسجيل خروج</a></li>
+                                    </li>*@
+                                    <li><a href="#" onclick="document.getElementById('logoutForm').submit(); return false;"><i class="fa fa-sign-out pull-right"></i> تسجيل خروج</a></li>
                                 </ul>
-                            </li>
-
-                            <li role="presentation" class="dropdown">
-                                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                    <i class="fa fa-envelope-o"></i>
-                                    <span class="badge bg-green">6</span>
-                                </a>
-                            </li>
+                            </li>                      
                         </ul>
                     </nav>
                 </div>
@@ -212,6 +205,10 @@
                 <div class="clearfix"></div>
             </footer>
             <!-- /footer content -->
+            <form id ="logoutForm" style="display:none;"method="post" action="@Url.Action("LogOff","Account")">
+                @Html.AntiForgeryToken()
+
+            </form>
         </div>
     </div>
     @Scripts.Render("~/bundles/main")

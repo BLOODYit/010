@@ -1,4 +1,5 @@
 ﻿@using Marsad.Models.Controls
+@model IEnumerable<Marsad.Models.ViewModels.IndicatorQuery>
 @{
     ViewBag.Title = "Indicator";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -47,14 +48,15 @@
                     }
                     @foreach (var item in Model)
                     {
-                        <tr class="@(i++%2==0?"even_pointer":"odd_pointer") @(item.Indicators.Count>0?"text-danger":"")">
-                            <td>@item.Code</td>
-                            <td>@item.Name</td>
-                            <td>@item.Bundle.Name</td>
-                            <td class=" last">
-                                <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Indicators",item.ID)">عرض</a>
-                            </td>
-                        </tr>
+                    <tr class="@(i++%2==0?"even_pointer":"odd_pointer") @(item.IndicatorsCount>0?"text-danger":"")">
+                        <td>@item.Code</td>
+                        <td>@item.Name</td>
+
+                        <td>@item.BundleName</td>
+                        <td class=" last">
+                            <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Indicators",new { item.ID })">عرض</a>
+                        </td>
+                    </tr>
 
                     }
                 </tbody>

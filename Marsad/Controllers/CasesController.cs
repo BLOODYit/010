@@ -33,7 +33,7 @@ namespace Marsad.Controllers
 
             var cases = db.Cases.AsQueryable();
             cases = SortParams(sortOrder, cases, searchString);
-
+            cases = cases.Include(x=>x.Period);
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(cases.ToPagedList(pageNumber, pageSize));
