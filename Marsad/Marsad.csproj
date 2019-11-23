@@ -188,15 +188,14 @@
     <Compile Include="Controllers\GeoAreasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IndicatorGroupsController.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\PeriodsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\QueryController.cs" />
     <Compile Include="Controllers\LogsController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\UpdateController.cs" />
-    <Compile Include="Controllers\UserGroupsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -205,9 +204,18 @@
     <Compile Include="Migrations\201908301209034_claims.Designer.cs">
       <DependentUpon>201908301209034_claims.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201911160822297_elementValues.cs" />
+    <Compile Include="Migrations\201911160822297_elementValues.Designer.cs">
+      <DependentUpon>201911160822297_elementValues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911230959330_userFix.cs" />
+    <Compile Include="Migrations\201911230959330_userFix.Designer.cs">
+      <DependentUpon>201911230959330_userFix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CaseYearIndicatorValue.cs" />
     <Compile Include="Models\Controls\EquationModel.cs" />
+    <Compile Include="Models\Controls\GeoAreasModel.cs" />
     <Compile Include="Models\ElementValue.cs" />
     <Compile Include="Models\EquationElement.cs" />
     <Compile Include="Models\EquationYear.cs" />
@@ -215,14 +223,12 @@
     <Compile Include="Models\GeoAreaBundleValue .cs" />
     <Compile Include="Models\GeoAreaValue.cs" />
     <Compile Include="Models\Logs\SystemLog.cs" />
-    <Compile Include="Models\MyClaim.cs" />
-    <Compile Include="Models\UserGroup.cs" />
+    <Compile Include="Models\Reports.cs" />
     <Compile Include="Models\GeoArea.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Controls\MultiSelectModel.cs" />
     <Compile Include="Models\DataSource.cs" />
     <Compile Include="Models\Validations\RequiredButNull.cs" />
-    <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Models\ُEntity.cs" />
     <Compile Include="Models\Indicator.cs" />
     <Compile Include="Models\Period.cs" />
@@ -1445,6 +1451,9 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-reboot.min.css.map" />
+    <Content Include="Content\fonts\SLXGc1nY6HkvalIhTps.woff2" />
+    <Content Include="Content\fonts\SLXGc1nY6HkvalIkTpu0xg.woff2" />
+    <Content Include="Content\fonts\SLXGc1nY6HkvalIvTpu0xg.woff2" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
@@ -1563,24 +1572,21 @@
     <Content Include="Views\GeoAreaBundles\Details.cshtml" />
     <Content Include="Views\GeoAreaBundles\Edit.cshtml" />
     <Content Include="Views\GeoAreaBundles\Index.cshtml" />
-    <Content Include="Views\UserGroups\Create.cshtml" />
-    <Content Include="Views\UserGroups\Delete.cshtml" />
-    <Content Include="Views\UserGroups\Details.cshtml" />
-    <Content Include="Views\UserGroups\Edit.cshtml" />
-    <Content Include="Views\UserGroups\Index.cshtml" />
-    <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\User\Create.cshtml" />
     <Content Include="Views\Shared\Controls\_Equation.cshtml" />
-    <Content Include="Views\User\Edit.cshtml" />
-    <Content Include="Views\User\Delete.cshtml" />
     <Content Include="Views\Update\GeoAreas.cshtml" />
     <Content Include="Views\Update\GeoAreaBundles.cshtml" />
     <Content Include="Views\Elements\GetCreateElement.cshtml" />
     <Content Include="Views\Logs\SystemLog.cshtml" />
     <Content Include="Views\Logs\UpdateLog.cshtml" />
-    <Content Include="Views\Logs\PendingLog.cshtml" />
     <Content Include="Views\Reports\Period.cshtml" />
     <Content Include="Views\Reports\GeoArea.cshtml" />
+    <Content Include="Views\Shared\Controls\_GeoAreas.cshtml" />
+    <Content Include="Views\Update\GetIndicatorEquations.cshtml" />
+    <Content Include="Views\Reports\GetIndicatorEquations.cshtml" />
+    <Content Include="Views\Reports\GetPeriod.cshtml" />
+    <Content Include="Views\Reports\GetIndicatorYears.cshtml" />
+    <Content Include="Views\Reports\GetGeo.cshtml" />
+    <Content Include="Views\Shared\_Account.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1603,6 +1609,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201908301209034_claims.resx">
       <DependentUpon>201908301209034_claims.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911160822297_elementValues.resx">
+      <DependentUpon>201911160822297_elementValues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911230959330_userFix.resx">
+      <DependentUpon>201911230959330_userFix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

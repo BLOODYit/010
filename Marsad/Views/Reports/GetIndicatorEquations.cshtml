@@ -1,0 +1,35 @@
+﻿@model Marsad.Models.Indicator
+@{
+    Layout = "";
+}
+    <div class="form-group" style="margin-top:10px;">
+        <label class="control-label col-sm-2 col-xs-12">الفترة الزمنية</label>
+        <label class="control-label col-sm-1 col-xs-12">سنة 1</label>
+        <div class="col-sm-3 col-xs-12">
+            <select class="form-control" name="Year1" id="year1">
+                @foreach (var ey in ViewBag.EquationYears)
+                {
+                    <option value="@ey.Year">@ey.Year</option>
+                }
+            </select>
+        </div>
+   
+        <label class="control-label col-sm-1 col-xs-12">سنة 2</label>
+        <div class="col-sm-3 col-xs-12">
+            <select class="form-control" name="Year2" id="year2">
+                @foreach (var ey in ViewBag.EquationYears)
+                {
+                    <option value="@ey.Year">@ey.Year</option>
+                }
+            </select>
+        </div>
+        <div class="col-sm-2 col-xs-12">
+            <button class="btn btn-primary" id="show-report">عرض</button>
+        </div>
+    </div>
+
+<script type="text/javascript">
+    $('#show-report').click(function () {
+        showReport();
+    });
+</script>

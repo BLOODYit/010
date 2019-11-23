@@ -1,0 +1,113 @@
+﻿@model Marsad.Models.Indicator
+@{
+    Layout = "";
+}
+
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+
+    @{
+        var first = true;
+    }
+    @foreach (var ey in ViewBag.EquationYears)
+    {
+        <li class="nav-item @(first?"active":"")">
+            <a class="nav-link" id="t@(ey.ID)-tab" data-toggle="tab" href="#t@(ey.ID)" role="tab" aria-controls="t@(ey.ID)" aria-selected="@(first?"true":"false")">@ey.Year</a>
+        </li>
+        first = false;
+    }
+</ul>
+
+@{
+    first = true;
+}
+<div class="tab-content" id="myTabContent">
+    @foreach (EquationYear ey in ViewBag.EquationYears)
+    {
+        <div class="tab-pane @(first? "active" : "")" id="t@(ey.ID)" role="tabpanel" aria-labelledby="t@(ey.ID)-tab">
+            <form action="@Url.Action("GeoArea")" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="GeoAreaID" value="@ViewBag.GeoAreaID" />
+                <input type="hidden" name="EquationYearID" value="@ey.ID" />
+                <input type="hidden" name="action" class="action" />
+                @{
+                    var found = false;
+                }
+                @foreach (EquationElement el in ey.Equation.EquationElements)
+                {
+                    <div class="form-group" id="">
+                        <label class="control-label col-sm-2 col-xs-12">@el.Element.Name</label>
+                        <div class="col-sm-10 col-xs-12">
+                            @{
+                                ElementValue ev = el.ElementValues.Where(x => x.GeoAreaID == ViewBag.GeoAreaID && x.EquationElementID == el.ID && x.EquationYearID == ey.ID).FirstOrDefault();
+                                if (ev != null)
+                                {
+                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" value="@ev.Value" required />
+                                    found = true;
+                                }
+                                else
+                                {
+                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" required />
+                                }
+                            }
+
+                        </div>
+                    </div>
+                }
+                @if (!found)
+                {
+                    <button type="button" class="btn btn-success add-btn">إضافة</button>
+                }
+                else
+                {
+                    <button type="button" class="btn btn-primary edit-btn">تعديل</button>
+                    <button type="button" class="btn btn-danger delete-btn">حذف</button>
+                }
+                <span class="error text-danger"></span>
+            </form>
+        </div>
+        first = false;
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.add-btn').click(function () {
+            $('.action').val('add');
+            $(this).closest('form').submit();
+        });
+        $('.edit-btn').click(function () {
+            $('.action').val('edit');
+            $(this).closest('form').submit();
+        });
+        $('.delete-btn').click(function () {
+            $('.action').val('delete');
+            $(this).closest('form').submit();
+        });
+
+        $('form').submit(function () {
+            var data = $(this).serialize();
+            $(this).closest('.error').val('');
+            $.post("@Url.Action("GeoAreas","Update")", data, function (data, status) {
+                if (data.success) {
+                    if (data.action == 'delete') {
+                        $(this).find("input[type=text], textarea").val("");
+                        alert('تم حذف البيانات بنجاح');
+                    }
+                    else if (data.action == 'add') {                        
+                        alert('تم إضافة البيانات بنجاح');
+                    }
+                    else if (data.action == 'edit') {                        
+                        alert('تم تعديل البيانات بنجاح');
+                    }
+                    getIndicator();
+
+                }
+                else {
+                    alert(data.error);
+                    $(this).find('.error').val(data.error);
+                }
+            });
+            return false;
+        });
+    });
+</script>

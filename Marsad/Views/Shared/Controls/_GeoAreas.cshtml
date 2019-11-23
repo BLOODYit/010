@@ -1,0 +1,385 @@
+﻿@model GeoAreasModel
+@using Marsad.Models.Controls
+@if (Model.Type.Equals("Kingdom"))
+{
+    return;
+}
+@{
+    GeoArea kingdom = Model.GovAreas.Where(x => x.GeoAreaID == null).FirstOrDefault();
+    if (kingdom == null)
+    {
+        return;
+    }
+}
+<script type="text/javascript">
+    var geoAreas =@Html.Raw(Json.Encode(Model.GovAreas));
+    var geoId = @Model.ID;
+</script>
+@if (Model.Type.Equals("Region"))
+{
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المملكة</label>
+        <div class="col-sm-10 col-xs-12">
+
+            @kingdom.Name
+            <input type="hidden" name="GeoAreaID" value="@kingdom.ID" />
+        </div>
+    </div>
+    return;
+}
+
+@if (Model.Type.Equals("SubRegion"))
+{
+    var regions = Model.GovAreas.Where(x => x.GeoAreaID == kingdom.ID).ToList();
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المنطقة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="GeoAreaID" required class="form-control">
+                @foreach (var region in regions)
+                {
+                    <option value="@region.ID" @(region.ID == Model.ID ? "selected" : "")>@region.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+    return;
+}
+
+@if (Model.Type.Equals("Governorate"))
+{
+    var regions = Model.GovAreas.Where(x => x.GeoAreaID == kingdom.ID).ToList();
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المنطقة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="regions" class="form-control" id="regions">
+                @foreach (var region in regions)
+                {
+                    <option value="@region.ID">@region.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">الحاضرة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="GeoAreaID" required class="form-control" id="subRegions">
+            </select>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $('#regions').change(function () {
+                var val = $(this).val();
+                $('#subRegions option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#subRegions').change();
+            });
+            $('#regions').change();
+
+            if (geoId > 0) {
+                var subRegionId = geoId;
+                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                $('#regions').val(regionId);
+                $('#regions').change();
+                $('#subRegions').val(subRegionId);
+            }
+        });
+    </script>
+    return;
+}
+
+
+@if (Model.Type.Equals("Town"))
+{
+    var regions = Model.GovAreas.Where(x => x.GeoAreaID == kingdom.ID).ToList();
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المنطقة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="regions" class="form-control" id="regions">
+                @foreach (var region in regions)
+                {
+                    <option value="@region.ID">@region.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">الحاضرة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="subRegions" class="form-control" id="subRegions">
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المحافظة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="GeoAreaID" required class="form-control" id="govs">
+            </select>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#regions').change(function () {
+                var val = $(this).val();
+                $('#subRegions option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#subRegions').change();
+            });
+
+            $('#subRegions').change(function () {
+                var val = $(this).val();
+                $('#govs option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#govs').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#govs').change();
+            });
+            $('#regions').change();
+
+            if (geoId > 0) {
+                var govId = geoId;
+                var subRegionId = geoAreas.find(function (e) { return e.ID == govId; }).GeoAreaID;
+                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                $('#regions').val(regionId);
+                $('#regions').change();
+                $('#subRegions').val(subRegionId);
+                $('#subRegions').change();
+                $('#govs').val(govId);
+            }
+        });
+    </script>
+    return;
+}
+
+
+@if (Model.Type.Equals("City"))
+{
+    var regions = Model.GovAreas.Where(x => x.GeoAreaID == kingdom.ID).ToList();
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المنطقة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="regions" class="form-control" id="regions">
+                @foreach (var region in regions)
+                {
+                    <option value="@region.ID">@region.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">الحاضرة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="subRegions" class="form-control" id="subRegions">
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المحافظة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="Govs" class="form-control" id="govs">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">البلدية</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="GeoAreaID" required class="form-control" id="towns">
+            </select>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#regions').change(function () {
+                var val = $(this).val();
+                $('#subRegions option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#subRegions').change();
+            });
+
+            $('#subRegions').change(function () {
+                var val = $(this).val();
+                $('#govs option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#govs').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#govs').change();
+            });
+
+
+            $('#govs').change(function () {
+                var val = $(this).val();
+                $('#towns option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#towns').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#towns').change();
+            });
+            $('#regions').change();
+
+            if (geoId > 0) {
+                var townId = geoId;
+                var govId = geoAreas.find(function (e) { return e.ID == townId; }).GeoAreaID;
+                var subRegionId = geoAreas.find(function (e) { return e.ID == govId; }).GeoAreaID;
+                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                $('#regions').val(regionId);
+                $('#regions').change();
+                $('#subRegions').val(subRegionId);
+                $('#subRegions').change();
+                $('#govs').val(govId);
+                $('#govs').change();
+                $('#towns').val(townId);
+            }
+        });
+    </script>
+    return;
+}
+
+
+@if (Model.Type.Equals("District"))
+{
+    var regions = Model.GovAreas.Where(x => x.GeoAreaID == kingdom.ID).ToList();
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المنطقة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="regions" class="form-control" id="regions">
+                @foreach (var region in regions)
+                {
+                    <option value="@region.ID">@region.Name</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">الحاضرة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="subRegions" class="form-control" id="subRegions">
+            </select>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المحافظة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="Govs" class="form-control" id="govs">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">البلدية</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="towns" class="form-control" id="towns">
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2 col-xs-12">المدينة</label>
+        <div class="col-sm-10 col-xs-12">
+            <select name="GeoAreaID" required class="form-control" id="cities">
+            </select>
+        </div>
+    </div>
+
+
+
+    <script type="text/javascript">
+        $(function () {
+            $('#regions').change(function () {
+                var val = $(this).val();
+                $('#subRegions option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#subRegions').change();
+            });
+
+            $('#subRegions').change(function () {
+                var val = $(this).val();
+                $('#govs option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#govs').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#govs').change();
+            });
+
+
+            $('#govs').change(function () {
+                var val = $(this).val();
+                $('#towns option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#towns').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#towns').change();
+            });
+
+            $('#towns').change(function () {
+                var val = $(this).val();
+                $('#cities option').remove();
+                geoAreas.forEach(function (e, i) {
+                    if (e.GeoAreaID == val && val != undefined) {
+                        $('#cities').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
+                    }
+                });
+                $('#cities').change();
+            });
+            $('#regions').change();
+
+            if (geoId > 0) {
+                var cityId = geoId;
+                var townId = geoAreas.find(function (e) { return e.ID == cityId; }).GeoAreaID;
+                var govId = geoAreas.find(function (e) { return e.ID == townId; }).GeoAreaID;
+                var subRegionId = geoAreas.find(function (e) { return e.ID == govId; }).GeoAreaID;
+                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                $('#regions').val(regionId);
+                $('#regions').change();
+                $('#subRegions').val(subRegionId);
+                $('#subRegions').change();
+                $('#govs').val(govId);
+                $('#govs').change();
+                $('#towns').val(townId);
+                $('#towns').change();
+                $('#cities').val(cityId);
+            }
+        });
+    </script>
+    return;
+}

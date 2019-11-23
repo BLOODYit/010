@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace Marsad.Models
 {
@@ -63,7 +64,7 @@ namespace Marsad.Models
     }
 
     public class RegisterViewModel
-    {        
+    {
         [EmailAddress]
         [Display(Name = "البريد الاليكتروني")]
         public string Email { get; set; }
@@ -78,11 +79,36 @@ namespace Marsad.Models
         [Display(Name = "تأكيد كلمة السر")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
-
         [Display(Name = "إسم المستخدم")]
         public string UserName { get; set; }
-        [Display(Name ="إسم الجهة")]
-        public string EntityName { get; set; }
+        [Display(Name = "الإسم")]
+        public string Name { get; set; }
+        [Display(Name = "إسم الجهة")]
+        public int? EntityID { get; set; }
+        public string RoleID { get; set; }
+    }
+
+
+    public class EditUserViewModel
+    {
+        [EmailAddress]
+        [Display(Name = "البريد الاليكتروني")]
+        public string Email { get; set; }        
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "كلمة السر")]
+        public string Password { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "تأكيد كلمة السر")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
+        [Display(Name = "إسم المستخدم")]
+        public string UserName { get; set; }
+        [Display(Name = "الإسم")]
+        public string Name { get; set; }
+        [Display(Name = "إسم الجهة")]
+        public int? EntityID { get; set; }
+        public string RoleID { get; set; }
     }
 
     public class ResetPasswordViewModel
@@ -112,5 +138,24 @@ namespace Marsad.Models
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
+    }
+
+    public static class IdentityExtension
+    {
+        public static string GetName(this System.Security.Principal.IPrincipal user)
+        {
+            var nameClaim = ((ClaimsIdentity)user.Identity).FindFirst("Name");
+            if (nameClaim != null)
+                return nameClaim.Value;
+            return "";
+        }
+
+        public static string GetImage(this System.Security.Principal.IPrincipal user)
+        {
+            var imageClaim = ((ClaimsIdentity)user.Identity).FindFirst("Image");
+            if (imageClaim != null)
+                return imageClaim.Value;
+            return "";
+        }
     }
 }

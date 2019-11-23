@@ -86,7 +86,7 @@ namespace Marsad.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "برجاء إدخال بيانات صحيحة");
                     return View(model);
             }
         }
@@ -129,7 +129,7 @@ namespace Marsad.Controllers
                     return View("Lockout");
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid code.");
+                    ModelState.AddModelError("", "كود غير صحيح");
                     return View(model);
             }
         }

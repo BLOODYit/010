@@ -27,8 +27,8 @@
                             <span>
                                 <img src="~/Images/logo.png" style="width:100%;" />
                             </span>
-                            
-                                <img class="logo-sm" src="~/Images/mini-logo.png" style="width:100%;" />                            
+
+                            <img class="logo-sm" src="~/Images/mini-logo.png" style="width:100%;" />
                         </a>
                     </div>
 
@@ -66,14 +66,10 @@
                                 <li class="@Html.IsSelected("Reports","")">
                                     <a><i class="fa fa-file"></i> التقارير <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
-                                        <li>
-                                            <a>تقارير المقارنة <span class="fa fa-chevron-down"></span></a>
-                                            <ul class="nav child_menu">
-                                                <li><a href="@Url.Action("Period","Reports")">لمؤشر في مدة زمنية</a></li>
-                                                <li><a href="@Url.Action("GeoArea","Reports")">لمؤشر في نطاق جغرافي</a></li>
-                                            </ul>   
-                                        </li>
-                                        
+
+                                        <li><a href="@Url.Action("Period","Reports")">مقارنة مؤشر في مدة زمنية</a></li>
+                                        <li><a href="@Url.Action("GeoArea","Reports")">مقارنة مؤشر في نطاق جغرافي</a></li>
+
                                     </ul>
                                 </li>
                                 <li class="@Html.IsSelected("Update","")">
@@ -130,8 +126,8 @@
                                     <a><i class="fa fa-refresh"></i> أنظمة أمن البيانات <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
 
-                                        <li><a href="@Url.Action(" Index","User")">المستخدمين</a></li>
-                                        <li><a href="@Url.Action(" Index","UserGroups")">ممجموعات المستخدمين</a></li>
+                                        <li><a href="@Url.Action("Index","User")">المستخدمين</a></li>
+                                        <li><a href="@Url.Action("Index","UserGroups")">ممجموعات المستخدمين</a></li>
                                     </ul>
                                 </li>
 

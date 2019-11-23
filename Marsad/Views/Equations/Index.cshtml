@@ -4,7 +4,7 @@
 
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "المعادلات الحسابية";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
@@ -13,13 +13,12 @@
             <h1>المعادلات الحسابية</h1>
             <hr />
 
-            <div class="col-sm-2">
-                @Html.ActionLink("إنشاء جديد", "Create", null, new { @class = "btn btn-success" })
+            <div class="col-sm-2">                
             </div>
             <div class="col-sm-8">
                 <form action="@Url.Action("Index")">
                     <div class="input-group">
-                        <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث" />
+                        <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث بالمؤشر او الحزمة" />
                         <span class="input-group-btn">
                             <input type="submit" value="بحث" class="btn btn-primary" />
                         </span>
@@ -30,13 +29,18 @@
                 <thead>
                     <tr>
                         <th>
-                            <a href="@Url.Action(" Index",new { sortOrder=ViewBag.IndicatorIDSortParm,currentFilter =ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.IndicatorIDSortParm,currentFilter =ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," IndicatorID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Code)
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.IndicatorNameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"IndicatorName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Name)
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.IndicatorNameSortParm,currentFilter =ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," IndicatorName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Name)
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.BundleNameSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"BundleName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Bundle.Name)
                             </a>
                         </th>
                         <th>
@@ -63,7 +67,10 @@
                             @Html.DisplayFor(modelItem => item.Indicator.Name)
                         </td>
                         <td>
-                            @string.Join(" - ",item.EquationYears.Select(x=>x.Year.ToString()).ToArray())
+                            @Html.DisplayFor(modelItem => item.Indicator.Bundle.Name)
+                        </td>
+                        <td>
+                            @string.Join(" - ", item.EquationYears.Select(x => x.Year.ToString()).ToArray())
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.EquationText)

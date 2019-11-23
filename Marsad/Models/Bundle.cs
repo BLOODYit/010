@@ -11,6 +11,7 @@ namespace Marsad.Models
         public Bundle()
         {
             this.Indicators = new List<Indicator>();
+            this.Users = new List<ApplicationUser>();
         }
 
         [Key]
@@ -35,6 +36,7 @@ namespace Marsad.Models
             return Color;
         }
 
-        public List<Indicator> Indicators { get; set; }
+        public virtual List<Indicator> Indicators { get; set; }
+        public List<ApplicationUser> Users { get; set; }
     }
 }

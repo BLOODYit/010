@@ -1,0 +1,85 @@
+﻿@model Marsad.Models.PeriodReport
+@{
+    Layout = "";
+}
+<style>
+    
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Model == null)
+            {
+                <h3 class="text-danger">@ViewBag.Error</h3>
+            }
+            else
+            {
+                <h2>@ViewBag.IndicatorName</h2>
+                <table class="table table-stripped">
+                    <thead>
+                        <tr>
+                            <td>@ViewBag.Year1</td>
+                            <td>@ViewBag.Year2</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@Model.V1</td>
+                            <td>@Model.V2</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="chartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>
+                <br />
+                <div id="barchartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>
+                <script>
+                    $(function () {
+                        var chart = new CanvasJS.Chart("chartContainer", {
+                            animationEnabled: true,
+                            title: {
+                                text: "@ViewBag.IndicatorName"
+                            },
+                            data: [{
+                                type: "pie",
+                                startAngle: 240,
+                                yValueFormatString: "##0.00",
+                                indexLabel: "{label} {y}",
+                                dataPoints: [
+                                    { y: @Model.V1, label: "@ViewBag.Year1" },
+                                    { y: @Model.V2, label: "@ViewBag.Year2" },
+                                ]
+                            }]
+                        });
+                        chart.render();
+                        var bchart = new CanvasJS.Chart("barchartContainer", {
+	                        animationEnabled: true,
+
+	title:{
+		text:"@ViewBag.IndicatorName"
+	},
+	axisX:{
+		interval: 1
+	},
+	axisY2:{
+		interlacedColor: "rgba(1,77,101,.2)",
+		gridColor: "rgba(1,77,101,.1)",
+		title: "@ViewBag.IndicatorName"
+	},
+	data: [{
+		type: "column",
+		name: "companies",
+		axisYType: "secondary",
+		color: "#014D65",
+		dataPoints: [
+			 { y: @Model.V1, label: "@ViewBag.Year1" },
+                                    { y: @Model.V2, label: "@ViewBag.Year2" },
+		]
+	}]
+            });
+                        bchart.render();
+                    });
+                </script>
+            }
+        </div>
+    </div>
+</div>

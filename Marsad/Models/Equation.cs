@@ -20,9 +20,10 @@ namespace Marsad.Models
         [Required]
         [Display(Name ="المؤشر")]
         public int IndicatorID { get; set; }
-        public Indicator Indicator { get; set; }
+        public virtual Indicator Indicator { get; set; }
                 
         [Display(Name = "المعادلة")]
+        [Required(ErrorMessage ="برجاء كتابة المعادلة الحسابية")]
         public string EquationText { get; set; }        
 
         public virtual List<EquationElement> EquationElements { get; set; }

@@ -10,17 +10,22 @@ namespace Marsad.Models
     {
         [Key]
         public int ID { get; set; }
+        public string Log { get; set; }
+        [MaxLength(1000)]
+        public string UserName { get; set; }
+        public DateTime ActionDate { get; set; }
+        public string Details { get; set; }
     }
-
-    public class PendingLog
-    {
-        [Key]
-        public int ID { get; set; }
-    }
+  
 
     public class UpdateLog
     {
         [Key]
         public int ID { get; set; }
+        public string Log { get; set; }
+        [MaxLength(1000)]
+        public string UserName { get; set; }
+        public DateTime ActionDate { get; set; }
+        public string Details { get; set; }
     }
 }

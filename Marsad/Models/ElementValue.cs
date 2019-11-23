@@ -10,12 +10,19 @@ namespace Marsad.Models
     {
         [Key]
         public int ID { get; set; }
-        public int EquationID { get; set; }
-        public Equation Equation { get; set; }
-        public int ElementID { get; set; }
-        public Element Element { get; set; }
-        public int Year { get; set; }
+        public int EquationElementID { get; set; }
+        public virtual EquationElement EquationElement { get; set; }
+        public int EquationYearID { get; set; }
+        public virtual EquationYear EquationYear { get; set; }        
         public float Value { get; set; }
-        public int GeoAreaID { get; internal set; }
+        public int? GeoAreaID { get; internal set; }
+        public GeoArea GeoArea { get; set; }
+        public int? GeoAreaBundleID { get; internal set; }
+        public GeoAreaBundle GeoAreaBundle { get; set; }
+        public int ApplicationUserID { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? CommitedAt { get; set; }
+        public bool IsCommited { get; set; }
     }
 }

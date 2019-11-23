@@ -1,55 +1,51 @@
 ﻿@model Marsad.Models.GeoArea
-
+@using Marsad.Models.Controls
 @{
-    ViewBag.Title = "إنشاء "+ViewBag.TypeName;
+    ViewBag.Title = "إنشاء " + ViewBag.TypeName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <div class="container">
-<div class="row">
-@using (Html.BeginForm()) 
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>إنشاء @ViewBag.TypeName</h4>
-        <hr />
+    <div class="row">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-            <div class="col-sm-10 col-xs-12">
-                @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+        <div class="form-horizontal">
+            <h4>إنشاء @ViewBag.TypeName</h4>
+            <hr />
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.Partial("~/Views/Shared/Controls/_GeoAreas.cshtml", new GeoAreasModel() { GovAreas = ViewBag.GeoAreas, Type = ViewBag.Type, ID = 0 })                        
+            @Html.ValidationMessageFor(model => model.GeoAreaID, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control", @type = "hidden" } })
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10 col-xs-12">
+                    <input type="submit" value="إنشاء" class="btn btn-success" />
+                    @Html.ActionLink("الرئيسية", "Index", new { Type = ViewBag.Type }, new { @class = "btn btn-default" })
+                </div>
             </div>
         </div>
+        }
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-            <div class="col-sm-10 col-xs-12">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.GeoAreaID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-            <div class="col-sm-10 col-xs-12">
-                @Html.DropDownList("GeoAreaID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.GeoAreaID, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        @Html.EditorFor(model => model.Type, new { htmlAttributes = new { @class = "form-control",@type="hidden" } })        
-
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-10 col-xs-12">
-                <input type="submit" value="إنشاء" class="btn btn-success" />
-                @Html.ActionLink("الرئيسية", "Index", null, new { @class = "btn btn-default" })
-            </div>
-        </div>
     </div>
-}
-
-</div>
 </div>
 

@@ -1,0 +1,93 @@
+﻿@model List<Marsad.Models.GeoReport>
+@{
+    Layout = "";
+}
+<style>
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Model == null)
+            {
+                <h3 class="text-danger">@ViewBag.Error</h3>
+            }
+            else
+            {
+                <h2>@ViewBag.IndicatorName</h2>
+                <table class="table table-stripped">
+                    <thead>
+                        <tr>
+                            @foreach (var m in Model)
+                            {
+                                <td>@m.GeoAreaName</td>
+                            }
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @foreach (var m in Model)
+                            {
+                                <td>@m.V</td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
+                <div id="chartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>
+                <br />
+                <div id="barchartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>
+                <script>
+                    $(function () {
+                        var chart = new CanvasJS.Chart("chartContainer", {
+                            animationEnabled: true,
+                            title: {
+                                text: "@ViewBag.IndicatorName"
+                            },
+                            data: [{
+                                type: "pie",
+                                startAngle: 240,
+                                yValueFormatString: "##0.00",
+                                indexLabel: "{label} {y}",
+                                dataPoints: [
+                                    @foreach (var m in Model)
+                                    {
+                                        <text>{ y: @m.V, label: "@m.GeoAreaName" },</text>
+                                    }
+                                ]
+                            }]
+                        });
+                        chart.render();
+                        var bchart = new CanvasJS.Chart("barchartContainer", {
+	                        animationEnabled: true,
+
+	title:{
+		text:"@ViewBag.IndicatorName"
+	},
+	axisX:{
+		interval: 1
+	},
+	axisY2:{
+		interlacedColor: "rgba(1,77,101,.2)",
+		gridColor: "rgba(1,77,101,.1)",
+		title: "@ViewBag.IndicatorName"
+	},
+	data: [{
+		type: "column",
+		name: "companies",
+		axisYType: "secondary",
+		color: "#014D65",
+		dataPoints: [
+			  @foreach (var m in Model)
+                                    {
+                                        <text>{ y: @m.V, label: "@m.GeoAreaName" },</text>
+                                    }
+		]
+	}]
+            });
+                        bchart.render();
+                    });
+                </script>
+            }
+        </div>
+    </div>
+</div>

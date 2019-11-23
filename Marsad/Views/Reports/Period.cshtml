@@ -1,71 +1,126 @@
-﻿@model IEnumerable<Marsad.Models.Case>
-@using Marsad.Models.Controls
+﻿@model Marsad.Models.GeoAreaValue
+
 @{
-    ViewBag.Title = "تقارير المقارنة لمؤشر في نطاق جغرافي";
+    ViewBag.Title = "تقارير المقارنة لمؤشر في مدة زمنية";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
 <div class="container">
     <div class="row">
-        <div class="col-sm-12">
-            <h2>تقارير المقارنة لمؤشر في نطاق جغرافي</h2>
-        </div>
-    </div>
-    <div class="row">
-        <form action="@Url.Action("Period","Reports")" method="post">
-
-            <div class="col-md-12">
-                <select name="indicatorID" class="form-control" id="indicatorID" required>
-                    <option value="">-- المؤشر --</option>
-                    @foreach (var indicator in ViewBag.Indicators.Keys)
-                    {
-                        <option value="@indicator">@ViewBag.Indicators[indicator]</option>
-                    }
-                </select>
-                <br>
-            </div>
-            <div class="col-md-6">
-                <select class="form-control" name="period1" id="period1" required>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <select class="form-control" name="period2" id="period2" required>
-                </select>
-            </div>
-            <div class="col-md-12">
-                <br />
-                <button class="btn btn-primary" type="submit">عرض التقرير </button>
-            </div>
-        </form>
-    </div>
-    <div class="row">
         <div class="col-xs-12">
-            @ViewBag.Result
+            <h2>تقارير المقارنة لمؤشر في مدة زمنية</h2>
+            <hr />
+            <form action="@Url.Action("Period")" method="get" id="GeoAreaTypeForm">
+                <div class="form-group">
+                    <label class="control-label col-sm-2 col-xs-12">النطاق الجغرافي</label>
+                    <div class="col-sm-10 col-xs-12">
+                        <select name="Type" class="form-control" id="GeoAreaType">
+                            <option value="Region" @(ViewBag.Type == "Region" ? "selected" : "")>منطقة</option>
+                            <option value="SubRegion" @(ViewBag.Type == "SubRegion" ? "selected" : "")>الحاضرة</option>
+                            <option value="Governorate" @(ViewBag.Type == "Governorate" ? "selected" : "")>المحافظة</option>
+                            <option value="Town" @(ViewBag.Type == "Town" ? "selected" : "")>البلدية</option>
+                            <option value="City" @(ViewBag.Type == "City" ? "selected" : "")>المدينة</option>
+                            <option value="District" @(ViewBag.Type == "District" ? "selected" : "")>الحي</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group" id="IndicatorIDDiv">
+                <label class="control-label col-sm-2 col-xs-12">@ViewBag.TypeName</label>
+                <div class="col-sm-10 col-xs-12">
+                    @Html.DropDownList("GeoAreaID", null, htmlAttributes: new { @class = "form-control", @id = "GeoAreaID" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Equation.Indicator.BundleID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    @Html.DropDownList("BundleID", null, htmlAttributes: new { @class = "form-control", @id = "BundleID" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Equation.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <div class="col-sm-10 col-xs-12">
+                    <select id="IndicatorID" class="form-control" required>
+                        <option value="">-- إختر المؤشر --</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div id="indicator"></div>
+            <div id="report"></div>
         </div>
     </div>
-
-
 </div>
 
-@section scripts{
+@section  scripts{
+    @Scripts.Render("~/scripts/charts")
     <script type="text/javascript">
-        $(document).ready(function () {
-            $('#indicatorID').change(function () {
-                $('#period1 option').remove();
-                $('#period2 option').remove();
-                var val = $(this).val();
-                if (val != undefined && val > 0) {
-                    var url = "@Url.Action("GetYears","Reports")/?indicatorID=" + val;
-                    $.ajax({
-                        url:url,
-                        success:function(data) {
-                            for (var i = 0; i < data.length; i++) {
-                                $('#period1').append("<option value='" + data[i] + "'>" + data[i] + "</option>");
-                                $('#period2').append("<option value='"+data[i]+"'>"+data[i]+"</option>");
-                            }
-                        }
+
+
+         function getIndicator() {
+                $('#indicator').html('');
+                var indicatorId = $('#IndicatorID').val();
+                var geoAreaId = $('#GeoAreaID').val();
+                if (indicatorId > 0 && geoAreaId > 0) {
+                    $.get("@Url.Action("GetIndicatorEquations","Reports")/?indicatorId="+indicatorId+"&geoAreaId="+geoAreaId, function (data, status) {
+                        $('#indicator').html(data);
                     });
                 }
+        }
+
+        function showReport() {
+            $('#report').html('');
+            var indicatorId = $('#IndicatorID').val();
+            var geoAreaId = $('#GeoAreaID').val();
+            var year1 = $('#year1').val();
+            var year2 = $('#year2').val();
+            if (!(indicatorId > 0)) {
+                alert('برجاء إختيار المؤشر');
+                return;
+            }
+            if (!(geoAreaId > 0)) {
+                alert('برجاء إختيار @ViewBag.TypeName');
+                return;
+            }
+            if (!(year1 > 0)) {
+                alert('برجاء السنة الاولى');
+                return;
+            }
+            if (!(year2 > 0)) {
+                alert('برجاء السنة الثانية');
+                return;
+            }
+            var q = "indicatorId="+indicatorId+"&geoAreaId="+geoAreaId+"&year1="+year1+"&year2="+year2;
+            $.get("@Url.Action("GetPeriod","Reports")/?"+q, function (data, status) {
+                $('#report').html(data);
             });
+        }
+        $(function () {
+            $('#BundleID').change(function (e) {
+                var id = $(this).val();
+                $('#IndicatorID option').remove();
+
+                $('#IndicatorID').append("<option value=''>-- إختر المؤشر --</option>");
+                $.get("@Url.Action("GetIndicatorsWithValues","Bundles")/" + id, function (data,status) {
+                    data.data.forEach(function (e, i) {
+                        $('#IndicatorID').append("<option value='"+e.ID+"'>"+e.Name+"</option>");
+                    });
+                });
+            });
+            $('#BundleID').change();
+
+            $('#IndicatorID,#GeoAreaID').change(function () {
+                getIndicator();
+            });
+
+            $('#GeoAreaType').change(function () {
+                $('#GeoAreaTypeForm').submit();
+            });
+
         });
     </script>
 }

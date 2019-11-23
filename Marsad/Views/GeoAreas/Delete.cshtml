@@ -1,7 +1,7 @@
 ﻿@model Marsad.Models.GeoArea
 
 @{
-    ViewBag.Title = "حذف "+ViewBag.TypeName;
+    ViewBag.Title = "حذف " + ViewBag.TypeName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,46 +10,47 @@
     <div class="row">
         <div class="col-xs-12">
 
-<h3>هل تريد فعلاً حذف السجل ؟</h3>
-<div>
-    <h4>حذف @ViewBag.TypeName</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Code)
-        </dt>
+            <h3>هل تريد فعلاً حذف السجل ؟</h3>
+            <div>
+                <h4>حذف @ViewBag.TypeName</h4>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Code)
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Code)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Code)
+                    </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
 
-        <dt>
-            النطاق التابع
-        </dt>
+                    <dt>
+                        @ViewBag.ParentName
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.ParentGeoArea.Name)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.ParentGeoArea.Name)
+                    </dd>
 
-    </dl>
+                </dl>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-             <input type="submit" value="حذف" class="btn btn-danger" />
-                        @Html.ActionLink("الرئيسية", "Index",null,new { @class="btn btn-default"})
+                    <div class="form-actions no-color">
+                        <input type="submit" value="حذف" class="btn btn-danger" />
+                        @Html.ActionLink("الرئيسية", "Index", new { Type = ViewBag.Type }, new { @class = "btn btn-default" })
+                    </div>
+                }
+            </div>
         </div>
-    }
-</div>
-		</div>
-	</div>
+    </div>
 </div>

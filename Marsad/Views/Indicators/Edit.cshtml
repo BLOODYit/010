@@ -22,7 +22,7 @@
                     <div class="form-group">
                         @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                         <div class="col-sm-10 col-xs-12">
-                            @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1" } })
                             @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                         <div class="col-md-offset-2 col-sm-10 col-xs-12">
                             <input type="submit" value="حفظ" class="btn btn-primary" />
                             @Html.ActionLink("الرئيسية", "Index", null, new { @class = "btn btn-default" })
-                            <a href="@Url.Action("Index","Equations",new { indicatorID=Model.ID})" class="btn btn-primary">إضافة معادلة حسابية للمؤشر</a>
+                            <a href="@Url.Action("Create","Equations",new { indicatorID=Model.ID})" class="btn btn-primary">إضافة معادلة حسابية للمؤشر</a>
                         </div>
                     </div>
                 </div>

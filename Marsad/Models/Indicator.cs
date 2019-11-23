@@ -17,6 +17,7 @@ namespace Marsad.Models
             this.Equations = new List<Equation>();
             this.Indicators = new List<Indicator>();
             this.Cases = new List<Case>();
+            this.Users = new List<ApplicationUser>();
         }
 
         [Key]
@@ -24,7 +25,8 @@ namespace Marsad.Models
 
         [Required(ErrorMessage = "برجاء إدخال رمز المؤشر")]        
         [Display(Name = "رمز المؤشر")]
-        [Remote("IsExist","Indicators", ErrorMessage ="رمز المؤشر يجب الا يتكرر")]
+        [Remote("IsExist","Indicators",AdditionalFields ="ID", ErrorMessage ="رمز المؤشر يجب الا يتكرر")]
+        [Range(1,int.MaxValue,ErrorMessage ="يجب ان يكون رمز المؤشر رقم موجب")]
         public int Code { get; set; }
 
         [Required(ErrorMessage = "برجاء إدخال إسم المؤشر")]
@@ -55,7 +57,7 @@ namespace Marsad.Models
         [Required(ErrorMessage ="برجاء إختيار الحزمة")]
         [Display(Name="الحزمة")]
         public int BundleID { get; set; }
-        public Bundle Bundle { get; set; }
+        public virtual Bundle Bundle { get; set; }
 
         [Display(Name = "تعريف المؤشر")]
         [DataType(DataType.MultilineText)]
@@ -79,5 +81,6 @@ namespace Marsad.Models
         public List<Equation> Equations { get; set; }
         public List<Indicator> Indicators { get; set; }
         public List<Case> Cases { get; set; }
+        public List<ApplicationUser> Users { get; set; }
     }
 }

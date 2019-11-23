@@ -35,12 +35,12 @@
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action(" Index",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," User")"></i> المستخدم
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action(" Index",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," Date")"></i> تاريخ العملية
                             </a>
                         </th>

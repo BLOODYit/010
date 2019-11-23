@@ -11,6 +11,7 @@ using Marsad.Models;
 
 namespace Marsad.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ElementsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -194,8 +195,6 @@ namespace Marsad.Controllers
             }
             return elements;
         }
-
-
 
         [HttpGet]
         public ActionResult GetCreateElement()

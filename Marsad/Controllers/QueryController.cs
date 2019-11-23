@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Marsad.Controllers
 {
+    [Authorize]
     public class QueryController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();

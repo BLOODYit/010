@@ -9,6 +9,7 @@ using PagedList;
 
 namespace Marsad.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class LogsController : Controller
     {
 
@@ -30,7 +31,7 @@ namespace Marsad.Controllers
 
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            return View(db.SystemLogs.ToPagedList(pageNumber, pageSize));            
+            return View(db.SystemLogs.ToPagedList(pageNumber, pageSize));
         }
 
         public ActionResult UpdateLog(string sortOrder, string currentFilter, string searchString, int? page)
@@ -47,12 +48,11 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
-
             int pageSize = 10;
             int pageNumber = (page ?? 1);
             return View(db.UpdateLogs.ToPagedList(pageNumber, pageSize));
         }
-        // GET: Update
+
         public ActionResult PendingLog(string sortOrder, string currentFilter, string searchString, int? page)
         {
 
@@ -67,10 +67,16 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
-
             int pageSize = 10;
             int pageNumber = (page ?? 1);
-            return View(db.PendingLogs.ToPagedList(pageNumber, pageSize));
+            var elementValues = db.ElementValues
+                .Include(x => x.EquationElement.Equation.Indicator)
+                .Include(x => x.GeoArea)
+                .Include(x => x.GeoAreaBundle)
+                .Where(x => x.IsCommited == false);
+            elementValues = elementValues.OrderByDescending(x => x.CreatedAt);
+            return View(elementValues.ToPagedList(pageNumber, pageSize));
         }
+
     }
 }

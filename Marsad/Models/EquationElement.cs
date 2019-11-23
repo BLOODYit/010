@@ -10,6 +10,7 @@ namespace Marsad.Models
     {
         public EquationElement()
         {
+            ElementValues = new HashSet<ElementValue>();
         }
 
         [Key]
@@ -19,5 +20,8 @@ namespace Marsad.Models
         public virtual Equation Equation { get; set; }
         public int ElementID { get; set; }
         public virtual Element Element { get; set; }
+
+        public virtual ICollection<ElementValue> ElementValues { get; set; }
+        
     }
 }

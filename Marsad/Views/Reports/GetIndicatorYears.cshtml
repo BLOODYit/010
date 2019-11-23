@@ -1,0 +1,70 @@
+﻿@model Marsad.Models.Indicator
+@{
+    Layout = "";
+}
+<script type="text/javascript">
+    var govAreas =@Html.Raw(Json.Encode(ViewBag.GovAreas));
+</script>
+<div class="form-group" style="margin-top:10px;">
+    <label class="control-label col-sm-2 col-xs-12">الفترة الزمنية</label>
+    <div class="col-sm-10 col-xs-12">
+        <select class="form-control" name="Year" id="year">
+            @foreach (var ey in ViewBag.EquationYears)
+            {
+                <option value="@ey.Year">@ey.Year</option>
+            }
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="control-label col-sm-2 col-xs-12">النظاق الجغرافي</label>
+    <div class="col-sm-5 col-xs-12">
+        <select class="form-control" id="GeoAreaType">
+            <option value="Region">منطقة</option>
+            <option value="SubRegion">الحاضرة</option>
+            <option value="Governorate">المحافظة</option>
+            <option value="Town">البلدية</option>
+            <option value="City">المدينة</option>
+            <option value="District">الحي</option>
+        </select>
+        <select class="form-control" multiple id="AllGeoAreaIDs"></select>
+    </div>
+    <div class="col-sm-5 col-xs-12">
+        <select class="form-control" multiple name="GeoAreaIds" id="GeoAreaIds"></select>
+    </div>
+</div>
+
+<div class="col-sm-5 col-xs-12">
+    <button class="btn btn-success" id="add">إضافة</button>
+    <button class="btn btn-danger" id="delete">حذف</button>
+    <button class="btn btn-primary" id="show-report">عرض</button>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#show-report').click(function () {            
+            showReport();
+        });
+        $('#GeoAreaType').change(function () {
+            $('#AllGeoAreaIDs option').remove();
+            var type = $(this).val();
+            if (type == undefined)
+                return;
+            govAreas.forEach(function (e, i) {
+                if (e.Type == type) {
+                    $('#AllGeoAreaIDs').append("<option value='"+e.ID+"'>"+e.Name+"</option>");
+                }
+            });
+        });
+        $('#GeoAreaType').change();
+
+        $('#add').click(function () {
+            $('#AllGeoAreaIDs option:selected').clone().appendTo($('#GeoAreaIds'));
+        });
+        $('#delete').click(function () {
+            $('#GeoAreaIds option:selected').remove();
+        });
+    });
+
+</script>

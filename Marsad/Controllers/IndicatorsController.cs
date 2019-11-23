@@ -11,11 +11,13 @@ using Marsad.Models;
 
 namespace Marsad.Controllers
 {
+    [Authorize(Roles = "Admin,Officer")]
     public class IndicatorsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Indicators
+        [Authorize(Roles = "Admin")]
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
 
@@ -38,6 +40,7 @@ namespace Marsad.Controllers
         }
 
         // GET: Indicators/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -53,6 +56,7 @@ namespace Marsad.Controllers
         }
 
         // GET: Indicators/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name");
@@ -64,6 +68,7 @@ namespace Marsad.Controllers
         // POST: Indicators/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod")] Indicator indicator, string command)
@@ -85,6 +90,7 @@ namespace Marsad.Controllers
         }
 
         // GET: Indicators/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -105,6 +111,7 @@ namespace Marsad.Controllers
         // POST: Indicators/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod")] Indicator indicator)
@@ -122,6 +129,7 @@ namespace Marsad.Controllers
         }
 
         // GET: Indicators/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -137,6 +145,7 @@ namespace Marsad.Controllers
         }
 
         // POST: Indicators/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -281,9 +290,9 @@ namespace Marsad.Controllers
         }
 
 
-        public JsonResult IsExist(int Code)
+        public JsonResult IsExist(int Code,int ID)
         {
-            return Json(!db.Indicators.Where(x => x.Code == Code).Any(), JsonRequestBehavior.AllowGet);            
+            return Json(!db.Indicators.Where(x => x.Code == Code && x.ID!=ID).Any(), JsonRequestBehavior.AllowGet);
         }
     }
 

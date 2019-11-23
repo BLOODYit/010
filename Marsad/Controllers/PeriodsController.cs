@@ -11,6 +11,7 @@ using Marsad.Models;
 
 namespace Marsad.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PeriodsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

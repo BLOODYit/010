@@ -28,6 +28,10 @@ namespace Marsad
                       "~/Content/vendors/bootstrap-daterangepicker/daterangepicker.css"));
 
             //Scripts
+
+            
+                bundles.Add(new ScriptBundle("~/scripts/charts").Include(
+                    "~/Scripts/canvasjs.min.js"));
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*", "~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                           "~/Scripts/bootstrap.js"

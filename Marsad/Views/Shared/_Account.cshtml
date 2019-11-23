@@ -1,0 +1,32 @@
+﻿@using Marsad.Helpers
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="images/favicon.ico" type="image/ico" />
+
+    <title>@ViewBag.Title - المرصد الحضري بالمنطقة الشرقية</title>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/nprogress")
+    @RenderSection("css", required: false)
+</head>
+
+<body class="login">
+    <div class="text-center">
+        <img src="~/Images/logo.png" width="180" style="margin-top:40px;"/>
+        <div class="login_wrapper">
+            <h2 class="text-center">قاعدة بيانات المرصد الحضري للمنطقة الشرقية</h2>            
+            @RenderBody()
+        </div>
+    </div>
+    @Scripts.Render("~/bundles/main")
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

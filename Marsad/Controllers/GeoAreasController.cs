@@ -11,6 +11,7 @@ using Marsad.Models;
 
 namespace Marsad.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class GeoAreasController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -60,8 +61,7 @@ namespace Marsad.Controllers
         public ActionResult Create(string type)
         {
             type = SetType(type);
-            var parentName = GeoArea.GetParentName(type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentName)), "ID", "Name");
+            ViewBag.GeoAreas = db.GeoAreas.ToList();
             return View();
         }
 
@@ -76,11 +76,10 @@ namespace Marsad.Controllers
             {
                 db.GeoAreas.Add(geoArea);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { Type = geoArea.Type });
             }
             string type = SetType(geoArea.Type);
-            string parentName = GeoArea.GetParentName(type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentName)), "ID", "Name", geoArea.GeoAreaID);
+            ViewBag.GeoAreas = db.GeoAreas.ToList();
             return View(geoArea);
         }
 
@@ -97,8 +96,7 @@ namespace Marsad.Controllers
                 return HttpNotFound();
             }
             string type = SetType(geoArea.Type);
-            string parentType = GeoArea.GetParentName(type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentType)), "ID", "Name", geoArea.GeoAreaID);
+            ViewBag.GeoAreas = db.GeoAreas.ToList();
             return View(geoArea);
         }
 
@@ -113,12 +111,10 @@ namespace Marsad.Controllers
             {
                 db.Entry(geoArea).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                return RedirectToAction("Index", new { Type = geoArea.Type });
+            }            
             string type = SetType(geoArea.Type);
-            string parentType = GeoArea.GetParentName(type);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(parentType)), "ID", "Name", geoArea.GeoAreaID);
-            ViewBag.GeoAreaID = new SelectList(db.GeoAreas, "ID", "Name", geoArea.GeoAreaID);
+            ViewBag.GeoAreas = db.GeoAreas.ToList();
             return View(geoArea);
         }
 
@@ -149,7 +145,7 @@ namespace Marsad.Controllers
                 db.GeoAreas.Remove(geoArea);
                 db.SaveChanges();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { Type = geoArea.Type });
         }
 
         protected override void Dispose(bool disposing)
