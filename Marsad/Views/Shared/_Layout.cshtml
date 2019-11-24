@@ -123,16 +123,15 @@
                                     </ul>
                                 </li>
                                 <li class="@Html.IsSelected(" Security","")">
-                                    <a><i class="fa fa-refresh"></i> أنظمة أمن البيانات <span class="fa fa-chevron-down"></span></a>
+                                    <a><i class="fa fa-shield"></i> أنظمة أمن البيانات <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
 
-                                        <li><a href="@Url.Action("Index","User")">المستخدمين</a></li>
-                                        <li><a href="@Url.Action("Index","UserGroups")">ممجموعات المستخدمين</a></li>
+                                        <li><a href="@Url.Action("Index","Users")">المستخدمين</a></li>                                        
                                     </ul>
                                 </li>
 
                                 <li class="@Html.IsSelected("Log","")">
-                                    <a><i class="fa fa-refresh"></i> نظام مراجعة البيانات <span class="fa fa-chevron-down"></span></a>
+                                    <a><i class="fa fa-history"></i> نظام مراجعة البيانات <span class="fa fa-chevron-down"></span></a>
                                     <ul class="nav child_menu">
 
                                         <li><a href="@Url.Action("SystemLog","Logs")">مراجعة بيانات النظام</a></li>

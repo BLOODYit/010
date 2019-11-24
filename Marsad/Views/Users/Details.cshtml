@@ -1,0 +1,45 @@
+﻿@model Marsad.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "بيانات فترة";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div>
+
+                <h4>بيانات فترة</h4>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        الإسم
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.Name)
+                    </dd>
+
+                    <dt>
+                        إسم المستخدم
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.UserName)
+                    </dd>
+
+                    <dt>
+                        البريد الاليكتروني
+                    </dt>
+
+                </dl>
+            </div>
+            <p>
+                @Html.ActionLink("تعديل", "Edit", new { id = Model.Id }, new { @class = "btn btn-primary" })
+                @Html.ActionLink("الرئيسية", "Index", null, new { @class = "btn btn-default" })
+            </p>
+        </div>
+    </div>
+</div>

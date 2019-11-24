@@ -17,8 +17,11 @@ namespace Marsad.Models
             Bundles = new List<Bundle>();
         }
         [MaxLength(255)]
-        public string Name { get; set; }        
+        [Display(Name = "الإسم")]
+        public string Name { get; set; }
+        [Display(Name = "الصورة")]
         public string Image { get; set; }
+        [Display(Name = "الجهة")]
         public int? EntityID { get; set; }
         public Entity Entity { get; set; }
         public List<Bundle> Bundles { get; set; }

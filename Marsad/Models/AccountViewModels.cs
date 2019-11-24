@@ -79,18 +79,27 @@ namespace Marsad.Models
         [Display(Name = "تأكيد كلمة السر")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
         [Display(Name = "إسم المستخدم")]
+        [Required]
         public string UserName { get; set; }
+
         [Display(Name = "الإسم")]
+        [Required]
         public string Name { get; set; }
+
         [Display(Name = "إسم الجهة")]
         public int? EntityID { get; set; }
+
+        [Required]
+        [Display(Name = "نوع المستخدم")]
         public string RoleID { get; set; }
     }
 
 
     public class EditUserViewModel
     {
+        public string Id { get; set; }
         [EmailAddress]
         [Display(Name = "البريد الاليكتروني")]
         public string Email { get; set; }        
@@ -108,6 +117,7 @@ namespace Marsad.Models
         public string Name { get; set; }
         [Display(Name = "إسم الجهة")]
         public int? EntityID { get; set; }
+        [Display(Name = "نوع المستخدم")]
         public string RoleID { get; set; }
     }
 

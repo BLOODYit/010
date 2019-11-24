@@ -46,7 +46,7 @@ namespace Marsad.Controllers
             ViewBag.CurrentFilter = searchString;
             ViewBag.Roles = roleManager.Roles.ToDictionary(x=>x.Id,x=>x.Name);
 
-            var users = userManager.Users;
+            var users = userManager.Users.Include(x=>x.Entity);
             users = SortParams(sortOrder, users, searchString);
             int pageSize = 10;
             int pageNumber = (page ?? 1);
@@ -71,9 +71,10 @@ namespace Marsad.Controllers
         // GET: Indicators/Create        
         public ActionResult Create()
         {
-            ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name");
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name");
-            ViewBag.RoleID = new SelectList(roleManager.Roles, "Id", "Name");
+            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name");
+            ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
             return View();
         }
 
@@ -115,9 +116,10 @@ namespace Marsad.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name");
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name");
-            ViewBag.RoleID = new SelectList(roleManager.Roles, "Id", "Name");
+            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name");
+            ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
             return View(newUser);
         }
 
@@ -135,11 +137,15 @@ namespace Marsad.Controllers
             }
             var roleId = user.Roles.FirstOrDefault().RoleId;
             var roleName = roleManager.Roles.Where(x => x.Id == roleId).FirstOrDefault().Name;
-            ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name", user.Bundles.Select(x => x.ID).ToArray());
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", user.Indicators.Select(x => x.ID).ToArray());
-            ViewBag.RoleID = new SelectList(roleManager.Roles, "Id", "Name", roleName);
-            return View(new RegisterViewModel()
+            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name",user.EntityID);
+            ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
+            ViewBag.bundleIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == id).Any()).Select(x => x.ID).ToArray();
+            ViewBag.indicatorIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == id).Any()).Select(x => x.ID).ToArray();
+            return View(new EditUserViewModel()
             {
+                Id=user.Id,               
                 Email = string.IsNullOrWhiteSpace(user.Email) ? user.UserName : user.Email,
                 EntityID = user.EntityID,
                 Name = user.Name,
@@ -176,9 +182,12 @@ namespace Marsad.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name", user.Bundles.Select(x => x.ID).ToArray());
-            ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", user.Indicators.Select(x => x.ID).ToArray());
-            ViewBag.RoleID = new SelectList(roleManager.Roles, "Id", "Name", oldUser.RoleID);
+            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name", user.EntityID);
+            ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
+            ViewBag.bundleIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == user.Id).Any()).Select(x => x.ID).ToArray();
+            ViewBag.indicatorIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == Id).Any()).Select(x => x.ID).ToArray();
             return View(oldUser);
         }
 
