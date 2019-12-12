@@ -12,13 +12,12 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin,Officer")]
-    public class IndicatorsController : Controller
+    public class IndicatorsController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Indicators
         [Authorize(Roles = "Admin")]
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
         {
 
             ViewBag.CurrentSort = sortOrder;
@@ -34,9 +33,23 @@ namespace Marsad.Controllers
 
             var indicators = db.Indicators.Include(i => i.Bundle).Include(i => i.IndicatorType).Include(i => i.ParentIndicator).AsQueryable();
             indicators = SortParams(sortOrder, indicators, searchString);
-            int pageSize = 10;
+            if (!pageSize.HasValue)
+                pageSize = 10;
             int pageNumber = (page ?? 1);
-            return View(indicators.ToPagedList(pageNumber, pageSize));
+            ViewBag.PageSize = new List<SelectListItem>()
+         {
+             new SelectListItem() { Value="10", Text= "10",Selected=(pageSize==10)},
+             new SelectListItem() { Value="20", Text= "20",Selected=(pageSize==20) },
+             new SelectListItem() { Value="50", Text= "50" ,Selected=(pageSize==50)},
+             new SelectListItem() { Value="100", Text= "100" ,Selected=(pageSize==100)},
+             new SelectListItem() { Value="200", Text= "200" ,Selected=(pageSize==200)},
+             new SelectListItem() { Value="500", Text= "500" ,Selected=(pageSize==500)},
+             new SelectListItem() { Value="1000", Text= "1000",Selected=(pageSize==1000) }
+         };
+
+            ViewBag.pSize = pageSize.Value;
+
+            return View(indicators.ToPagedList(pageNumber, pageSize.Value));
         }
 
         // GET: Indicators/Details/5
@@ -47,7 +60,8 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Indicator indicator = db.Indicators.Find(id);
+
+            Indicator indicator = db.Indicators.Include(x => x.ChildIndicators).Where(x => x.ID == id).FirstOrDefault();
             if (indicator == null)
             {
                 return HttpNotFound();
@@ -62,6 +76,8 @@ namespace Marsad.Controllers
             ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name");
             ViewBag.IndicatorTypeID = new SelectList(db.IndicatorTypes, "ID", "Name");
             ViewBag.IndicatorID = new SelectList(db.Indicators.Where(x => !x.HasParent), "ID", "Name");
+            var MaxCode = db.Indicators.Max(x => (int?)x.Code);
+            ViewBag.NextCode = (MaxCode.HasValue) ? MaxCode.Value + 1 : 1;
             return View();
         }
 
@@ -77,6 +93,7 @@ namespace Marsad.Controllers
             {
                 db.Indicators.Add(indicator);
                 db.SaveChanges();
+                Log(LogAction.Create, indicator);
                 if (command.Equals("إنشاء"))
                     return RedirectToAction("Index");
                 else
@@ -120,6 +137,7 @@ namespace Marsad.Controllers
             {
                 db.Entry(indicator).State = EntityState.Modified;
                 db.SaveChanges();
+                Log(LogAction.Update, indicator);
                 return RedirectToAction("Index");
             }
             ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name", indicator.BundleID);
@@ -151,8 +169,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Indicator indicator = db.Indicators.Find(id);
+            Indicator _indicator = new Indicator() { ID = id, Name = indicator.Name };
             db.Indicators.Remove(indicator);
             db.SaveChanges();
+            Log(LogAction.Delete, _indicator);
             return RedirectToAction("Index");
         }
 
@@ -271,6 +291,8 @@ namespace Marsad.Controllers
             //var indicators = db.Indicators.Where(x => !x.HasParent);
             ViewBag.BundleID = new SelectList(db.Bundles, "ID", "Name");
             ViewBag.IndicatorTypeID = new SelectList(db.IndicatorTypes, "ID", "Name");
+            var MaxCode = db.Indicators.Max(x => (int?)x.Code);
+            ViewBag.NextCode = (MaxCode.HasValue) ? MaxCode.Value + 1 : 1;
             return PartialView();
         }
 
@@ -281,6 +303,7 @@ namespace Marsad.Controllers
             {
                 db.Indicators.Add(indicator);
                 db.SaveChanges();
+                Log(LogAction.Create, indicator);
                 return Json(new { success = true, data = indicator });
             }
             else
@@ -300,7 +323,4 @@ namespace Marsad.Controllers
             return Json(!isExists, JsonRequestBehavior.AllowGet);
         }
     }
-
-
 }
-

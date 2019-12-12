@@ -12,10 +12,8 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class GeoAreaBundlesController : Controller
+    public class GeoAreaBundlesController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: GeoAreaBundles
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -31,7 +29,7 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
-            var geoAreaBundles = db.GeoAreaBundles.AsQueryable();
+            var geoAreaBundles = db.GeoAreas.Where(x => x.Type == "Bundle").Include(x => x.GeoAreaBundles).AsQueryable();
             geoAreaBundles = SortParams(sortOrder, geoAreaBundles, searchString);
             int pageSize = 10;
             int pageNumber = (page ?? 1);
@@ -46,7 +44,7 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            GeoAreaBundle geoAreaBundle = db.GeoAreaBundles.Find(id);
+            GeoArea geoAreaBundle = db.GeoAreas.Include(x => x.GeoAreaBundles).Where(x => x.ID == id && x.Type == "Bundle").FirstOrDefault();
             if (geoAreaBundle == null)
             {
                 return HttpNotFound();
@@ -58,7 +56,7 @@ namespace Marsad.Controllers
         public ActionResult Create()
         {
             ViewBag.GeoAreaTypes = GeoArea.Types;
-            ViewBag.GeoAreas = db.GeoAreas.ToList();
+            ViewBag.GeoAreas = db.GeoAreas.Where(x => x.Type != "Bundle").ToList();
             return View();
         }
 
@@ -67,18 +65,27 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Code,Name")] GeoAreaBundle geoAreaBundle,int[] geo_area_ids)
-        {            
+        public ActionResult Create([Bind(Include = "ID,Code,Name,Type")] GeoArea geoAreaBundle, int[] geo_area_ids)
+        {
+            geoAreaBundle.Type = "Bundle";
             if (ModelState.IsValid)
-            {                
-                geoAreaBundle.GeoAreas = db.GeoAreas.Where(x => geo_area_ids.Contains(x.ID)).ToList();
-                db.GeoAreaBundles.Add(geoAreaBundle);
+            {
+                geoAreaBundle.GeoAreaBundles = new List<GeoAreaBundle>();
+                var childGeoAreas = db.GeoAreas.Where(x => geo_area_ids.Contains(x.ID)).ToList();
+                foreach(var geoArea in childGeoAreas)
+                {
+                    geoAreaBundle.GeoAreaBundles.Add(new GeoAreaBundle() { 
+                        ChildGeoAreaID=geoArea.ID,                        
+                    });
+                }                
+                db.GeoAreas.Add(geoAreaBundle);
                 db.SaveChanges();
+                Log(LogAction.Create, geoAreaBundle);
                 return RedirectToAction("Index");
             }
 
             ViewBag.GeoAreaTypes = GeoArea.Types;
-            ViewBag.GeoAreas = db.GeoAreas.ToList();
+            ViewBag.GeoAreas = db.GeoAreas.Where(x => x.Type != "Bundle").ToList();
             return View(geoAreaBundle);
         }
 
@@ -89,14 +96,14 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            GeoAreaBundle geoAreaBundle = db.GeoAreaBundles.Find(id);
+            GeoArea geoAreaBundle = db.GeoAreas.Where(x => x.ID == id && x.Type == "Bundle").Include(x => x.GeoAreaBundles).FirstOrDefault();
             if (geoAreaBundle == null)
             {
                 return HttpNotFound();
             }
 
             ViewBag.GeoAreaTypes = GeoArea.Types;
-            ViewBag.GeoAreas = db.GeoAreas.ToList();
+            ViewBag.GeoAreas = db.GeoAreas.Where(x => x.Type != "Bundle").ToList();
             return View(geoAreaBundle);
         }
 
@@ -105,26 +112,33 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Code,Name")] GeoAreaBundle geoAreaBundle, int[] geo_area_ids)
+        public ActionResult Edit([Bind(Include = "ID,Code,Name,Type")] GeoArea geoAreaBundle, int[] geo_area_ids)
         {
             if (ModelState.IsValid)
             {
-                
+
                 db.Entry(geoAreaBundle).State = EntityState.Modified;
-                geoAreaBundle.GeoAreas = db.GeoAreaBundles.Where(x => x.ID == geoAreaBundle.ID).Include(x => x.GeoAreas).FirstOrDefault().GeoAreas;
-                geoAreaBundle.GeoAreas.Clear();
-                var gareas = db.GeoAreas.Where(x => geo_area_ids.Contains(x.ID)).ToList();
-                foreach (var ga in gareas)
+                geoAreaBundle.GeoAreaBundles = db.GeoAreas.Where(x => x.ID == geoAreaBundle.ID).Include(x => x.GeoAreaBundles).FirstOrDefault().GeoAreaBundles;
+                if (geoAreaBundle.GeoAreaBundles == null)
+                    geoAreaBundle.GeoAreaBundles = new List<GeoAreaBundle>();
+                geoAreaBundle.GeoAreaBundles.Clear();
+
+                var childGeoAreas = db.GeoAreas.Where(x => geo_area_ids.Contains(x.ID)).ToList();
+                foreach (var geoArea in childGeoAreas)
                 {
-                    geoAreaBundle.GeoAreas.Add(ga);
-                }                
-                
+                    geoAreaBundle.GeoAreaBundles.Add(new GeoAreaBundle()
+                    {
+                        ChildGeoAreaID = geoArea.ID,
+                    });
+                }
+
                 db.SaveChanges();
+                Log(LogAction.Update, geoAreaBundle);
                 return RedirectToAction("Index");
             }
             GeoArea.Types.Reverse();
             ViewBag.GeoAreaTypes = GeoArea.Types;
-            ViewBag.GeoAreas = db.GeoAreas.ToList();
+            ViewBag.GeoAreas = db.GeoAreas.Where(x => x.Type != "Bundle").ToList();
             return View(geoAreaBundle);
         }
 
@@ -135,7 +149,7 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            GeoAreaBundle geoAreaBundle = db.GeoAreaBundles.Find(id);
+            GeoArea geoAreaBundle = db.GeoAreas.Where(x => x.ID == id && x.Type == "Bundle").FirstOrDefault();
             if (geoAreaBundle == null)
             {
                 return HttpNotFound();
@@ -148,9 +162,11 @@ namespace Marsad.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            GeoAreaBundle geoAreaBundle = db.GeoAreaBundles.Find(id);
-            db.GeoAreaBundles.Remove(geoAreaBundle);
+            GeoArea geoAreaBundle = db.GeoAreas.Where(x => x.ID == id && x.Type == "Bundle").FirstOrDefault();
+            GeoArea _geoAreaBundle = new GeoArea() { ID = id, Name = geoAreaBundle.Name, Type = geoAreaBundle.Type };
+            db.GeoAreas.Remove(geoAreaBundle);
             db.SaveChanges();
+            Log(LogAction.Delete, _geoAreaBundle);
             return RedirectToAction("Index");
         }
 
@@ -163,7 +179,7 @@ namespace Marsad.Controllers
             base.Dispose(disposing);
         }
 
-        private IQueryable<GeoAreaBundle> SortParams(string sortOrder, IQueryable<GeoAreaBundle> geoAreaBundles, string searchString)
+        private IQueryable<GeoArea> SortParams(string sortOrder, IQueryable<GeoArea> geoAreaBundles, string searchString)
         {
             if (!String.IsNullOrWhiteSpace(searchString))
                 geoAreaBundles = geoAreaBundles.Where(x => x.Name.Contains(searchString));

@@ -176,6 +176,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\BundlesController.cs" />
     <Compile Include="Controllers\CasesController.cs" />
     <Compile Include="Controllers\DataSourceGroupsController.cs" />
@@ -213,7 +214,20 @@
     <Compile Include="Migrations\201911230959330_userFix.Designer.cs">
       <DependentUpon>201911230959330_userFix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201912080922170_finalFix1.cs" />
+    <Compile Include="Migrations\201912080922170_finalFix1.Designer.cs">
+      <DependentUpon>201912080922170_finalFix1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912080945477_finalFix2.cs" />
+    <Compile Include="Migrations\201912080945477_finalFix2.Designer.cs">
+      <DependentUpon>201912080945477_finalFix2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201912110414433_GeoAreaFix.cs" />
+    <Compile Include="Migrations\201912110414433_GeoAreaFix.Designer.cs">
+      <DependentUpon>201912110414433_GeoAreaFix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CalculatedValue.cs" />
     <Compile Include="Models\CaseYearIndicatorValue.cs" />
     <Compile Include="Models\Controls\EquationModel.cs" />
     <Compile Include="Models\Controls\GeoAreasModel.cs" />
@@ -221,8 +235,6 @@
     <Compile Include="Models\EquationElement.cs" />
     <Compile Include="Models\EquationYear.cs" />
     <Compile Include="Models\GeoAreaBundle.cs" />
-    <Compile Include="Models\GeoAreaBundleValue .cs" />
-    <Compile Include="Models\GeoAreaValue.cs" />
     <Compile Include="Models\Logs\SystemLog.cs" />
     <Compile Include="Models\Reports.cs" />
     <Compile Include="Models\GeoArea.cs" />
@@ -230,6 +242,7 @@
     <Compile Include="Models\Controls\MultiSelectModel.cs" />
     <Compile Include="Models\DataSource.cs" />
     <Compile Include="Models\Validations\RequiredButNull.cs" />
+    <Compile Include="Models\ViewModels\OfficerKPI.cs" />
     <Compile Include="Models\ViewModels\Query.cs" />
     <Compile Include="Models\ُEntity.cs" />
     <Compile Include="Models\Indicator.cs" />
@@ -1573,7 +1586,6 @@
     <Content Include="Views\GeoAreaBundles\Index.cshtml" />
     <Content Include="Views\Shared\Controls\_Equation.cshtml" />
     <Content Include="Views\Update\GeoAreas.cshtml" />
-    <Content Include="Views\Update\GeoAreaBundles.cshtml" />
     <Content Include="Views\Elements\GetCreateElement.cshtml" />
     <Content Include="Views\Logs\SystemLog.cshtml" />
     <Content Include="Views\Logs\UpdateLog.cshtml" />
@@ -1591,11 +1603,12 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
-    <Content Include="Views\Logs\PendingLogs.cshtml" />
+    <Content Include="Views\Logs\PendingLog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\vendors\bootstrap\fonts\" />
+    <Folder Include="Views\Base\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -1620,6 +1633,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201911230959330_userFix.resx">
       <DependentUpon>201911230959330_userFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912080922170_finalFix1.resx">
+      <DependentUpon>201912080922170_finalFix1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912080945477_finalFix2.resx">
+      <DependentUpon>201912080945477_finalFix2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201912110414433_GeoAreaFix.resx">
+      <DependentUpon>201912110414433_GeoAreaFix.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

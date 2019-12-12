@@ -67,12 +67,13 @@ namespace Marsad.Models
         public DbSet<Marsad.Models.Element> Elements { get; set; }
         public DbSet<Marsad.Models.Entity> Entities { get; set; }
         public DbSet<Marsad.Models.Equation> Equations { get; set; }
-        public DbSet<Marsad.Models.GeoArea> GeoAreas { get; set; }
-        public DbSet<Marsad.Models.GeoAreaBundle> GeoAreaBundles { get; set; }
+        public DbSet<Marsad.Models.GeoArea> GeoAreas { get; set; }        
         public DbSet<Marsad.Models.SystemLog> SystemLogs { get; set; }
         public DbSet<Marsad.Models.UpdateLog> UpdateLogs { get; set; }        
         public DbSet<Marsad.Models.EquationElement> EquationElements { get; set; }
         public DbSet<Marsad.Models.EquationYear> EquationYears { get; set; }
+        public DbSet<Marsad.Models.CalculatedValue> CalculatedValues { get; set; }
+        
 
     }
 }

@@ -12,7 +12,7 @@
             <div class="form-group">
                 @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                 <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1", @Value = ViewBag.NextCode } })
                     @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                 </div>
             </div>

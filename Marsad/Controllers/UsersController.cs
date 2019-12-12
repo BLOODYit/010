@@ -10,13 +10,14 @@ using System.Web.Mvc;
 using Marsad.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security.DataProtection;
+using Microsoft.AspNet.Identity.Owin;
 
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class UsersController : Controller
+    public class UsersController : BaseController
     {
-        private ApplicationDbContext db;
         private UserStore<ApplicationUser> userStore;
         private ApplicationUserManager userManager;
         private RoleStore<IdentityRole> roleStore;
@@ -24,9 +25,10 @@ namespace Marsad.Controllers
 
         public UsersController()
         {
-            db = new ApplicationDbContext();
             userStore = new UserStore<ApplicationUser>(db);
             userManager = new ApplicationUserManager(userStore);
+            var provider = new DpapiDataProtectionProvider("Marsad");
+            userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser, string>(provider.Create("UserToken")) as IUserTokenProvider<ApplicationUser, string>;
             roleStore = new RoleStore<IdentityRole>(db);
             roleManager = new RoleManager<IdentityRole>(roleStore);
         }
@@ -44,9 +46,9 @@ namespace Marsad.Controllers
                 searchString = currentFilter;
             }
             ViewBag.CurrentFilter = searchString;
-            ViewBag.Roles = roleManager.Roles.ToDictionary(x=>x.Id,x=>x.Name);
+            ViewBag.Roles = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
 
-            var users = userManager.Users.Include(x=>x.Entity);
+            var users = userManager.Users.Include(x => x.Entity);
             users = SortParams(sortOrder, users, searchString);
             int pageSize = 10;
             int pageNumber = (page ?? 1);
@@ -60,7 +62,7 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser user =  userManager.FindById(id);
+            ApplicationUser user = userManager.FindById(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -113,6 +115,7 @@ namespace Marsad.Controllers
                 userManager.Create(user, newUser.Password);
                 user = userManager.FindByName(user.UserName);
                 userManager.AddToRole(user.Id, newUser.RoleID);
+                Log(LogAction.Create, user);
                 return RedirectToAction("Index");
             }
 
@@ -139,13 +142,13 @@ namespace Marsad.Controllers
             var roleName = roleManager.Roles.Where(x => x.Id == roleId).FirstOrDefault().Name;
             ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
             ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name",user.EntityID);
+            ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name", user.EntityID);
             ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
             ViewBag.bundleIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == id).Any()).Select(x => x.ID).ToArray();
             ViewBag.indicatorIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == id).Any()).Select(x => x.ID).ToArray();
             return View(new EditUserViewModel()
             {
-                Id=user.Id,               
+                Id = user.Id,
                 Email = string.IsNullOrWhiteSpace(user.Email) ? user.UserName : user.Email,
                 EntityID = user.EntityID,
                 Name = user.Name,
@@ -161,6 +164,7 @@ namespace Marsad.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Name,UserName,Email,EntityID,RoleID,Password,ConfirmPassword")] EditUserViewModel oldUser, int[] indicatorIds, int[] bundlesIds, string Id)
         {
+
             var user = userManager.FindById(Id);
             if (ModelState.IsValid)
             {
@@ -180,6 +184,7 @@ namespace Marsad.Controllers
                     var token = userManager.GeneratePasswordResetToken(user.Id);
                     userManager.ResetPassword(user.Id, token, oldUser.Password);
                 }
+                Log(LogAction.Update, user);
                 return RedirectToAction("Index");
             }
             ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
@@ -212,8 +217,11 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             ApplicationUser user = userManager.FindById(id);
+
+            ApplicationUser _user = new ApplicationUser() { UserName = user.UserName, Name = user.Name, Id = user.Id };
             userManager.Delete(user);
             db.SaveChanges();
+            Log(LogAction.Delete, _user);
             return RedirectToAction("Index");
         }
 
@@ -234,7 +242,7 @@ namespace Marsad.Controllers
             ViewBag.IDSortParm = String.IsNullOrEmpty(sortOrder) ? "IDDesc" : "";
             ViewBag.EmailSortParm = sortOrder == "Email" ? "EmailDesc" : "Email";
             ViewBag.NameSortParm = sortOrder == "Name" ? "NameDesc" : "Name";
-            ViewBag.UserNameSortParm = sortOrder == "UserName" ? "UserNameDesc" : "UserName";           
+            ViewBag.UserNameSortParm = sortOrder == "UserName" ? "UserNameDesc" : "UserName";
 
             switch (sortOrder)
             {
@@ -255,7 +263,7 @@ namespace Marsad.Controllers
                     break;
                 case "UserName":
                     users = users.OrderBy(s => s.UserName);
-                    break;                
+                    break;
                 case "IDDesc":
                     users = users.OrderByDescending(s => s.Id);
                     break;

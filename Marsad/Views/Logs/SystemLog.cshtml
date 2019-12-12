@@ -12,7 +12,7 @@
             <h1>مراجعة بيانات النظام</h1>
             <hr />
             <div class="col-sm-8 offset-sm-2">
-                <form action="@Url.Action("Index")">
+                <form action="@Url.Action("SystemLog")">
                     <div class="input-group">
                         <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث" />
                         <span class="input-group-btn">
@@ -25,35 +25,44 @@
                 <thead>
                     <tr>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Code")"></i> كود العملية
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> العملية
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," User")"></i> المستخدم
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," Date")"></i> تاريخ العملية
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.NotesSortParm,currentFilter=ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.NotesSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Notes")"></i> ملاحظات
                             </a>
-                        </th>
-                        
+                        </th>                        
                     </tr>
                 </thead>
                 <tbody>
-                    
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>@item.ID</td>
+                        <td>@item.Log</td>
+                        <td>@item.UserName</td>
+                        <td>@item.ActionDate.ToString()</td>
+                        <td>@item.Details</td>
+                    </tr>
+                    }
+
                 </tbody>
             </table>
 
@@ -61,7 +70,7 @@
             @if (Model.PageCount > 1)
             {
                 <div class="col-md-8">
-                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                    @Html.PagedListPager(Model, page => Url.Action("SystemLog", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
                 </div>
             }
 

@@ -12,9 +12,8 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class PeriodsController : Controller
+    public class PeriodsController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Periods
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -71,6 +70,7 @@ namespace Marsad.Controllers
             {
                 db.Periods.Add(period);
                 db.SaveChanges();
+                Log(LogAction.Create, period);
                 return RedirectToAction("Index");
             }
 
@@ -103,6 +103,7 @@ namespace Marsad.Controllers
             {
                 db.Entry(period).State = EntityState.Modified;
                 db.SaveChanges();
+                Log(LogAction.Update, period);
                 return RedirectToAction("Index");
             }
             return View(period);
@@ -129,8 +130,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Period period = db.Periods.Find(id);
+            Period _period = new Period() { ID = id, Name = period.Name };
             db.Periods.Remove(period);
             db.SaveChanges();
+            Log(LogAction.Delete, _period);
             return RedirectToAction("Index");
         }
 

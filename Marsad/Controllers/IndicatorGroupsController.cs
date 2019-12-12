@@ -12,9 +12,8 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class IndicatorGroupsController : Controller
+    public class IndicatorGroupsController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: IndicatorGroups
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -57,7 +56,9 @@ namespace Marsad.Controllers
         // GET: IndicatorGroups/Create
         public ActionResult Create()
         {
-            ViewBag.Indicators = db.Indicators.ToDictionary(x=>x.ID,x=>x.Name);
+            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            var MaxCode = db.IndicatorGroups.Max(x => (int?)x.Code);
+            ViewBag.NextCode = (MaxCode.HasValue) ? MaxCode.Value + 1 : 1;
             return View();
         }
 
@@ -66,23 +67,24 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Code,Name,Description")] IndicatorGroup indicatorGroup,int[] indicatorIds)
+        public ActionResult Create([Bind(Include = "ID,Code,Name,Description")] IndicatorGroup indicatorGroup, int[] indicatorIds)
         {
             if (ModelState.IsValid)
             {
                 var indicators = db.Indicators.Where(x => indicatorIds.Contains(x.ID));
-                foreach(var i in indicators)
+                foreach (var i in indicators)
                 {
                     indicatorGroup.Indicators.Add(i);
                 }
-                
+
                 db.IndicatorGroups.Add(indicatorGroup);
                 db.SaveChanges();
+                Log(LogAction.Create, indicatorGroup);
                 return RedirectToAction("Index");
             }
 
             ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.indicatorIds = indicatorIds;            
+            ViewBag.indicatorIds = indicatorIds;
             return View(indicatorGroup);
         }
 
@@ -93,7 +95,7 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            IndicatorGroup indicatorGroup = db.IndicatorGroups.Include(x=>x.Indicators).Where(x=>x.ID==id).FirstOrDefault();
+            IndicatorGroup indicatorGroup = db.IndicatorGroups.Include(x => x.Indicators).Where(x => x.ID == id).FirstOrDefault();
             if (indicatorGroup == null)
             {
                 return HttpNotFound();
@@ -121,11 +123,13 @@ namespace Marsad.Controllers
                 {
                     indicatorGroup.Indicators.Add(i);
                 }
+
                 db.SaveChanges();
+                Log(LogAction.Update, indicatorGroup);
                 return RedirectToAction("Index");
             }
             ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.indicatorIds = indicatorIds;            
+            ViewBag.indicatorIds = indicatorIds;
             return View(indicatorGroup);
         }
 
@@ -150,8 +154,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             IndicatorGroup indicatorGroup = db.IndicatorGroups.Find(id);
+            IndicatorGroup _indicatorGroup = new IndicatorGroup() { ID = id, Name = indicatorGroup.Name };
             db.IndicatorGroups.Remove(indicatorGroup);
             db.SaveChanges();
+            Log(LogAction.Delete, _indicatorGroup);
             return RedirectToAction("Index");
         }
 
@@ -206,6 +212,16 @@ namespace Marsad.Controllers
             return indicatorGroups;
         }
 
+
+        public JsonResult IsExist(int Code, int? ID)
+        {
+            bool isExists = false;
+            if (!ID.HasValue)
+                isExists = db.IndicatorGroups.Where(x => x.Code == Code).Any();
+            else
+                isExists = db.IndicatorGroups.Where(x => x.Code == Code && x.ID != ID.Value).Any();
+            return Json(!isExists, JsonRequestBehavior.AllowGet);
+        }
     }
 
 

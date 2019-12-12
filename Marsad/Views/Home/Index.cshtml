@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Marsad.Models.ViewModels
+@{
     ViewBag.Title = "الرئيسية";
 }
 <div class="row">
@@ -21,8 +22,8 @@
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-file"></i> مصادر البيانات</span>
-        <div class="count green">@ViewBag.DataSourceCount</div>
-        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>@ViewBag.DataSourceGroupCount </i> مجموعات</span>
+        <div class="count">@ViewBag.DataSourceCount</div>
+        <span class="count_bottom"><i class="green"><i></i>@ViewBag.DataSourceGroupCount </i> مجموعات</span>
     </div>
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
         <span class="count_top"><i class="fa fa-home"></i> الجهات</span>
@@ -36,38 +37,47 @@
 
 </div>
 <!-- /top tiles -->
-<div class="row">
-    <div class="col-md-12 col-sm-12 col-xs-12" style="background: white;">
-        <div class="dashboard_graph">
-            <div class="row x_title">
-                <div class="col-md-12">
-                    <h3> نشاط ضباط الإتصال</h3>
+@if (User.IsInRole("Admin"))
+{
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12" style="background: white;">
+            <div class="dashboard_graph">
+                <div class="row x_title">
+                    <div class="col-md-12">
+                        <h3> نشاط ضباط الإتصال</h3>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-12">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>ضابط الإتصال</th>
-                            <th>الجهة</th>
-                            <th>عدد القيم المحدثة</th>
-                            <th>اخر تحديث</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in ViewBag.OfficersKPI)
-                        {
+
+                <div class="col-md-12">
+                    <table class="table table-bordered table-hover">
+                        <thead>
                             <tr>
-                                <td>@item.ApplicationUser.Name</td>
-                                <td>@item.ApplicationUser.Entity.Name</td>
-                                <td>@item.Count</td>
-                                <td>@item.LastUpdated</td>
+                                <th>ضابط الإتصال</th>
+                                <th>الجهة</th>
+                                <th>عدد القيم المحدثة</th>
+                                <th>اخر تحديث</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach (OfficerKPI item in ViewBag.OfficersKPI)
+                            {
+                                <tr>
+                                    <td>@item.ApplicationUser.Name</td>
+                                    <td>
+                                        @if (item.ApplicationUser.Entity != null)
+                                        {
+                                            @item.ApplicationUser.Entity.Name
+                                        }
+                                    </td>
+                                    <td>@item.Count</td>
+                                    <td>@item.LastUpdated</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>                
             </div>
         </div>
     </div>
-</div>
-<br />
+    <br />
+}

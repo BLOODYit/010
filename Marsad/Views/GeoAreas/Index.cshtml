@@ -40,11 +40,27 @@
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> @ViewBag.TypeName
                             </a>
                         </th>
-                        <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.GeoAreaIDSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"GeoAreaID")"></i> @ViewBag.ParentName
-                            </a>
-                        </th>
+                        @if (ViewBag.Type == "Governorate")
+                        {
+                            <th>
+                                <a href="@Url.Action("Index",new { sortOrder=ViewBag.GeoAreaIDSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                    <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"GeoAreaID")"></i> @ViewBag.ParentName
+                                </a>
+                            </th>
+                            <th>
+                                <a href="@Url.Action("Index",new { sortOrder=ViewBag.GeoAreaIDSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                    <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"GeoAreaID")"></i> المنطقة
+                                </a>
+                            </th>
+                        }
+                        else
+                        {
+                            <th>
+                                <a href="@Url.Action("Index",new { sortOrder=ViewBag.GeoAreaIDSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                    <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"GeoAreaID")"></i> @ViewBag.ParentName
+                                </a>
+                            </th>
+                        }
                         <th width="250"></th>
                     </tr>
                 </thead>
@@ -57,12 +73,36 @@
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.Name)
-                            </td>
-                            <td>
+                            </td>                            
+                            @if (ViewBag.Type == "Governorate")
+                            {
+                                if (item.ParentGeoArea.Type == "Region")
+                                {
+                                    <td>
+                                        بدون حاضرة
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ParentGeoArea.Name)
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ParentGeoArea.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ParentGeoArea.ParentGeoArea.Name)
+                                    </td>
+                                }
 
-                                @Html.DisplayFor(modelItem => item.ParentGeoArea.Name)
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ParentGeoArea.Name)
+                                </td>
+                            }
 
-                            </td>
                             <td>
                                 @Html.ActionLink("تعديل", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" })
                                 @Html.ActionLink("بيانات", "Details", new { id = item.ID }, new { @class = "btn btn-default" })

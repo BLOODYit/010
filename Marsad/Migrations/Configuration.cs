@@ -14,6 +14,7 @@
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(Marsad.Models.ApplicationDbContext context)
@@ -61,8 +62,8 @@
                 context.DataSourceTypes.Add(new DataSourceType() { Name = "مسح ميداني" });
 
 
-                context.IndicatorGroups.Add(new IndicatorGroup() { Code = "2128", Name = "المجموعة الاختبارية", Description = "الفقد في المياه" });
-                context.IndicatorGroups.Add(new IndicatorGroup() { Code = "2129", Name = "المجموعة الجديدة" });
+                context.IndicatorGroups.Add(new IndicatorGroup() { Code = 2128, Name = "المجموعة الاختبارية", Description = "الفقد في المياه" });
+                context.IndicatorGroups.Add(new IndicatorGroup() { Code = 2129, Name = "المجموعة الجديدة" });
 
                 context.IndicatorTypes.Add(new IndicatorType() { Name = "عالمي - رئيسي" });
                 context.IndicatorTypes.Add(new IndicatorType() { Name = "عالمي - شامل" });
@@ -120,21 +121,21 @@
             var dataSource1 = context.DataSources.Where(x => x.Code == 1).FirstOrDefault();
             var dataSource2 = context.DataSources.Where(x => x.Code == 2).FirstOrDefault();
             var dataSource3 = context.DataSources.Where(x => x.Code == 3).FirstOrDefault();
-            if (!context.Elements.Any(x => x.Code.Equals("1")))
+            if (!context.Elements.Any(x => x.Code==1))
             {
-                context.Elements.Add(new Element() { Code = "1", Name = "عدد حالات الزواج في سنة", MeasureUnit = "حالة زواج", DataSourceID = dataSource1.ID });
-                context.Elements.Add(new Element() { Code = "2", Name = "عدد حالات الطلاق في سنة", MeasureUnit = "حالة طلاق", DataSourceID = dataSource1.ID });
-                context.Elements.Add(new Element() { Code = "3", Name = "اجمالي الانفاق السنوي بالميزانية", MeasureUnit = "ريال", DataSourceID = dataSource1.ID });
-                context.Elements.Add(new Element() { Code = "4", Name = "الانفاق السنوي علي رواتب العاملين", MeasureUnit = "ريال", DataSourceID = dataSource1.ID });
-                context.Elements.Add(new Element() { Code = "5", Name = "اجمالي عدد الطلاب/الطالبات", MeasureUnit = "طالب/طالبة", DataSourceID = dataSource2.ID });
-                context.Elements.Add(new Element() { Code = "6", Name = "اجمالي عدد الفصول", MeasureUnit = "فصل دراسي", DataSourceID = dataSource2.ID });
-                context.Elements.Add(new Element() { Code = "7", Name = "اجمالي عدد المعلمين", MeasureUnit = "معلم", DataSourceID = dataSource2.ID });
+                context.Elements.Add(new Element() { Code = 1, Name = "عدد حالات الزواج في سنة", MeasureUnit = "حالة زواج", DataSourceID = dataSource1.ID });
+                context.Elements.Add(new Element() { Code = 2, Name = "عدد حالات الطلاق في سنة", MeasureUnit = "حالة طلاق", DataSourceID = dataSource1.ID });
+                context.Elements.Add(new Element() { Code = 3, Name = "اجمالي الانفاق السنوي بالميزانية", MeasureUnit = "ريال", DataSourceID = dataSource1.ID });
+                context.Elements.Add(new Element() { Code = 4, Name = "الانفاق السنوي علي رواتب العاملين", MeasureUnit = "ريال", DataSourceID = dataSource1.ID });
+                context.Elements.Add(new Element() { Code = 5, Name = "اجمالي عدد الطلاب/الطالبات", MeasureUnit = "طالب/طالبة", DataSourceID = dataSource2.ID });
+                context.Elements.Add(new Element() { Code = 6, Name = "اجمالي عدد الفصول", MeasureUnit = "فصل دراسي", DataSourceID = dataSource2.ID });
+                context.Elements.Add(new Element() { Code = 7, Name = "اجمالي عدد المعلمين", MeasureUnit = "معلم", DataSourceID = dataSource2.ID });
 
-                context.Elements.Add(new Element() { Code = "8", Name = "عدد الأسر التي يقل دخلها عن 2500 ريال شهريا", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
-                context.Elements.Add(new Element() { Code = "9", Name = "إجمالي عدد الأسر", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
-                context.Elements.Add(new Element() { Code = "10", Name = "عدد النساء المعيلات في المدينة", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
-                context.Elements.Add(new Element() { Code = "11", Name = "إجمالي عدد النساء في المدينة", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
-                context.Elements.Add(new Element() { Code = "12", Name = "اسرة المستشفيات بالمدينة", MeasureUnit = "سرير لكل نسمة", DataSourceID = dataSource3.ID });
+                context.Elements.Add(new Element() { Code = 8, Name = "عدد الأسر التي يقل دخلها عن 2500 ريال شهريا", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
+                context.Elements.Add(new Element() { Code = 9, Name = "إجمالي عدد الأسر", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
+                context.Elements.Add(new Element() { Code = 10, Name = "عدد النساء المعيلات في المدينة", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
+                context.Elements.Add(new Element() { Code = 11, Name = "إجمالي عدد النساء في المدينة", MeasureUnit = "عدد", DataSourceID = dataSource3.ID });
+                context.Elements.Add(new Element() { Code = 12, Name = "اسرة المستشفيات بالمدينة", MeasureUnit = "سرير لكل نسمة", DataSourceID = dataSource3.ID });
                 context.SaveChanges();
             }
 

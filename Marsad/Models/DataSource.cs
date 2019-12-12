@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Marsad.Models
 {
@@ -20,6 +21,8 @@ namespace Marsad.Models
 
         [Required(ErrorMessage ="برجاء إخال رمز المصدر")]
         [Display(Name="رمز المصدر")]
+        [Remote("IsExist", "DataSources", AdditionalFields = "ID", ErrorMessage = "رمز المصدر يجب الا يتكرر")]
+        [Range(1, int.MaxValue, ErrorMessage = "يجب ان يكون رمز المصدر رقم موجب")]
         public int Code { get; set; }
 
         [Required(ErrorMessage = "برجاء إخال مصدر البيانات")]

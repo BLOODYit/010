@@ -1,10 +1,10 @@
-﻿@model PagedList.IPagedList<Marsad.Models.UpdateLog>
+﻿@model PagedList.IPagedList<Marsad.Models.PendingLog>
 @using PagedList.Mvc;
 @using Marsad.Helpers;
 
 @{
     ViewBag.Title = "مراجعة الأرقام والتحديثات";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";    
 }
 <div class="container">
     <div class="row">
@@ -12,7 +12,7 @@
             <h1>مراجعة الأرقام والتحديثات</h1>
             <hr />
             <div class="col-sm-8 offset-sm-2">
-                <form action="@Url.Action("UpdateLog")">
+                <form action="@Url.Action("PendingLog")">
                     <div class="input-group">
                         <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث" />
                         <span class="input-group-btn">
@@ -25,42 +25,53 @@
                 <thead>
                     <tr>
                         <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Code")"></i> كود العملية
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> البيان
+                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> العملية
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," User")"></i> المستخدم
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," Date")"></i> تاريخ العملية
                             </a>
                         </th>
                         <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.NotesSortParm,currentFilter=ViewBag.CurrentFilter})">
+                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.NotesSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Notes")"></i> القيم المحدثة
                             </a>
-                        </th>                        
+                        </th>
+                        <th>
+                            تأكيد
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                        <tr>
-                            <td>@item.ID</td>
-                            <td>@item.Log</td>
-                            <td>@item.UserName</td>
-                            <td>@item.ActionDate.ToString()</td>
-                            <td>@item.Details</td>
-                        </tr>
+                    <tr>
+                        <td>@item.ID</td>
+                        <td>@item.Log</td>
+                        <td>@item.UserName</td>
+                        <td>@item.ActionDate.ToString()</td>
+                        <td>@GetDetails(item.GeoAreaID, item.EquationYearID)</td>
+                        <td>
+                            <form action="@Url.Action("GeoAreasConfirm","Update")" method="post">
+                                @Html.AntiForgeryToken()
+                                <input name="GeoAreaID" type="hidden" value="@item.GeoAreaID" />
+                                <input name="EquationYearID" type="hidden" value="@item.EquationYearID" />
+                                <button class="btn btn-primary confirm" type="button">تأكيد</button>
+                            </form>
+                        </td>
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -69,7 +80,7 @@
             @if (Model.PageCount > 1)
             {
                 <div class="col-md-8">
-                    @Html.PagedListPager(Model, page => Url.Action("UpdateLog", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                    @Html.PagedListPager(Model, page => Url.Action("PendingLog", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
                 </div>
             }
 

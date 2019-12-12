@@ -12,10 +12,8 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class GeoAreasController : Controller
+    public class GeoAreasController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: GeoAreas
         public ActionResult Index(string type, string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -76,6 +74,7 @@ namespace Marsad.Controllers
             {
                 db.GeoAreas.Add(geoArea);
                 db.SaveChanges();
+                Log(LogAction.Create, geoArea);
                 return RedirectToAction("Index", new { Type = geoArea.Type });
             }
             string type = SetType(geoArea.Type);
@@ -111,8 +110,9 @@ namespace Marsad.Controllers
             {
                 db.Entry(geoArea).State = EntityState.Modified;
                 db.SaveChanges();
+                Log(LogAction.Update, geoArea);
                 return RedirectToAction("Index", new { Type = geoArea.Type });
-            }            
+            }
             string type = SetType(geoArea.Type);
             ViewBag.GeoAreas = db.GeoAreas.ToList();
             return View(geoArea);
@@ -140,10 +140,12 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             GeoArea geoArea = db.GeoAreas.Find(id);
+            GeoArea _geoArea = new GeoArea() { ID = id, Name = geoArea.Name };
             if (!geoArea.Type.Equals("Kingdom"))
             {
                 db.GeoAreas.Remove(geoArea);
                 db.SaveChanges();
+                Log(LogAction.Delete, _geoArea);
             }
             return RedirectToAction("Index", new { Type = geoArea.Type });
         }

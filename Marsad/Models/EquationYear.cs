@@ -7,7 +7,7 @@ namespace Marsad.Models
     {
         public EquationYear()
         {
-            ElementValues = new HashSet<ElementValue>();
+            ElementValues = new List<ElementValue>();
         }
         [Key]
         public int ID { get; set; }
@@ -15,6 +15,6 @@ namespace Marsad.Models
         public Equation Equation { get; set; }
         [Display(Name = "السنة")]
         public int Year { get; set; }
-        public virtual ICollection<ElementValue> ElementValues { get; set; }
+        public virtual List<ElementValue> ElementValues { get; set; }
     }
 }

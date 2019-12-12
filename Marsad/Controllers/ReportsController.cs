@@ -137,7 +137,7 @@ namespace Marsad.Controllers
             var value = ee.ElementValues.Where(x => x.GeoAreaID == geoAreaID && x.EquationYear.Year == year).FirstOrDefault();
             if (value == null)
             {
-                throw new Exception(string.Format("لا يوجد قيمة للعنصر {0} في سنة {1}", ee.Element.Name, year));
+                throw new Exception(string.Format("لا يوجد قيمة للمؤشر {0} في سنة {1}", ee.Element.Name, year));
             }
             return value.Value.ToString();
         }

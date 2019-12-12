@@ -24,46 +24,58 @@
     @foreach (EquationYear ey in ViewBag.EquationYears)
     {
         <div class="tab-pane @(first? "active" : "")" id="t@(ey.ID)" role="tabpanel" aria-labelledby="t@(ey.ID)-tab">
-            <form action="@Url.Action("GeoArea")" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="GeoAreaID" value="@ViewBag.GeoAreaID" />
-                <input type="hidden" name="EquationYearID" value="@ey.ID" />
-                <input type="hidden" name="action" class="action" />
-                @{
-                    var found = false;
-                }
-                @foreach (EquationElement el in ey.Equation.EquationElements)
-                {
-                    <div class="form-group" id="">
-                        <label class="control-label col-sm-2 col-xs-12">@el.Element.Name</label>
-                        <div class="col-sm-10 col-xs-12">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <br />
+                        <form action="@Url.Action("GeoArea")" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="GeoAreaID" value="@ViewBag.GeoAreaID" />
+                            <input type="hidden" name="EquationYearID" value="@ey.ID" />
+                            <input type="hidden" name="action" class="action" />
                             @{
-                                ElementValue ev = el.ElementValues.Where(x => x.GeoAreaID == ViewBag.GeoAreaID && x.EquationElementID == el.ID && x.EquationYearID == ey.ID).FirstOrDefault();
-                                if (ev != null)
-                                {
-                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" value="@ev.Value" required />
-                                    found = true;
-                                }
-                                else
-                                {
-                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" required />
-                                }
+                                var found = false;
                             }
+                            @foreach (EquationElement el in ey.Equation.EquationElements)
+                            {
+                                <div class="form-group" id="">
+                                    <div class="row">
+                                        <label class="control-label col-sm-2 col-xs-12">@el.Element.Name</label>
+                                        <div class="col-sm-8 col-xs-12">
+                                            @{
+                                                ElementValue ev = el.ElementValues.Where(x => x.GeoAreaID == ViewBag.GeoAreaID && x.EquationElementID == el.ID && x.EquationYearID == ey.ID).FirstOrDefault();
+                                                if (ev != null)
+                                                {
+                                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" value="@ev.Value" required />
+                                                    found = true;
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" required />
+                                                }
+                                            }
 
-                        </div>
+                                        </div>
+                                        <div class="col-sm-2 col-xs-12">
+                                            @el.Element.MeasureUnit
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (!found)
+                            {
+                                <button type="button" class="btn btn-success add-btn">إضافة</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-primary edit-btn">تعديل</button>
+                                <button type="button" class="btn btn-danger delete-btn">حذف</button>
+                            }
+                            <span class="error text-danger"></span>
+                        </form>
                     </div>
-                }
-                @if (!found)
-                {
-                    <button type="button" class="btn btn-success add-btn">إضافة</button>
-                }
-                else
-                {
-                    <button type="button" class="btn btn-primary edit-btn">تعديل</button>
-                    <button type="button" class="btn btn-danger delete-btn">حذف</button>
-                }
-                <span class="error text-danger"></span>
-            </form>
+                </div>
+            </div>
         </div>
         first = false;
     }

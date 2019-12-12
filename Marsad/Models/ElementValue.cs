@@ -15,10 +15,8 @@ namespace Marsad.Models
         public int EquationYearID { get; set; }
         public virtual EquationYear EquationYear { get; set; }        
         public float Value { get; set; }
-        public int? GeoAreaID { get; internal set; }
-        public GeoArea GeoArea { get; set; }
-        public int? GeoAreaBundleID { get; internal set; }
-        public GeoAreaBundle GeoAreaBundle { get; set; }
+        public int GeoAreaID { get; internal set; }
+        public GeoArea GeoArea { get; set; }       
         public string ApplicationUserID { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public DateTime CreatedAt { get; set; }

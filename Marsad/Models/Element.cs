@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Marsad.Models
 {
@@ -16,10 +17,11 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required(ErrorMessage ="يجب إدخال رمز العنصر")]
-        [MaxLength(255, ErrorMessage = "رمز العنصر يجب الا يتعدى 255 حرف")]
+        [Required(ErrorMessage ="يجب إدخال رمز العنصر")]        
         [Display(Name="رمز العنصر")]
-        public string Code { get; set; }
+        [Remote("IsExist", "Elemets", AdditionalFields = "ID", ErrorMessage = "رمز العنصر يجب الا يتكرر")]
+        [Range(1, int.MaxValue, ErrorMessage = "يجب ان يكون رمز العنصر رقم موجب")]
+        public int Code { get; set; }
 
         [Required(ErrorMessage ="يجب إدخال العنصر")]
         [MaxLength(255, ErrorMessage = "إسم العنصر يجب الا يتعدى 255 حرف")]

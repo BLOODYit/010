@@ -12,10 +12,8 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class DataSourceGroupsController : Controller
-    {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
+    public class DataSourceGroupsController : BaseController
+    {        
         // GET: DataSourceGroups
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -59,6 +57,8 @@ namespace Marsad.Controllers
         {
             ViewBag.dataSourceIds = null;
             ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
+            var MaxCode = db.DataSourceGroups.Max(x => (int?)x.Code);
+            ViewBag.NextCode = (MaxCode.HasValue) ? MaxCode.Value + 1 : 1;
             return View();
         }
 
@@ -71,11 +71,12 @@ namespace Marsad.Controllers
         {
             if (ModelState.IsValid)
             {
-                dataSourceGroup.DataSources.AddRange(db.DataSources.Where(x=>dataSources.Contains(x.ID)));
+                dataSourceGroup.DataSources.AddRange(db.DataSources.Where(x => dataSources.Contains(x.ID)));
                 db.DataSourceGroups.Add(dataSourceGroup);
                 db.SaveChanges();
+                Log(LogAction.Create, dataSourceGroup);
                 return RedirectToAction("Index");
-            }            
+            }
             ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
             return View(dataSourceGroup);
         }
@@ -88,7 +89,7 @@ namespace Marsad.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             DataSourceGroup dataSourceGroup = db.DataSourceGroups.Find(id);
-            ViewBag.dataSourceIds = db.DataSources.Where(x=>x.DataSourceGroups.Where(y=>y.ID==id).Any()).Select(x=>x.ID).ToArray();
+            ViewBag.dataSourceIds = db.DataSources.Where(x => x.DataSourceGroups.Where(y => y.ID == id).Any()).Select(x => x.ID).ToArray();
             ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
             if (dataSourceGroup == null)
             {
@@ -102,11 +103,11 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Code,Name")] DataSourceGroup dataSourceGroup,int[] dataSources)
+        public ActionResult Edit([Bind(Include = "ID,Code,Name")] DataSourceGroup dataSourceGroup, int[] dataSources)
         {
             if (ModelState.IsValid)
             {
-                
+
                 db.Entry(dataSourceGroup).State = EntityState.Modified;
                 var oldDataSourceGroup = db.DataSourceGroups.Where(x => x.ID == dataSourceGroup.ID).Include(x => x.DataSources).FirstOrDefault();
                 dataSourceGroup.DataSources = oldDataSourceGroup.DataSources;
@@ -114,6 +115,7 @@ namespace Marsad.Controllers
 
                 dataSourceGroup.DataSources.AddRange(db.DataSources.Where(x => dataSources.Contains(x.ID)));
                 db.SaveChanges();
+                Log(LogAction.Update,dataSourceGroup);
                 return RedirectToAction("Index");
             }
             return View(dataSourceGroup);
@@ -140,8 +142,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             DataSourceGroup dataSourceGroup = db.DataSourceGroups.Find(id);
+            DataSourceGroup _dataSourceGroup = new DataSourceGroup() { ID=id,Name=dataSourceGroup.Name };
             db.DataSourceGroups.Remove(dataSourceGroup);
             db.SaveChanges();
+            Log(LogAction.Delete, _dataSourceGroup);
             return RedirectToAction("Index");
         }
 
@@ -189,6 +193,15 @@ namespace Marsad.Controllers
             return dataSourceGroups;
         }
 
+        public JsonResult IsExist(int Code, int? ID)
+        {
+            bool isExists = false;
+            if (!ID.HasValue)
+                isExists = db.DataSourceGroups.Where(x => x.Code == Code).Any();
+            else
+                isExists = db.DataSourceGroups.Where(x => x.Code == Code && x.ID != ID.Value).Any();
+            return Json(!isExists, JsonRequestBehavior.AllowGet);
+        }
     }
 
 

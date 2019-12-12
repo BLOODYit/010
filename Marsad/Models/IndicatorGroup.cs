@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace Marsad.Models
 {
@@ -15,10 +16,11 @@ namespace Marsad.Models
         [Key]
         public int ID { get; set; }
 
-        [Required(ErrorMessage ="برجاء إدخال رمز المجموعة")]
-        [MaxLength(255)]
+        [Required(ErrorMessage ="برجاء إدخال رمز المجموعة")]        
         [Display(Name ="رمز المجموعة")]
-        public string Code { get; set; }
+        [Remote("IsExist", "IndicatorGroups", AdditionalFields = "ID", ErrorMessage = "رمز المجموعة يجب الا يتكرر")]
+        [Range(1, int.MaxValue, ErrorMessage = "يجب ان يكون رمز المجموعة رقم موجب")]
+        public int Code { get; set; }
         
         [MaxLength(255)]
         [Required(ErrorMessage = "برجاء إدخال المجموعة")]

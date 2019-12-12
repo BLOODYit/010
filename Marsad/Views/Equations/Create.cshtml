@@ -28,7 +28,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                     <div class="col-sm-10 col-xs-12">
-                        <select id="IndicatorID" name="IndicatorID" class="form-control" required></select>
+                        @Html.DropDownList("IndicatorID", null, htmlAttributes: new { @class = "form-control", @id = "IndicatorID" })                        
                         @Html.ValidationMessageFor(model => model.IndicatorID, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -175,7 +175,7 @@
                 });
             });
             bindItems();
-            $('#BundleID').change();
+            //$('#BundleID').change();
         });
         function bindItems() {
               $('.year').datepicker({

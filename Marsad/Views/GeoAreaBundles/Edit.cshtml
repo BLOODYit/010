@@ -1,4 +1,4 @@
-﻿@model Marsad.Models.GeoAreaBundle
+﻿@model Marsad.Models.GeoArea
 
 @{
     ViewBag.Title = "تعديل منطقة معرفة";
@@ -23,6 +23,7 @@
                     @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                     <div class="col-sm-10 col-xs-12">
                         @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                        <input type="hidden" name="Type" value="Bundle" />
                         @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
                     </div>
                 </div>
@@ -51,9 +52,9 @@
                         <div class="col-md-6"><button id="add" type="button" class="btn btn-success">إضافة</button></div>
                         <div class="col-md-6"><button id="delete" type="button" class="btn btn-danger pull-right">حذف</button></div>
                         <select name="geo_area_ids" class="form-control" id="geo-areas" multiple>
-                            @foreach(var item in Model.GeoAreas)
+                            @foreach(var item in Model.GeoAreaBundles)
                             {
-                                <option value="@item.ID">@item.Name</option>
+                                <option value="@item.ChildGeoAreaID">@item.ChildGeoArea.Name</option>
                             }
                         </select>
                     </div>

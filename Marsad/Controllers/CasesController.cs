@@ -12,10 +12,9 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class CasesController : Controller
+    public class CasesController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
+        
         // GET: Cases
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -76,6 +75,7 @@ namespace Marsad.Controllers
                 @case.Entities.AddRange(db.Entities.Where(x => entityIds.Contains(x.ID)));
                 @case.Indicators.AddRange(db.Indicators.Where(x => indicatorIds.Contains(x.ID)));
                 db.SaveChanges();
+                Log(LogAction.Create, @case);
                 return RedirectToAction("Index");
             }
 
@@ -125,6 +125,7 @@ namespace Marsad.Controllers
                 @case.Entities.AddRange(db.Entities.Where(x => entityIds.Contains(x.ID)));
                 @case.Indicators.AddRange(db.Indicators.Where(x => indicatorIds.Contains(x.ID)));
                 db.SaveChanges();
+                Log(LogAction.Update, @case);
                 return RedirectToAction("Index");
             }
             ViewBag.PeriodID = new SelectList(db.Periods, "ID", "Name", @case.PeriodID);
@@ -156,8 +157,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Case @case = db.Cases.Find(id);
+            Case _case = new Case() { ID = id, Name = @case.Name };
             db.Cases.Remove(@case);
             db.SaveChanges();
+            Log(LogAction.Delete, _case);
             return RedirectToAction("Index");
         }
 

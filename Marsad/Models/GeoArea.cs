@@ -9,6 +9,10 @@ namespace Marsad.Models
 {
     public class GeoArea
     {
+        public GeoArea()
+        {
+            this.GeoAreaBundles = new List<GeoAreaBundle>();            
+        }
         [Key]
         public int ID { get; set; }
 
@@ -24,7 +28,7 @@ namespace Marsad.Models
         [RequiredNullable]
         public int? GeoAreaID { get; set; }
         public virtual GeoArea ParentGeoArea { get; set; }
-
+        
         [Required]
         public string Type { get; set; }
 
@@ -62,8 +66,8 @@ namespace Marsad.Models
                 return "Region";
             return "Kingdom";
         }
-
-        public virtual List<GeoAreaValue> GeoAreaValues { get; set; }
+        
+        public virtual List<GeoAreaBundle> GeoAreaBundles { get; set; }
 
     }
 

@@ -1,4 +1,5 @@
 ﻿using Marsad.Models;
+using Marsad.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -48,7 +49,7 @@ namespace Marsad.Controllers
             var officerKPI = db.ElementValues
                 .Where(x => officerIds.Contains(x.ApplicationUserID))
                 .GroupBy(x => new { x.ApplicationUser })
-                .Select(x => new { x.Key.ApplicationUser, Count = x.Count(), LastUpdated = x.Max(y => y.CreatedAt) }).ToList();
+                .Select(x => new OfficerKPI{ ApplicationUser = x.Key.ApplicationUser, Count = x.Count(), LastUpdated = x.Max(y => y.CreatedAt) }).ToList();
             ViewBag.OfficersKPI = officerKPI;            
             return View();
         }

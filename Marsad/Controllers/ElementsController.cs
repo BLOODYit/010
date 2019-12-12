@@ -12,10 +12,8 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class ElementsController : Controller
+    public class ElementsController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: Elements
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -58,6 +56,8 @@ namespace Marsad.Controllers
         public ActionResult Create()
         {
             ViewBag.DataSourceID = new SelectList(db.DataSources, "ID", "Name");
+            var MaxCode = db.Elements.Max(x => (int?)x.Code);
+            ViewBag.NextCode = (MaxCode.HasValue) ? MaxCode.Value + 1 : 1;
             return View();
         }
 
@@ -72,6 +72,7 @@ namespace Marsad.Controllers
             {
                 db.Elements.Add(element);
                 db.SaveChanges();
+                Log(LogAction.Create, element);
                 return RedirectToAction("Index");
             }
 
@@ -106,6 +107,7 @@ namespace Marsad.Controllers
             {
                 db.Entry(element).State = EntityState.Modified;
                 db.SaveChanges();
+                Log(LogAction.Update, element);
                 return RedirectToAction("Index");
             }
             ViewBag.DataSourceID = new SelectList(db.DataSources, "ID", "Name", element.DataSourceID);
@@ -133,8 +135,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Element element = db.Elements.Find(id);
+            Element _element = new Element() { ID = id, Name = element.Name };
             db.Elements.Remove(element);
             db.SaveChanges();
+            Log(LogAction.Delete, _element);
             return RedirectToAction("Index");
         }
 
@@ -200,6 +204,8 @@ namespace Marsad.Controllers
         public ActionResult GetCreateElement()
         {
             ViewBag.DataSourceID = new SelectList(db.DataSources, "ID", "Name");
+            var MaxCode = db.Elements.Max(x => (int?)x.Code);
+            ViewBag.NextCode = (MaxCode.HasValue) ? MaxCode.Value + 1 : 1;
             return PartialView();
         }
 
@@ -210,6 +216,7 @@ namespace Marsad.Controllers
             {
                 db.Elements.Add(element);
                 db.SaveChanges();
+                Log(LogAction.Create, element);
                 return Json(new { success = true, data = element });
             }
             else
@@ -218,6 +225,15 @@ namespace Marsad.Controllers
             }
         }
 
+        public JsonResult IsExist(int Code, int? ID)
+        {
+            bool isExists = false;
+            if (!ID.HasValue)
+                isExists = db.Elements.Where(x => x.Code == Code).Any();
+            else
+                isExists = db.Elements.Where(x => x.Code == Code && x.ID != ID.Value).Any();
+            return Json(!isExists, JsonRequestBehavior.AllowGet);
+        }
     }
 
 

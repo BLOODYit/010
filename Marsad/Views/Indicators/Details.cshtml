@@ -9,106 +9,143 @@
 <div class="container">
 <div class="row">
 <div class="col-xs-12">
-<div>
+    <div>
 
-    <h4>بيانات مؤشر</h4>
-    <hr />
-    <dl class="dl-horizontal">
+        <h4>بيانات مؤشر</h4>
+        <hr />
+        <dl class="dl-horizontal">
 
-        @if (Model.HasParent)
-        {
+            @if (Model.HasParent)
+            {
+                <dt>
+                    المؤشر الرئيسي
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ParentIndicator.Name)
+                </dd>
+            }
+
             <dt>
-                المؤشر الرئيسي
+                @Html.DisplayNameFor(model => model.Code)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.ParentIndicator.Name)
+                @Html.DisplayFor(model => model.Code)
             </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Bundle.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Bundle.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IndicatorType.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IndicatorType.Name)
+            </dd>
+
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ElementCount)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ElementCount)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.MeasureUnit)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.MeasureUnit)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Correlation)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Correlation)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.References)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.References)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.CalculationMethod)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.CalculationMethod)
+            </dd>
+
+        </dl>
+        @if (Model.ChildIndicators.Count > 0) { 
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-striped jambo_table">
+                    <thead>
+                        <tr class="headings">
+                            <th class="column-title">كود المؤشر</th>
+                            <th class="column-title">أسم المؤشر</th>
+                            <th class="column-title">الحزمة التابع لها</th>
+                            <th class="column-title no-link last">
+                                <span class="nobr">عمليات</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            ushort i = 0;
+                        }
+                        @foreach (var item in Model.ChildIndicators)
+                        {
+                            <tr class="@(i++%2==0?"even_pointer":"odd_pointer")">
+                                <td>@item.Code</td>
+                                <td>@item.Name</td>
+
+                                <td>@item.Bundle.Name</td>
+                                <td class=" last">
+                                    <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Indicators",new { item.ID })">عرض</a>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>                
+            </div>
+        </div>
+
         }
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Code)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Code)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Bundle.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Bundle.Name)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IndicatorType.Name)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IndicatorType.Name)
-        </dd>
-
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ElementCount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ElementCount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.MeasureUnit)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.MeasureUnit)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Correlation)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Correlation)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.References)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.References)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CalculationMethod)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CalculationMethod)
-        </dd>
-
-    </dl>
-</div>
+    </div>
 <p>
     @Html.ActionLink("تعديل", "Edit", new { id = Model.ID },new {@class="btn btn-primary"})
     @Html.ActionLink("الرئيسية", "Index",null,new {@class="btn btn-default"})

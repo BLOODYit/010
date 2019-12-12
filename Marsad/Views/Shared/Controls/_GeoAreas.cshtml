@@ -60,10 +60,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-sm-2 col-xs-12">الحاضرة</label>
-        <div class="col-sm-10 col-xs-12">
-            <select name="GeoAreaID" required class="form-control" id="subRegions">
-            </select>
+        <div class="form-group">
+            <label class="control-label col-sm-2 col-xs-12">الحاضرة</label>
+            <div class="col-sm-10 col-xs-12">
+                <select name="GeoAreaID" class="form-control" id="subRegions">
+                </select>
+            </div>
         </div>
     </div>
     <script type="text/javascript">
@@ -71,27 +73,49 @@
             $('#regions').change(function () {
                 var val = $(this).val();
                 $('#subRegions option').remove();
+                $('#subRegions').append("<option value=''>بدون حاضرة</option>");
                 geoAreas.forEach(function (e, i) {
-                    if (e.GeoAreaID == val && val != undefined) {
+                    if (e.GeoAreaID == val && val != undefined && e.Type == "SubRegion") {
                         $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
                     }
                 });
                 $('#subRegions').change();
             });
+
+            $('#subRegions').change(function () {
+                var sr = $(this);
+                if (sr.val() == '') {
+                    $('#regions').attr('name', 'GeoAreaID');
+                    $('#subRegions').attr('name', 'subRegion');
+                }
+                else {
+                    $('#regions').attr('name', 'region');
+                    $('#subRegions').attr('name', 'GeoAreaID');
+                }
+            });
             $('#regions').change();
 
             if (geoId > 0) {
                 var subRegionId = geoId;
-                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
-                $('#regions').val(regionId);
-                $('#regions').change();
-                $('#subRegions').val(subRegionId);
+                var parentGeoRegion = geoAreas.find(function (e) { return e.ID == subRegionId; });
+                if (parentGeoRegion.Type == "Region") {
+                    var regionId = parentGeoRegion.GeoAreaID;
+                    $('#regions').val(subRegionId);
+                    $('#regions').change();
+                    $('#subRegions').val();
+                }
+                else if (parentGeoRegion.Type == "SubRegion") {
+                    var regionId = parentGeoRegion.GeoAreaID;
+                    $('#regions').val(regionId);
+                    $('#regions').change();
+                    $('#subRegions').val(subRegionId);
+                }
+                $('#subRegions').change();
             }
         });
     </script>
     return;
 }
-
 
 @if (Model.Type.Equals("Town"))
 {
@@ -131,8 +155,9 @@
             $('#regions').change(function () {
                 var val = $(this).val();
                 $('#subRegions option').remove();
+                $('#subRegions').append("<option value=''>بدون حاضرة</option>");
                 geoAreas.forEach(function (e, i) {
-                    if (e.GeoAreaID == val && val != undefined) {
+                    if (e.GeoAreaID == val && val != undefined && e.Type == "SubRegion") {
                         $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
                     }
                 });
@@ -141,9 +166,10 @@
 
             $('#subRegions').change(function () {
                 var val = $(this).val();
+                var regionId = $('#regions').val();
                 $('#govs option').remove();
                 geoAreas.forEach(function (e, i) {
-                    if (e.GeoAreaID == val && val != undefined) {
+                    if ((e.GeoAreaID == val && val != undefined) || (e.GeoAreaID == regionId && e.Type == "Governorate")) {
                         $('#govs').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
                     }
                 });
@@ -153,8 +179,17 @@
 
             if (geoId > 0) {
                 var govId = geoId;
-                var subRegionId = geoAreas.find(function (e) { return e.ID == govId; }).GeoAreaID;
-                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                var gov = geoAreas.find(function (e) { return e.ID == govId; });
+                var subRegionId;
+                var regionId;                
+                if (gov.ParentGeoArea.Type == "Region") {
+                    subRegionId = '';
+                    regionId = gov.GeoAreaID;
+                }
+                else {
+                    subRegionId = gov.GeoAreaID;
+                    regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                }
                 $('#regions').val(regionId);
                 $('#regions').change();
                 $('#subRegions').val(subRegionId);
@@ -165,7 +200,6 @@
     </script>
     return;
 }
-
 
 @if (Model.Type.Equals("City"))
 {
@@ -214,8 +248,9 @@
             $('#regions').change(function () {
                 var val = $(this).val();
                 $('#subRegions option').remove();
+                $('#subRegions').append("<option value=''>بدون حاضرة</option>");
                 geoAreas.forEach(function (e, i) {
-                    if (e.GeoAreaID == val && val != undefined) {
+                    if (e.GeoAreaID == val && val != undefined && e.Type == "SubRegion") {
                         $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
                     }
                 });
@@ -224,9 +259,10 @@
 
             $('#subRegions').change(function () {
                 var val = $(this).val();
+                var regionId = $('#regions').val();
                 $('#govs option').remove();
                 geoAreas.forEach(function (e, i) {
-                    if (e.GeoAreaID == val && val != undefined) {
+                    if ((e.GeoAreaID == val && val != undefined) || (e.GeoAreaID == regionId && e.Type == "Governorate")) {
                         $('#govs').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
                     }
                 });
@@ -249,8 +285,17 @@
             if (geoId > 0) {
                 var townId = geoId;
                 var govId = geoAreas.find(function (e) { return e.ID == townId; }).GeoAreaID;
-                var subRegionId = geoAreas.find(function (e) { return e.ID == govId; }).GeoAreaID;
-                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                var gov = geoAreas.find(function (e) { return e.ID == govId; });
+                var subRegionId;
+                var regionId;                
+                if (gov.ParentGeoArea.Type == "Region") {
+                    subRegionId = '';
+                    regionId = gov.GeoAreaID;
+                }
+                else {
+                    subRegionId = gov.GeoAreaID;
+                    regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                }
                 $('#regions').val(regionId);
                 $('#regions').change();
                 $('#subRegions').val(subRegionId);
@@ -263,7 +308,6 @@
     </script>
     return;
 }
-
 
 @if (Model.Type.Equals("District"))
 {
@@ -320,8 +364,9 @@
             $('#regions').change(function () {
                 var val = $(this).val();
                 $('#subRegions option').remove();
+                $('#subRegions').append("<option value=''>بدون حاضرة</option>");
                 geoAreas.forEach(function (e, i) {
-                    if (e.GeoAreaID == val && val != undefined) {
+                    if (e.GeoAreaID == val && val != undefined && e.Type == "SubRegion") {
                         $('#subRegions').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
                     }
                 });
@@ -330,9 +375,10 @@
 
             $('#subRegions').change(function () {
                 var val = $(this).val();
+                var regionId = $('#regions').val();
                 $('#govs option').remove();
                 geoAreas.forEach(function (e, i) {
-                    if (e.GeoAreaID == val && val != undefined) {
+                    if ((e.GeoAreaID == val && val != undefined) || (e.GeoAreaID == regionId && e.Type == "Governorate")) {
                         $('#govs').append("<option value='" + e.ID + "'>" + e.Name + "</option>");
                     }
                 });
@@ -367,8 +413,17 @@
                 var cityId = geoId;
                 var townId = geoAreas.find(function (e) { return e.ID == cityId; }).GeoAreaID;
                 var govId = geoAreas.find(function (e) { return e.ID == townId; }).GeoAreaID;
-                var subRegionId = geoAreas.find(function (e) { return e.ID == govId; }).GeoAreaID;
-                var regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                var gov = geoAreas.find(function (e) { return e.ID == govId; });
+                var subRegionId;
+                var regionId;                
+                if (gov.ParentGeoArea.Type == "Region") {
+                    subRegionId = '';
+                    regionId = gov.GeoAreaID;
+                }
+                else {
+                    subRegionId = gov.GeoAreaID;
+                    regionId = geoAreas.find(function (e) { return e.ID == subRegionId; }).GeoAreaID;
+                }
                 $('#regions').val(regionId);
                 $('#regions').change();
                 $('#subRegions').val(subRegionId);

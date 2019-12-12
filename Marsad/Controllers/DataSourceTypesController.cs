@@ -12,10 +12,9 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class DataSourceTypesController : Controller
+    public class DataSourceTypesController :BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
+        
         // GET: DataSourceTypes
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -71,6 +70,7 @@ namespace Marsad.Controllers
             {
                 db.DataSourceTypes.Add(dataSourceType);
                 db.SaveChanges();
+                Log(LogAction.Create, dataSourceType);
                 return RedirectToAction("Index");
             }
 
@@ -103,6 +103,7 @@ namespace Marsad.Controllers
             {
                 db.Entry(dataSourceType).State = EntityState.Modified;
                 db.SaveChanges();
+                Log(LogAction.Update, dataSourceType);
                 return RedirectToAction("Index");
             }
             return View(dataSourceType);
@@ -129,8 +130,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             DataSourceType dataSourceType = db.DataSourceTypes.Find(id);
+            DataSourceType _dataSourceType = new DataSourceType() { ID=id,Name=dataSourceType.Name};
             db.DataSourceTypes.Remove(dataSourceType);
             db.SaveChanges();
+            Log(LogAction.Delete, _dataSourceType);
             return RedirectToAction("Index");
         }
 

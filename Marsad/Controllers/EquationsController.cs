@@ -14,10 +14,8 @@ using System.Text.RegularExpressions;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class EquationsController : Controller
+    public class EquationsController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
         // GET: Equations
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? indicatorID)
         {
@@ -66,7 +64,7 @@ namespace Marsad.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var bundles = db.Bundles.AsQueryable();
+            var bundles = db.Bundles.Include(x => x.Indicators).AsQueryable();
             bundles = bundles.Where(x => x.Indicators.Any());
             ViewBag.IndicatorID = new SelectList(indicator.Bundle.Indicators, "ID", "Name", indicator);
             ViewBag.BundleID = new SelectList(bundles, "ID", "Name", indicator.Bundle);
@@ -131,6 +129,7 @@ namespace Marsad.Controllers
                     });
                 }
                 db.SaveChanges();
+                Log(LogAction.Create, equation);
                 return RedirectToAction("Index");
             }
 
@@ -141,7 +140,7 @@ namespace Marsad.Controllers
             }
 
             var bundles = db.Bundles.AsQueryable();
-            bundles = bundles.Where(x=>x.Indicators.Any());
+            bundles = bundles.Where(x => x.Indicators.Any());
             ViewBag.IndicatorID = new SelectList(indicator.Bundle.Indicators, "ID", "Name", indicator);
             ViewBag.BundleID = new SelectList(bundles, "ID", "Name", indicator.Bundle);
             ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
@@ -234,6 +233,7 @@ namespace Marsad.Controllers
                 }
 
                 db.SaveChanges();
+                Log(LogAction.Update, equation);
                 return RedirectToAction("Index");
             }
             ViewBag.IndicatorID = new SelectList(db.Indicators, "ID", "Name", equation.IndicatorID);
@@ -267,8 +267,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Equation equation = db.Equations.Find(id);
+            Equation _equation = new Equation() { ID = id, Indicator = equation.Indicator, EquationYears = equation.EquationYears };
             db.Equations.Remove(equation);
             db.SaveChanges();
+            Log(LogAction.Delete, _equation);
             return RedirectToAction("Index");
         }
 

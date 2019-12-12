@@ -8,15 +8,13 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Marsad.Models;
+using Microsoft.AspNet.Identity;
 
 namespace Marsad.Controllers
 {
     [Authorize(Roles ="Admin,Officer")]
-    public class BundlesController : Controller
-    {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
-
+    public class BundlesController : BaseController
+    {        
         // GET: Bundles
         [Authorize(Roles ="Admin")]
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
@@ -76,6 +74,7 @@ namespace Marsad.Controllers
             {
                 db.Bundles.Add(bundle);
                 db.SaveChanges();
+                Log(LogAction.Create, bundle);
                 return RedirectToAction("Index");
             }
 
@@ -110,6 +109,7 @@ namespace Marsad.Controllers
             {
                 db.Entry(bundle).State = EntityState.Modified;
                 db.SaveChanges();
+                Log(LogAction.Update, bundle);
                 return RedirectToAction("Index");
             }
             return View(bundle);
@@ -138,8 +138,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Bundle bundle = db.Bundles.Find(id);
+            Bundle _bundle = new Bundle() { ID = id, Name = bundle.Name };
             db.Bundles.Remove(bundle);
             db.SaveChanges();
+            Log(LogAction.Delete, _bundle);
             return RedirectToAction("Index");
         }
 
@@ -192,10 +194,13 @@ namespace Marsad.Controllers
         [HttpGet]
         public JsonResult GetIndicatorsWithValues(int id)
         {
-            var indicators = db.Indicators.Where(x=>x.Equations.Any()).Where(x => x.BundleID == id).Select(x => new { x.ID, x.Name }).ToList();
+            bool isAdmin = User.IsInRole("Admin");            
+            var userId = User.Identity.GetUserId();
+            var bundleUsersIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == userId).Any()).Select(x => x.ID).ToList();
+            var indicatorUsersIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == userId).Any() || bundleUsersIds.Contains(x.BundleID)).Select(x => x.ID).ToList();
+            var indicators = db.Indicators.Where(x=>x.Equations.Any()).Where(x => x.BundleID == id && (indicatorUsersIds.Contains(x.ID) || isAdmin)).Select(x => new { x.ID, x.Name }).ToList();
             return Json(new { success = true, data = indicators }, JsonRequestBehavior.AllowGet);
         }
-
         
     }
 

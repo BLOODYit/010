@@ -12,10 +12,9 @@ using Marsad.Models;
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
-    public class DataSourcesController : Controller
+    public class DataSourcesController : BaseController
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
-
+        
         // GET: DataSources
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -61,6 +60,8 @@ namespace Marsad.Controllers
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name");
             ViewBag.PeriodID = new SelectList(db.Periods, "ID", "Name");
             ViewBag.DataSourceGroups = db.DataSourceGroups.ToDictionary(x => x.ID, x => x.Name);
+            var MaxCode = db.DataSources.Max(x => (int?)x.Code);
+            ViewBag.NextCode = (MaxCode.HasValue) ? MaxCode.Value + 1 : 1;
             return View();
         }
 
@@ -73,10 +74,6 @@ namespace Marsad.Controllers
         {
             if (ModelState.IsValid)
             {
-                int? code = db.DataSources.Max(x => (int?)x.Code);
-                dataSource.Code = code.HasValue ? code.Value : 0 + 1;
-
-
                 var dataSourceGroups = db.DataSourceGroups.Where(x => dataSourceGroupIds.Contains(x.ID));
                 foreach (var dsg in dataSourceGroups)
                 {
@@ -88,6 +85,7 @@ namespace Marsad.Controllers
                     dataSource.PeriodID = null;
                 db.DataSources.Add(dataSource);
                 db.SaveChanges();
+                Log(LogAction.Create, dataSource);
                 return RedirectToAction("Index");
             }
 
@@ -144,6 +142,7 @@ namespace Marsad.Controllers
                 if (dataSource.NoPeriod)
                     dataSource.PeriodID = null;
                 db.SaveChanges();
+                Log(LogAction.Update,dataSource);
                 return RedirectToAction("Index");
             }
             ViewBag.DataSourceTypeID = new SelectList(db.DataSourceTypes, "ID", "Name", dataSource.DataSourceTypeID);
@@ -175,8 +174,10 @@ namespace Marsad.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             DataSource dataSource = db.DataSources.Find(id);
+            DataSource _dataSource = new DataSource() { ID = id, Name = dataSource.Name };
             db.DataSources.Remove(dataSource);
             db.SaveChanges();
+            Log(LogAction.Delete,_dataSource);
             return RedirectToAction("Index");
         }
 
@@ -305,6 +306,15 @@ namespace Marsad.Controllers
             return dataSources;
         }
 
+        public JsonResult IsExist(int Code, int? ID)
+        {
+            bool isExists = false;
+            if (!ID.HasValue)
+                isExists = db.DataSources.Where(x => x.Code == Code).Any();
+            else
+                isExists = db.DataSources.Where(x => x.Code == Code && x.ID != ID.Value).Any();
+            return Json(!isExists, JsonRequestBehavior.AllowGet);
+        }
     }
 
 
