@@ -29,7 +29,7 @@ namespace Marsad.Controllers
             ViewBag.CurrentFilter = searchString;
 
 
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
             var systemLogs = db.SystemLogs.AsQueryable();
             if (!string.IsNullOrEmpty(searchString))
@@ -52,7 +52,7 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
             var updateLogs = db.UpdateLogs.AsQueryable();
             if (!string.IsNullOrEmpty(searchString))
@@ -74,25 +74,31 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
 
-            var result = db.ElementValues
-                .Include(x => x.GeoArea)
-                .Include(x => x.EquationYear.Equation.Indicator)
+            var query = db.ElementYearValues.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query = query.Where(x => x.Element.Name.Contains(searchString));
+            var result = query.Include(x => x.ApplicationUser)
+                .Include(x => x.Element)
                 .Where(x => x.IsCommited == false)
-                .GroupBy(x => new { x.GeoArea, x.EquationYear })
+                .GroupBy(x => new { x.CreatedAt, x.ApplicationUser, x.Year, x.GeoArea })
                 .Select(x => new PendingLog()
                 {
-                    ActionDate = x.Max(y => y.CreatedAt),
-                    UserName = x.Max(y => y.ApplicationUser.Name),
-                    Log = "بيان مؤشر " + x.Key.EquationYear.Equation.Indicator.Name + " الخاص بـ" + x.Key.GeoArea.Name + " لسنة " + x.Key.EquationYear.Year.ToString(),
-                    EquationYearID=x.Key.EquationYear.ID,
-                    GeoAreaID=x.Key.GeoArea.ID
+                    ActionDate = x.Key.CreatedAt,
+                    UserName = x.Key.ApplicationUser.Name,
+                    Log = "تحديث قيم نطاق (" + x.Key.GeoArea.Name + ")",
+                    Year = x.Key.Year,
+                    ApplicationUserID = x.Key.ApplicationUser.Id,
+                    GeoAreaID = x.Key.GeoArea.ID
                 })
                 .OrderBy(x => x.ActionDate)
                 .ToPagedList(pageNumber, pageSize);
-
+            var details = db.ElementYearValues.Include(x => x.Element).Where(x => x.IsCommited == false);
+            if (!string.IsNullOrWhiteSpace(searchString))
+                details = details.Where(x => x.Element.Name.Contains(searchString));
+            ViewBag.Details = details;
             return View(result);
         }
     }

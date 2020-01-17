@@ -60,14 +60,6 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.EntityID, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                        <div class="col-sm-10 col-xs-12">
-                            @Html.DropDownList("EntityID", null, htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.EntityID, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         @Html.LabelFor(model => model.RoleID, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                         <div class="col-sm-10 col-xs-12">
                             @{
@@ -81,17 +73,49 @@
                         </div>
                     </div>
 
-                    <div class="form-group officerDetails">
-                        <label class="control-label col-sm-2 col-xs-12">الحزم المسموح تحديثها</label>
+
+                    <div class="form-group officerDetails" style="@(currentKey=="Officer"?"display:block":"display:none")">
+                        @Html.LabelFor(model => model.EntityID, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
                         <div class="col-sm-10 col-xs-12">
-                            @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "bundles", Data = ViewBag.Bundles, Title = "", Name = "bundleIds", Selected = ViewBag.bundleIds })
+                            @Html.DropDownList("EntityID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.EntityID, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
-                    <div class="form-group officerDetails">
-                        <label class="control-label col-sm-2 col-xs-12">المؤشرات المسموح تحديثها</label>
+                    <div class="form-group officerDetails" style="@(currentKey=="Officer"?"display:block":"display:none")">
+                        <label class="control-label col-sm-2 col-xs-12">مصادر البيانات</label>
                         <div class="col-sm-10 col-xs-12">
-                            @Html.Partial("~/Views/Shared/Controls/_MultiSelect.cshtml", new MultiSelectModel() { ID = "indicators", Data = ViewBag.Indicators, Title = "", Name = "indicatorIds", Selected = ViewBag.indicatorIds })
+                            <select class="form-control" id="dataSource">
+                                <option value="">الكل</option>
+                                @foreach (var key in ViewBag.DataSources.Keys)
+                                {
+                                    <option value="@key">@ViewBag.DataSources[key]</option>
+                                }
+                            </select>
+                            <input type="text" class="form-control" id="elementFilter" placeholder="تصفيه العناصر..." />
+                        </div>
+                    </div>
+
+                    <div class="form-group officerDetails" style="@(currentKey=="Officer"?"display:block":"display:none")">
+                        <label class="control-label col-sm-2 col-xs-12">العناصر المسموحة</label>
+                        <div class="col-sm-10 col-xs-12" style="max-height:300px;overflow-y:auto">
+                            <table class="table table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th width="30px"></th>
+                                        <th>العنصر</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="elementsBody">
+                                    @foreach (Element element in ViewBag.Elements)
+                                    {
+                                        <tr data-sourceId="@element.DataSourceID" data-name="@element.Name">
+                                            <td><input type="checkbox" name="elementIds" value="@element.ID" @(((int[])ViewBag.elementIds).Contains(element.ID) ? "checked" : "") /></td>
+                                            <td>@element.Name</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
@@ -115,18 +139,36 @@
 
 @section Scripts{
     <script>
-            $(function () {
-                $('.roleId').change(function () {
-                    var val = $(this).val();
-                    if (val == 'Officer') {
-                        $('.officerDetails').css('display', 'block');
-                    }
-                    else {
-                        $('.officerDetails').css('display', 'none');
+        $(function () {
+            $('.roleId').change(function () {
+                var val = $(this).val();
+                if (val == 'Officer') {
+                    $('.officerDetails').css('display', 'block');
+                }
+                else {
+                    $('.officerDetails').css('display', 'none');
+                }
+            });
+
+            $('#dataSource').change(function () {
+                filterElements();
+            });
+            $('#elementFilter').keyup(function () {
+                filterElements();
+            });
+            function filterElements() {
+                var dataSource = $('#dataSource').val();
+                var filter = $('#elementFilter').val();
+                $('#elementsBody tr').each(function (i) {
+                    var name = $(this).data().name + "";
+                    if (($(this).data().sourceid == dataSource || (dataSource == '' || dataSource == undefined))
+                        && (name.indexOf(filter) >= 0 || (filter == '' || filter == undefined))) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
                     }
                 });
-                $('.roleId').val('@Model.RoleID');
-                $('.roleId').change();
-            });
+            }
+        });
     </script>
 }

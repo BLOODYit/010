@@ -1,7 +1,7 @@
 ﻿@model Marsad.Models.Entity
 
 @{
-    ViewBag.Title = "تعديل حهة";
+    ViewBag.Title = "تعديل جهة";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,7 +14,7 @@
                 @Html.AntiForgeryToken()
 
                 <div class="form-horizontal">
-                    <h2>تعديل حهة</h2>
+                    <h2>تعديل جهة</h2>
                     <hr />
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                     @Html.HiddenFor(model => model.ID)

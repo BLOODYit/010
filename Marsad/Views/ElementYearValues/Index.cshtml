@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "تحديث قيم العناصر";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>تحديث قيم العناصر</h1>
+            <div class="col-sm-2">
+            </div>
+            <div class="col-sm-8">
+                <form action="@Url.Action("Index")" method="get" id="GeoAreaTypeForm">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2 col-xs-12">النطاق الجغرافي</label>
+                        <div class="col-sm-10 col-xs-12">
+                            <select name="Type" class="form-control" id="GeoAreaType">
+                                <option value="Region" @(ViewBag.Type == "Region" ? "selected" : "")>منطقة</option>
+                                <option value="SubRegion" @(ViewBag.Type == "SubRegion" ? "selected" : "")>الحاضرة</option>
+                                <option value="Governorate" @(ViewBag.Type == "Governorate" ? "selected" : "")>المحافظة</option>
+                                <option value="Town" @(ViewBag.Type == "Town" ? "selected" : "")>البلدية</option>
+                                <option value="City" @(ViewBag.Type == "City" ? "selected" : "")>المدينة</option>
+                                <option value="District" @(ViewBag.Type == "District" ? "selected" : "")>الحي</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+                <div class="form-group" id="IndicatorIDDiv">
+                    <label class="control-label col-sm-2 col-xs-12">@ViewBag.TypeName</label>
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.DropDownList("GeoAreaID", null, htmlAttributes: new { @class = "form-control", @id = "GeoAreaID" })
+                    </div>
+                </div>
+
+                <div class="input-group col-sm-10 col-xs-12 col-sm-offset-2">
+                    <input class="form-control year" id="year" placeholder="السنة" />
+                    <span class="input-group-btn">
+                        <input id="getYears" type="button" value="عناصر السنة" class="btn btn-primary" />
+                    </span>
+                </div>
+            </div>
+            <hr />
+
+            <div id="elementValues">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('#getYears').click(function () {                
+                var year = $('#year').val();
+                var geoArea = $('#GeoAreaID').val();
+                var url = '@Url.Action("GetElementValues")?year=' + year + '&geoArea=' + geoArea;
+                $('#elementValues').html('');
+                 $.get(url).done(function (res) {
+                    $('#elementValues').html(res);
+                });
+            });
+              $('#GeoAreaType').change(function () {
+                $('#GeoAreaTypeForm').submit();
+            });
+        });
+    </script>
+}

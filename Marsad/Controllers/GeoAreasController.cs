@@ -33,7 +33,7 @@ namespace Marsad.Controllers
             var geoAreas = db.GeoAreas.Where(x => x.Type.Equals(type)).Include(g => g.ParentGeoArea).AsQueryable();
             geoAreas = SortParams(sortOrder, geoAreas, searchString);
 
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
             return View(geoAreas.ToPagedList(pageNumber, pageSize));
         }

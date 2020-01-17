@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<Marsad.Models.Equation>
+﻿@model PagedList.IPagedList<Marsad.Models.Indicator>
 @using PagedList.Mvc;
 @using Marsad.Helpers;
 
@@ -13,10 +13,17 @@
             <h1>المعادلات الحسابية</h1>
             <hr />
 
-            <div class="col-sm-2">                
+            <div class="col-sm-2">
             </div>
             <div class="col-sm-8">
                 <form action="@Url.Action("Index")">
+                    <select class="form-control" name="bundleID">
+                        <option value="">الكل</option>
+                        @foreach (var id in ViewBag.Bundles.Keys)
+                        {
+                            <option value="@id" @(ViewBag.BundleID == id ? "selected" : "")>@ViewBag.Bundles[id]</option>
+                        }
+                    </select>
                     <div class="input-group">
                         <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث بالمؤشر او الحزمة" />
                         <span class="input-group-btn">
@@ -30,27 +37,22 @@
                     <tr>
                         <th>
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.IndicatorIDSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," IndicatorID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Code)
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," IndicatorID")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Code)
                             </a>
                         </th>
                         <th>
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.IndicatorNameSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," IndicatorName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Name)
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," IndicatorName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Name)
                             </a>
                         </th>
                         <th>
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.BundleNameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"BundleName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Indicator.Bundle.Name)
+                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"BundleName")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().Bundle.Name)
                             </a>
                         </th>
                         <th>
                             <a href="@Url.Action("Index",new { sortOrder=ViewBag.YearSortParm,currentFilter=ViewBag.CurrentFilter})">
                                 <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Year")"></i> السنة
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("Index",new { sortOrder=ViewBag.EquationTextSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"EquationText")"></i> @Html.DisplayNameFor(model => model.FirstOrDefault().EquationText)
                             </a>
                         </th>
                         <th width="250"></th>
@@ -59,28 +61,37 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Indicator.Code)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Indicator.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Indicator.Bundle.Name)
-                        </td>
-                        <td>
-                            @string.Join(" - ", item.EquationYears.Select(x => x.Year.ToString()).ToArray())
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.EquationText)
-                        </td>
-                        <td>
-                            @Html.ActionLink("تعديل", "Edit", new { id = item.ID }, new { @class = "btn btn-primary" })
-                            @Html.ActionLink("بيانات", "Details", new { id = item.ID }, new { @class = "btn btn-default" })
-                            @Html.ActionLink("حذف", "Delete", new { id = item.ID }, new { @class = "btn btn-danger" })
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Code)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Bundle.Name)
+                            </td>
+                            <td>
+                                @string.Join(" - ", item.Equations.SelectMany(x => x.EquationYears).Select(x => x.Year.ToString()).ToArray())
+                            </td>
+                            <td>
+                                @if (item.Equations.Count == 1)
+                                {
+                                    @Html.ActionLink("تعديل", "Edit", new { id = item.Equations[0].ID }, new { @class = "btn btn-primary" })
+                                    @Html.ActionLink("بيانات", "Details", new { id = item.Equations[0].ID }, new { @class = "btn btn-default" })
+                                    @Html.ActionLink("حذف", "Delete", new { id = item.Equations[0].ID }, new { @class = "btn btn-danger" })
+                                }
+                                else
+                                {
+                                    {
+                                        //string[] ids = ;
+                                    }
+                                    <button type="button" class="btn btn-primary popup" data-equations="@string.Join(",", item.Equations.Select(x=>x.ID.ToString()).ToArray())" data-years="@string.Join(",", item.Equations.Select(x => string.Join(" - ", x.EquationYears.Select(y=>y.Year.ToString()).ToArray())).Select(x=>x).ToArray())" data-action="Edit">تعديل</button>
+                                    <button type="button" class="btn btn-default popup" data-equations="@string.Join(",", item.Equations.Select(x=>x.ID.ToString()).ToArray())" data-years="@string.Join(",", item.Equations.Select(x => string.Join(" - ", x.EquationYears.Select(y=>y.Year.ToString()).ToArray())).Select(x=>x).ToArray())" data-action="Details">بيانات</button>
+                                    <button type="button" class="btn btn-danger popup" data-equations="@string.Join(",", item.Equations.Select(x=>x.ID.ToString()).ToArray())" data-years="@string.Join(",", item.Equations.Select(x => string.Join(" - ", x.EquationYears.Select(y=>y.Year.ToString()).ToArray())).Select(x=>x).ToArray())" data-action="Delete">حذف</button>
+                                }
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -96,3 +107,33 @@
         </div>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="popup-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="popup-modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('.popup').click(function () {
+                var ids = $(this).data().equations.split(',');
+                var years = $(this).data().years.split(',');
+                var _class = $(this).attr('class');
+                var url = '@Url.Action("Index")';
+                url = url.replace('Index', '');
+                url += '/'+$(this).data().action;
+                _class=_class.replace('popup', '');
+                var body = '';
+                ids.forEach(function (e, i) {
+                    body += '<a href="'+url+'/'+e+'" class="' + _class+ '" style="width:100%">' + years[i] + '</a><br />';
+                });
+                $('#popup-modal-body').html(body);
+                $('#popup-modal').modal('show');
+            });
+        });
+    </script>
+}

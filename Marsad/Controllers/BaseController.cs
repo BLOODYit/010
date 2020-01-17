@@ -98,6 +98,13 @@ namespace Marsad.Controllers
                     _entity = "مستخدم";
                     _data = string.Format("إسم المستخدم: {0} - إسم: {1}", ((ApplicationUser)entity).UserName, ((ApplicationUser)entity).Name);
                 }
+                else if(entity.GetType() == typeof(ElementYearValue))
+                {
+                    _action = "تحديث";
+                    _entity = "قيم عناصر";
+                    _data = notes;
+                    notes = "";
+                }
 
                 string log = string.Format("تم {0} {1}", _action, _entity);
                 if (!string.IsNullOrWhiteSpace(notes))

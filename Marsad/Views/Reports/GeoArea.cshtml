@@ -1,6 +1,4 @@
-﻿@model Marsad.Models.GeoAreaValue
-
-@{
+﻿@{
     ViewBag.Title = "تقارير المقارنة لمؤشر في نطاق جغرافي";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -12,14 +10,14 @@
             <h2>تقارير المقارنة لمؤشر في نطاق حغرافي</h2>
             <hr />         
             <div class="form-group">
-                @Html.LabelFor(model => model.Equation.Indicator.BundleID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <label class = "control-label col-sm-2 col-xs-12">الحزمة</label>
                 <div class="col-sm-10 col-xs-12">
                     @Html.DropDownList("BundleID", null, htmlAttributes: new { @class = "form-control", @id = "BundleID" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Equation.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <label class="control-label col-sm-2 col-xs-12">المؤشر</label>
                 <div class="col-sm-10 col-xs-12">
                     <select id="IndicatorID" class="form-control" required>
                         <option value="">-- إختر المؤشر --</option>

@@ -1,0 +1,24 @@
+﻿@using Marsad.Helpers
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="~/Images/favicon.ico" type="image/ico" />
+    <title>مؤشرات المناطق</title>
+    <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/Scripts/nprogress")
+    @RenderSection("css", required: false)
+</head>
+<body>
+    @RenderBody()
+    @Scripts.Render("~/bundles/main")
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -32,7 +32,7 @@ namespace Marsad.Controllers
 
             var dataSourceTypes = db.DataSourceTypes.AsQueryable();
             dataSourceTypes = SortParams(sortOrder, dataSourceTypes, searchString);
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
 
             return View(dataSourceTypes.ToPagedList(pageNumber, pageSize));

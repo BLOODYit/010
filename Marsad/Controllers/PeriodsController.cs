@@ -32,7 +32,7 @@ namespace Marsad.Controllers
 
             var periods = db.Periods.AsQueryable();
             periods = SortParams(sortOrder, periods, searchString);
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
 
             return View(periods.ToPagedList(pageNumber, pageSize));

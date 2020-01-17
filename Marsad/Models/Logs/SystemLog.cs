@@ -33,9 +33,10 @@ namespace Marsad.Models
     {
         [Key]
         public int ID { get; set; }
+        public int Year { get; set; }
         public int GeoAreaID { get; set; }
-        public int EquationYearID { get; set; }
         public string Log { get; set; }
+        public string ApplicationUserID { get; set; }
         [MaxLength(1000)]
         public string UserName { get; set; }
         public DateTime ActionDate { get; set; }

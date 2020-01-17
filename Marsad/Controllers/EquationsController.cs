@@ -17,7 +17,7 @@ namespace Marsad.Controllers
     public class EquationsController : BaseController
     {
         // GET: Equations
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? indicatorID)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? indicatorID, int? bundleID)
         {
 
             ViewBag.CurrentSort = sortOrder;
@@ -30,14 +30,20 @@ namespace Marsad.Controllers
                 searchString = currentFilter;
             }
             ViewBag.CurrentFilter = searchString;
-
-            var equations = db.Equations.Include(e => e.Indicator).Include(e => e.Indicator.Bundle).AsQueryable();
-            equations = SortParams(sortOrder, equations, searchString);
+            var indicators = db.Indicators.Where(x => x.Equations.Any()).Include(x => x.Bundle).Include(x => x.Equations).AsQueryable();
+            indicators = SortParams(sortOrder, indicators, searchString);
             if (indicatorID.HasValue)
-                equations = equations.Where(x => x.IndicatorID == indicatorID.Value);
-            int pageSize = 10;
+                indicators = indicators.Where(x => x.ID == indicatorID.Value);
+            if (bundleID.HasValue)
+                indicators = indicators.Where(x => x.BundleID == bundleID.Value);
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
-            return View(equations.ToPagedList(pageNumber, pageSize));
+            ViewBag.Bundles = db.Bundles.Where(x => x.Indicators.Where(y => y.Equations.Any()).Any()).ToDictionary(x=>x.ID,x=>x.Name);
+            if (bundleID.HasValue)
+            {
+                ViewBag.BundleID = bundleID.Value;
+            }
+            return View(indicators.ToPagedList(pageNumber, pageSize));
         }
 
         // GET: Equations/Details/5
@@ -283,13 +289,13 @@ namespace Marsad.Controllers
             base.Dispose(disposing);
         }
 
-        private IQueryable<Equation> SortParams(string sortOrder, IQueryable<Equation> equations, string searchString)
+        private IQueryable<Indicator> SortParams(string sortOrder, IQueryable<Indicator> indicators, string searchString)
         {
             if (!String.IsNullOrWhiteSpace(searchString))
-                equations = equations.Where(x =>
-                x.Indicator.Code.ToString().Contains(searchString) ||
-                x.Indicator.Name.Contains(searchString) ||
-                x.Indicator.Bundle.Name.Contains(searchString)
+                indicators = indicators.Where(x =>
+                x.Code.ToString().Contains(searchString) ||
+                x.Name.Contains(searchString) ||
+                x.Bundle.Name.Contains(searchString)
                 );
             ViewBag.IDSortParm = String.IsNullOrEmpty(sortOrder) ? "IDDesc" : "";
             ViewBag.IndicatorIDSortParm = sortOrder == "IndicatorID" ? "IndicatorIDDesc" : "IndicatorID";
@@ -302,37 +308,31 @@ namespace Marsad.Controllers
             switch (sortOrder)
             {
                 case "IndicatorIDDesc":
-                    equations = equations.OrderByDescending(s => s.Indicator.Code);
+                    indicators = indicators.OrderByDescending(s => s.Code);
                     break;
                 case "IndicatorID":
-                    equations = equations.OrderBy(s => s.Indicator.Code);
+                    indicators = indicators.OrderBy(s => s.Code);
                     break;
                 case "IndicatorNameDesc":
-                    equations = equations.OrderByDescending(s => s.Indicator.Name);
+                    indicators = indicators.OrderByDescending(s => s.Name);
                     break;
                 case "IndicatorName":
-                    equations = equations.OrderBy(s => s.Indicator.Name);
-                    break;
-                case "EquationTextDesc":
-                    equations = equations.OrderByDescending(s => s.EquationText);
-                    break;
-                case "EquationText":
-                    equations = equations.OrderBy(s => s.EquationText);
-                    break;
+                    indicators = indicators.OrderBy(s => s.Name);
+                    break;               
                 case "BundleNameDesc":
-                    equations = equations.OrderByDescending(s => s.Indicator.Bundle.Name);
+                    indicators = indicators.OrderByDescending(s => s.Bundle.Name);
                     break;
                 case "BundleName":
-                    equations = equations.OrderBy(s => s.Indicator.Bundle.Name);
+                    indicators = indicators.OrderBy(s => s.Bundle.Name);
                     break;
                 case "IDDesc":
-                    equations = equations.OrderByDescending(s => s.ID);
+                    indicators = indicators.OrderByDescending(s => s.ID);
                     break;
                 default:
-                    equations = equations.OrderBy(s => s.ID);
+                    indicators = indicators.OrderBy(s => s.ID);
                     break;
             }
-            return equations;
+            return indicators;
         }
 
         private bool ValidateEquation(string equationText)

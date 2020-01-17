@@ -32,7 +32,7 @@ namespace Marsad.Controllers
 
             var indicatorGroups = db.IndicatorGroups.AsQueryable();
             indicatorGroups = SortParams(sortOrder, indicatorGroups, searchString);
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
 
             return View(indicatorGroups.ToPagedList(pageNumber, pageSize));
@@ -212,7 +212,7 @@ namespace Marsad.Controllers
             return indicatorGroups;
         }
 
-
+        [HttpGet]
         public JsonResult IsExist(int Code, int? ID)
         {
             bool isExists = false;

@@ -25,42 +25,32 @@
                 <thead>
                     <tr>
                         <th>
-                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Code")"></i> كود العملية
-                            </a>
+                            كود العملية
                         </th>
                         <th>
-                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> العملية
-                            </a>
+                            العملية
                         </th>
                         <th>
-                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," User")"></i> المستخدم
-                            </a>
+                            المستخدم
                         </th>
                         <th>
-                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," Date")"></i> تاريخ العملية
-                            </a>
+                            تاريخ العملية
                         </th>
                         <th>
-                            <a href="@Url.Action("SystemLog",new { sortOrder=ViewBag.NotesSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Notes")"></i> ملاحظات
-                            </a>
-                        </th>                        
+                            ملاحظات
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td>@item.ID</td>
-                        <td>@item.Log</td>
-                        <td>@item.UserName</td>
-                        <td>@item.ActionDate.ToString()</td>
-                        <td>@item.Details</td>
-                    </tr>
+                        <tr>
+                            <td>@item.ID</td>
+                            <td>@item.Log</td>
+                            <td>@item.UserName</td>
+                            <td>@item.ActionDate.ToString()</td>
+                            <td>@item.Details</td>
+                        </tr>
                     }
 
                 </tbody>

@@ -44,6 +44,7 @@
                                         <div class="col-sm-8 col-xs-12">
                                             @{
                                                 ElementValue ev = el.ElementValues.Where(x => x.GeoAreaID == ViewBag.GeoAreaID && x.EquationElementID == el.ID && x.EquationYearID == ey.ID).FirstOrDefault();
+                                                ElementYearValue eyc = ((List<ElementYearValue>)ViewBag.ElementYearValues).Where(x => x.GeoAreaID == (int)ViewBag.GeoAreaID && x.Year == ey.Year && x.ElementID == el.ElementID).FirstOrDefault();
                                                 if (ev != null)
                                                 {
                                                     <input type="text" name="ElementValue_@(el.ID)" class="form-control" value="@ev.Value" required />
@@ -51,10 +52,13 @@
                                                 }
                                                 else
                                                 {
-                                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" required />
+                                                    <input type="text" name="ElementValue_@(el.ID)" class="form-control" required value="@(eyc != null?eyc.Value.ToString():"")" />
                                                 }
                                             }
-
+                                            @if (eyc != null)
+                                            {
+                                                <span class="text-danger">تم التحديث بقيمة (@eyc.Value) بتاريخ (@eyc.CreatedAt) من قبل (@eyc.ApplicationUser.Name)</span>
+                                            }
                                         </div>
                                         <div class="col-sm-2 col-xs-12">
                                             @el.Element.MeasureUnit
@@ -105,10 +109,10 @@
                         $(this).find("input[type=text], textarea").val("");
                         alert('تم حذف البيانات بنجاح');
                     }
-                    else if (data.action == 'add') {                        
+                    else if (data.action == 'add') {
                         alert('تم إضافة البيانات بنجاح');
                     }
-                    else if (data.action == 'edit') {                        
+                    else if (data.action == 'edit') {
                         alert('تم تعديل البيانات بنجاح');
                     }
                     getIndicator();

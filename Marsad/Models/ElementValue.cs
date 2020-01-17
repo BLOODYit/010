@@ -21,6 +21,6 @@ namespace Marsad.Models
         public ApplicationUser ApplicationUser { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? CommitedAt { get; set; }
-        public bool IsCommited { get; set; }        
+        public bool IsCommited { get; set; }
     }
 }

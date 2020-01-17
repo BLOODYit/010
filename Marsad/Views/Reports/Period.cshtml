@@ -1,10 +1,7 @@
-﻿@model Marsad.Models.GeoAreaValue
-
-@{
+﻿@{
     ViewBag.Title = "تقارير المقارنة لمؤشر في مدة زمنية";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 
 <div class="container">
     <div class="row">
@@ -34,14 +31,14 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Equation.Indicator.BundleID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <label class="control-label col-sm-2 col-xs-12">الحزمة</label>
                 <div class="col-sm-10 col-xs-12">
                     @Html.DropDownList("BundleID", null, htmlAttributes: new { @class = "form-control", @id = "BundleID" })
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Equation.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                <label class="control-label col-sm-2 col-xs-12">المؤشر</label>
                 <div class="col-sm-10 col-xs-12">
                     <select id="IndicatorID" class="form-control" required>
                         <option value="">-- إختر المؤشر --</option>
@@ -49,17 +46,15 @@
                 </div>
             </div>
 
-
             <div id="indicator"></div>
-            <div id="report"></div>
+            <div id="report"></div>            
         </div>
     </div>
 </div>
 
-@section  scripts{
+@section  scripts{    
     @Scripts.Render("~/scripts/charts")
     <script type="text/javascript">
-
 
          function getIndicator() {
                 $('#indicator').html('');
@@ -76,8 +71,7 @@
             $('#report').html('');
             var indicatorId = $('#IndicatorID').val();
             var geoAreaId = $('#GeoAreaID').val();
-            var year1 = $('#year1').val();
-            var year2 = $('#year2').val();
+
             if (!(indicatorId > 0)) {
                 alert('برجاء إختيار المؤشر');
                 return;
@@ -86,15 +80,10 @@
                 alert('برجاء إختيار @ViewBag.TypeName');
                 return;
             }
-            if (!(year1 > 0)) {
-                alert('برجاء السنة الاولى');
-                return;
-            }
-            if (!(year2 > 0)) {
-                alert('برجاء السنة الثانية');
-                return;
-            }
-            var q = "indicatorId="+indicatorId+"&geoAreaId="+geoAreaId+"&year1="+year1+"&year2="+year2;
+            var q = "indicatorId=" + indicatorId + "&geoAreaId=" + geoAreaId;
+            $('.year').each(function () {
+                q += "&year="+$(this).val();
+            });
             $.get("@Url.Action("GetPeriod","Reports")/?"+q, function (data, status) {
                 $('#report').html(data);
             });

@@ -33,7 +33,7 @@ namespace Marsad.Controllers
             var dataSources = db.DataSources.Include(d => d.DataSourceType).Include(d => d.Entity).Include(d => d.Period).AsQueryable();
             dataSources = SortParams(sortOrder, dataSources, searchString);
 
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
             return View(dataSources.ToPagedList(pageNumber, pageSize));
         }
@@ -306,6 +306,7 @@ namespace Marsad.Controllers
             return dataSources;
         }
 
+        [HttpGet]
         public JsonResult IsExist(int Code, int? ID)
         {
             bool isExists = false;

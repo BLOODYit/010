@@ -31,7 +31,7 @@ namespace Marsad.Controllers
 
             var geoAreaBundles = db.GeoAreas.Where(x => x.Type == "Bundle").Include(x => x.GeoAreaBundles).AsQueryable();
             geoAreaBundles = SortParams(sortOrder, geoAreaBundles, searchString);
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
 
             return View(geoAreaBundles.ToPagedList(pageNumber, pageSize));

@@ -50,7 +50,7 @@ namespace Marsad.Controllers
 
             var users = userManager.Users.Include(x => x.Entity);
             users = SortParams(sortOrder, users, searchString);
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
             return View(users.ToPagedList(pageNumber, pageSize));
         }
@@ -73,8 +73,8 @@ namespace Marsad.Controllers
         // GET: Indicators/Create        
         public ActionResult Create()
         {
-            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Elements = db.Elements.ToList();
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name");
             ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
             return View();
@@ -85,7 +85,7 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(RegisterViewModel newUser, int[] indicatorIds, int[] bundleIds)
+        public ActionResult Create(RegisterViewModel newUser, int[] elementIds)
         {
             if (ModelState.IsValid)
             {
@@ -95,21 +95,16 @@ namespace Marsad.Controllers
                     UserName = newUser.UserName,
                     Email = newUser.UserName
                 };
-                if (indicatorIds != null)
+                if (newUser.RoleID.Equals("Officer"))
                 {
-                    var indicators = db.Indicators.Where(x => indicatorIds.Contains(x.ID)).ToList();
-                    foreach (var indicator in indicators)
+                    user.EntityID = newUser.EntityID;
+                    if (elementIds != null)
                     {
-                        user.Indicators.Add(indicator);
-                    }
-                }
-
-                if (bundleIds != null)
-                {
-                    var bundles = db.Bundles.Where(x => bundleIds.Contains(x.ID)).ToList();
-                    foreach (var bundle in bundles)
-                    {
-                        user.Bundles.Add(bundle);
+                        var elements = db.Elements.Where(x => elementIds.Contains(x.ID)).ToList();
+                        foreach (var element in elements)
+                        {
+                            user.Elements.Add(element);
+                        }
                     }
                 }
                 userManager.Create(user, newUser.Password);
@@ -118,11 +113,11 @@ namespace Marsad.Controllers
                 Log(LogAction.Create, user);
                 return RedirectToAction("Index");
             }
-
-            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Elements = db.Elements.ToList();
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name");
             ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
+            ViewBag.elementIds = elementIds;
             return View(newUser);
         }
 
@@ -140,12 +135,13 @@ namespace Marsad.Controllers
             }
             var roleId = user.Roles.FirstOrDefault().RoleId;
             var roleName = roleManager.Roles.Where(x => x.Id == roleId).FirstOrDefault().Name;
-            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+
+            ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Elements = db.Elements.ToList();
+
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name", user.EntityID);
             ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
-            ViewBag.bundleIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == id).Any()).Select(x => x.ID).ToArray();
-            ViewBag.indicatorIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == id).Any()).Select(x => x.ID).ToArray();
+            ViewBag.elementIds = user.Elements.Select(x => x.ID).ToArray();
             return View(new EditUserViewModel()
             {
                 Id = user.Id,
@@ -162,18 +158,27 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Name,UserName,Email,EntityID,RoleID,Password,ConfirmPassword")] EditUserViewModel oldUser, int[] indicatorIds, int[] bundlesIds, string Id)
+        public ActionResult Edit([Bind(Include = "Name,UserName,Email,EntityID,RoleID,Password,ConfirmPassword")] EditUserViewModel oldUser, int[] elementIds, string Id)
         {
-
             var user = userManager.FindById(Id);
             if (ModelState.IsValid)
             {
-
                 user.Name = oldUser.Name;
                 user.Email = oldUser.Email;
-                user.EntityID = oldUser.EntityID;
-                //indicators
-                //Bundles
+                user.EntityID = null;
+                user.Elements.Clear();                
+                if (oldUser.RoleID.Equals("Officer"))
+                {
+                    user.EntityID = oldUser.EntityID;
+                    if (elementIds != null)
+                    {
+                        var elements = db.Elements.Where(x => elementIds.Contains(x.ID)).ToList();
+                        foreach (var element in elements)
+                        {
+                            user.Elements.Add(element);
+                        }
+                    }
+                }
                 userManager.Update(user);
                 var roleIds = user.Roles.Select(x => x.RoleId).ToList();
                 var roleNames = roleManager.Roles.Where(x => roleIds.Contains(x.Id)).Select(x => x.Name).ToArray();
@@ -187,12 +192,12 @@ namespace Marsad.Controllers
                 Log(LogAction.Update, user);
                 return RedirectToAction("Index");
             }
-            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
-            ViewBag.Indicators = db.Indicators.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.DataSources = db.DataSources.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.Elements = db.Elements.ToList();
+
             ViewBag.EntityID = new SelectList(db.Entities, "ID", "Name", user.EntityID);
             ViewBag.RoleID = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
-            ViewBag.bundleIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == user.Id).Any()).Select(x => x.ID).ToArray();
-            ViewBag.indicatorIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == Id).Any()).Select(x => x.ID).ToArray();
+            ViewBag.elementIds = user.Elements.Select(x => x.ID).ToArray();
             return View(oldUser);
         }
 

@@ -50,9 +50,8 @@ namespace Marsad.Models
     public class LoginViewModel
     {
         [Required]
-        [Display(Name = "Email")]
-        [EmailAddress]
-        public string Email { get; set; }
+        [Display(Name = "إسم المستخدم")]        
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

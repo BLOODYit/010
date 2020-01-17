@@ -602,40 +602,21 @@ function init_JQVmap() {
     if (typeof (jQuery.fn.vectorMap) === 'undefined') { return; }
     
 
-    if ($('#world-map-gdp').length) {
+    if ($('#ksa-map-gdp').length) {
 
-        $('#world-map-gdp').vectorMap({
-            map: 'world_en',
+        $('#ksa-map-gdp').vectorMap({
+            map: 'ksa',
             backgroundColor: null,
             color: '#ffffff',
             hoverOpacity: 0.7,
             selectedColor: '#666666',
             enableZoom: true,
             showTooltip: true,
-            values: sample_data,
+            //values: sample_data,
             scaleColors: ['#E6F2F0', '#149B7E'],
             normalizeFunction: 'polynomial'
         });
-
     }
-
-    if ($('#usa_map').length) {
-
-        $('#usa_map').vectorMap({
-            map: 'usa_en',
-            backgroundColor: null,
-            color: '#ffffff',
-            hoverOpacity: 0.7,
-            selectedColor: '#666666',
-            enableZoom: true,
-            showTooltip: true,
-            values: sample_data,
-            scaleColors: ['#E6F2F0', '#149B7E'],
-            normalizeFunction: 'polynomial'
-        });
-
-    }
-
 };
 
 

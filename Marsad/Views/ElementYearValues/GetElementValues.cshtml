@@ -1,0 +1,87 @@
+﻿@{
+    Layout = null;
+}
+<br />
+<div class="container clear">
+    <div class="col-md-2"></div>
+        <div class="col-md-8">
+            <label class="control-label col-sm-2 col-xs-12">مصدر البيانات</label>
+            <div class="col-sm-10 col-xs-12">
+                <select class="form-control" id="dataSources">
+                    <option value="">الكل</option>
+                    @foreach (var key in ViewBag.DataSources.Keys)
+                    {
+                        <option value="@key">@ViewBag.DataSources[key]</option>
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr>
+                            <td width="50">م</td>
+                            <td width="400">العنصر</td>
+                            <td colspan="2">القيمة</td>
+                        </tr>
+                    </thead>
+                    <tbody id="elementRows">
+                        @{
+                            var i = 0;
+                        }
+                        @foreach (Element element in ViewBag.Elements)
+                        {
+                            var ev = ((List<ElementYearValue>)ViewBag.ElementYearValues).Where(x => x.ElementID == element.ID).FirstOrDefault();
+                            <tr data-datasourceid="@element.DataSourceID">
+                                <td>@(++i)</td>
+                                <td>@element.Name</td>
+                                <td><input type="number" step="0.01" class="form-control elementvalue" data-element="@element.ID" value="@(ev==null?"":ev.Value.ToString())" /></td>
+                                <td>@element.MeasureUnit</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <button class="btn btn-primary" id="update-btn">تحديث</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    $(function () {
+        $('#update-btn').click(function () {
+            var year = $('#year').val();
+            var geoArea = $('#GeoAreaID').val();
+            var elementIds = [];
+            var values = [];
+
+            $('.elementvalue').each(function () {
+                if ($(this).val() != '' && $(this).val() != undefined && !isNaN($(this).val())) {
+                    elementIds.push($(this).data().element);
+                    values.push($(this).val());
+                }
+            });
+            var data = { year: year, geoArea: geoArea, elementIds: elementIds, values: values };
+            console.log(data);
+            $.ajax({
+                type: "post",
+                data: data,
+                url: '@Url.Action("UpdateElementValues")',
+                success: function () {
+                    alert('تم تحديث القيم');
+                    $('#getYears').click();
+                }
+            });
+        });
+        $('#dataSources').change(function () {
+            var val = $(this).val();
+            $('#elementRows tr').each(function () {
+                if (val == '' || $(this).data().datasourceid == val) {
+                    $(this).show();
+                }
+                else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+    </script>

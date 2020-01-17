@@ -24,31 +24,11 @@
             <table class="table table-striped jambo_table">
                 <thead>
                     <tr>
-                        <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Code")"></i> كود العملية
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> البيان
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," User")"></i> المستخدم
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," Date")"></i> تاريخ العملية
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("UpdateLog",new { sortOrder=ViewBag.NotesSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Notes")"></i> القيم المحدثة
-                            </a>
-                        </th>                        
+                        <th>كود العملية</th>
+                        <th>البيان</th>
+                        <th>المستخدم</th>
+                        <th>تاريخ العملية</th>
+                        <th>القيم المحدثة</th>
                     </tr>
                 </thead>
                 <tbody>

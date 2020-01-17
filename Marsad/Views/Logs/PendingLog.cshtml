@@ -4,7 +4,8 @@
 
 @{
     ViewBag.Title = "مراجعة الأرقام والتحديثات";
-    Layout = "~/Views/Shared/_Layout.cshtml";    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    IQueryable<ElementYearValue> elementValues = ViewBag.Details as IQueryable<ElementYearValue>;
 }
 <div class="container">
     <div class="row">
@@ -24,54 +25,28 @@
             <table class="table table-striped jambo_table">
                 <thead>
                     <tr>
-                        <th>
-                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.CodeSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Code")"></i> كود العملية
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.NameSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Name")"></i> العملية
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.UserSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," User")"></i> المستخدم
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.DateSortParm,currentFilter =ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort," Date")"></i> تاريخ العملية
-                            </a>
-                        </th>
-                        <th>
-                            <a href="@Url.Action("PendingLog",new { sortOrder=ViewBag.NotesSortParm,currentFilter=ViewBag.CurrentFilter})">
-                                <i class="@Html.GetSortingClass((string)ViewBag.CurrentSort,"Notes")"></i> القيم المحدثة
-                            </a>
-                        </th>
-                        <th>
-                            تأكيد
-                        </th>
+                        <th>العملية</th>
+                        <th>المستخدم</th>
+                        <th>تاريخ العملية</th>
+                        <th>القيم المحدثة</th>
+                       
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var item in Model)
                     {
-                    <tr>
-                        <td>@item.ID</td>
-                        <td>@item.Log</td>
-                        <td>@item.UserName</td>
-                        <td>@item.ActionDate.ToString()</td>
-                        <td>@GetDetails(item.GeoAreaID, item.EquationYearID)</td>
-                        <td>
-                            <form action="@Url.Action("GeoAreasConfirm","Update")" method="post">
-                                @Html.AntiForgeryToken()
-                                <input name="GeoAreaID" type="hidden" value="@item.GeoAreaID" />
-                                <input name="EquationYearID" type="hidden" value="@item.EquationYearID" />
-                                <button class="btn btn-primary confirm" type="button">تأكيد</button>
-                            </form>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>@item.Log</td>
+                            <td>@item.UserName</td>
+                            <td>@item.ActionDate.ToString()</td>
+                            <td>
+                                @if (elementValues != null)
+                                {
+                                    var evs = elementValues.Where(x => x.Year == item.Year && x.ApplicationUserID == item.ApplicationUserID && x.GeoAreaID==item.GeoAreaID).ToList();
+                                    @Html.Raw(string.Join(" - ", evs.Select(x => x.Element.Name + " : " + x.Value.ToString()).ToArray()));
+                                }
+                            </td>                            
+                        </tr>
                     }
                 </tbody>
             </table>

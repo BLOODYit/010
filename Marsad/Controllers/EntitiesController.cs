@@ -8,12 +8,23 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Marsad.Models;
+using Marsad.Models.ViewModels;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity;
 
 namespace Marsad.Controllers
 {
     [Authorize(Roles = "Admin")]
     public class EntitiesController : BaseController
     {
+        UserStore<ApplicationUser> userStore;
+        ApplicationUserManager userManager;
+        public EntitiesController()
+        {
+            db = new ApplicationDbContext();
+            userStore = new UserStore<ApplicationUser>(db);
+            userManager = new ApplicationUserManager(userStore);
+        }
         // GET: Entities
         public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
@@ -31,7 +42,7 @@ namespace Marsad.Controllers
 
             var entities = db.Entities.AsQueryable();
             entities = SortParams(sortOrder, entities, searchString);
-            int pageSize = 10;
+            int pageSize = 50;
             int pageNumber = (page ?? 1);
 
             return View(entities.ToPagedList(pageNumber, pageSize));
@@ -63,17 +74,39 @@ namespace Marsad.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Description")] Entity entity)
+        public ActionResult Create(EntityViewModel entityViewModel)
         {
             if (ModelState.IsValid)
             {
+                Entity entity = new Entity()
+                {
+                    Name = entityViewModel.Name,
+                    Description = entityViewModel.Description
+                };
                 db.Entities.Add(entity);
                 db.SaveChanges();
                 Log(LogAction.Create, entity);
+                if (!string.IsNullOrEmpty(entityViewModel.UserName)
+                    && !string.IsNullOrEmpty(entityViewModel.Name)
+                    && !string.IsNullOrEmpty(entityViewModel.Password)
+                    && !string.IsNullOrEmpty(entityViewModel.ConfirmPassword))
+                {
+                    ApplicationUser user = new ApplicationUser()
+                    {
+                        UserName = entityViewModel.UserName,
+                        Name = entityViewModel.OfficerName,
+                        EntityID = entity.ID
+                    };
+                    IdentityResult identityResult = userManager.Create(user, entityViewModel.Password);
+                    if (identityResult.Succeeded)
+                    {
+                        userManager.AddToRole(user.Id, "Officer");
+                    }                    
+                }
                 return RedirectToAction("Index");
             }
 
-            return View(entity);
+            return View(entityViewModel);
         }
 
         // GET: Entities/Edit/5

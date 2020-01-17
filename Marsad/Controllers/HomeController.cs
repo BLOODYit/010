@@ -40,6 +40,7 @@ namespace Marsad.Controllers
             ViewBag.BundleCount = db.Bundles.Count();
             ViewBag.DataSourceCount = db.DataSources.Count();
             ViewBag.DataSourceGroupCount = db.DataSourceGroups.Count();
+            ViewBag.GeoAreas = db.GeoAreas.GroupBy(x => x.Type).ToDictionary(g => g.Key, g => g.Count());
             var officerIds = new List<string>();
             if (role != null)
             {
@@ -49,8 +50,8 @@ namespace Marsad.Controllers
             var officerKPI = db.ElementValues
                 .Where(x => officerIds.Contains(x.ApplicationUserID))
                 .GroupBy(x => new { x.ApplicationUser })
-                .Select(x => new OfficerKPI{ ApplicationUser = x.Key.ApplicationUser, Count = x.Count(), LastUpdated = x.Max(y => y.CreatedAt) }).ToList();
-            ViewBag.OfficersKPI = officerKPI;            
+                .Select(x => new OfficerKPI { ApplicationUser = x.Key.ApplicationUser, Count = x.Count(), LastUpdated = x.Max(y => y.CreatedAt) }).ToList();
+            ViewBag.OfficersKPI = officerKPI;
             return View();
         }
 

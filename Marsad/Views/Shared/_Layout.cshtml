@@ -8,7 +8,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="~/Images/favicon.ico" type="image/ico" />
-
     <title>@ViewBag.Title - المرصد الحضري بالمنطقة الشرقية</title>
     <link href="~/Content/PagedList.css" rel="stylesheet" type="text/css" />
     @Styles.Render("~/Content/css")
@@ -16,7 +15,6 @@
     @Scripts.Render("~/Scripts/nprogress")
     @RenderSection("css", required: false)
 </head>
-
 <body class="nav-md">
     <div class="container body">
         <div class="main_container">
@@ -72,20 +70,24 @@
 
                                     </ul>
                                 </li>
-                                @if (User.IsInRole("Admin") || User.IsInRole("Officer"))
+                                @if (User.IsInRole("Admin"))
                                 {
                                     <li class="@Html.IsSelected("Update", "")">
                                         <a><i class="fa fa-refresh"></i> التحديث <span class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
-                                            <li><a href="@Url.Action("GeoAreas", "Update", new { type = "Region" })">مناطق</a></li>
-                                            <li><a href="@Url.Action("GeoAreas", "Update", new { type = "SubRegion" })">حاضرة</a></li>
-                                            <li><a href="@Url.Action("GeoAreas", "Update", new { type = "Governorate" })">محافظات</a></li>
-                                            <li><a href="@Url.Action("GeoAreas", "Update", new { type = "Town" })">بلديات</a></li>
-                                            <li><a href="@Url.Action("GeoAreas", "Update", new { type = "City" })">مدن</a></li>
-                                            <li><a href="@Url.Action("GeoAreas", "Update", new { type = "District" })">أحياء</a></li>
-                                            <li><a href="@Url.Action("GeoAreas", "Update", new { type = "Bundle" })">نظاقات جغرافية معرفة</a></li>
+                                            <li class="@Html.IsSelected("Update", "GeoAreas")"><a href="@Url.Action("GeoAreas", "Update", new { type = "Region" })">مناطق</a></li>
+                                            <li class="@Html.IsSelected("Update", "GeoAreas")"><a href="@Url.Action("GeoAreas", "Update", new { type = "SubRegion" })">حاضرة</a></li>
+                                            <li class="@Html.IsSelected("Update", "GeoAreas")"><a href="@Url.Action("GeoAreas", "Update", new { type = "Governorate" })">محافظات</a></li>
+                                            <li class="@Html.IsSelected("Update", "GeoAreas")"><a href="@Url.Action("GeoAreas", "Update", new { type = "Town" })">بلديات</a></li>
+                                            <li class="@Html.IsSelected("Update", "GeoAreas")"><a href="@Url.Action("GeoAreas", "Update", new { type = "City" })">مدن</a></li>
+                                            <li class="@Html.IsSelected("Update", "GeoAreas")"><a href="@Url.Action("GeoAreas", "Update", new { type = "District" })">أحياء</a></li>
+                                            <li class="@Html.IsSelected("Update", "GeoAreas")"><a href="@Url.Action("GeoAreas", "Update", new { type = "Bundle" })">نظاقات جغرافية معرفة</a></li>
                                         </ul>
                                     </li>
+                                }
+                                @if (User.IsInRole("Admin") || User.IsInRole("Admin"))
+                                {
+                                    <li class="@Html.IsSelected("ElementYearValues", "")"><a href="@Url.Action("Index", "ElementYearValues")"><i class="fa fa-refresh"></i> تحديث قيم العناصر</a></li>
                                 }
                                 @if (User.IsInRole("Admin"))
                                 {
@@ -127,23 +129,23 @@
 
                                         </ul>
                                     </li>
-                                <li class="@Html.IsSelected(" Security", "")">
-                                    <a><i class="fa fa-shield"></i> أنظمة أمن البيانات <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
+                                    <li class="@Html.IsSelected(" Security", "")">
+                                        <a><i class="fa fa-shield"></i> أنظمة أمن البيانات <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
 
-                                        <li><a href="@Url.Action("Index", "Users")">المستخدمين</a></li>
-                                    </ul>
-                                </li>
+                                            <li><a href="@Url.Action("Index", "Users")">المستخدمين</a></li>
+                                        </ul>
+                                    </li>
 
-                                <li class="@Html.IsSelected("Log", "")">
-                                    <a><i class="fa fa-history"></i> نظام مراجعة البيانات <span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
+                                    <li class="@Html.IsSelected("Log", "")">
+                                        <a><i class="fa fa-history"></i> نظام مراجعة البيانات <span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
 
-                                        <li><a href="@Url.Action("SystemLog", "Logs")">مراجعة بيانات النظام</a></li>
-                                        <li><a href="@Url.Action("UpdateLog", "Logs")">مراجعة الأرقام والتحديثات</a></li>
-                                        <li><a href="@Url.Action("PendingLog", "Logs")">نظام مراجعة البيانات المعلقة</a></li>
-                                    </ul>
-                                </li>
+                                            <li><a href="@Url.Action("SystemLog", "Logs")">مراجعة بيانات النظام</a></li>
+                                            <li><a href="@Url.Action("UpdateLog", "Logs")">مراجعة الأرقام والتحديثات</a></li>
+                                            <li><a href="@Url.Action("PendingLog", "Logs")">نظام مراجعة البيانات المعلقة</a></li>
+                                        </ul>
+                                    </li>
                                 }
                             </ul>
                         </div>

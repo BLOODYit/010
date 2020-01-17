@@ -183,6 +183,7 @@
     <Compile Include="Controllers\DataSourcesController.cs" />
     <Compile Include="Controllers\DataSourceTypesController.cs" />
     <Compile Include="Controllers\ElementsController.cs" />
+    <Compile Include="Controllers\ElementYearValuesController.cs" />
     <Compile Include="Controllers\EntitiesController.cs" />
     <Compile Include="Controllers\EquationsController.cs" />
     <Compile Include="Controllers\GeoAreaBundlesController.cs" />
@@ -226,12 +227,25 @@
     <Compile Include="Migrations\201912110414433_GeoAreaFix.Designer.cs">
       <DependentUpon>201912110414433_GeoAreaFix.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001131756369_UserElements.cs" />
+    <Compile Include="Migrations\202001131756369_UserElements.Designer.cs">
+      <DependentUpon>202001131756369_UserElements.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001132114238_UsersElements.cs" />
+    <Compile Include="Migrations\202001132114238_UsersElements.Designer.cs">
+      <DependentUpon>202001132114238_UsersElements.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202001142035222_ElementYearVaules.cs" />
+    <Compile Include="Migrations\202001142035222_ElementYearVaules.Designer.cs">
+      <DependentUpon>202001142035222_ElementYearVaules.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CalculatedValue.cs" />
     <Compile Include="Models\CaseYearIndicatorValue.cs" />
     <Compile Include="Models\Controls\EquationModel.cs" />
     <Compile Include="Models\Controls\GeoAreasModel.cs" />
     <Compile Include="Models\ElementValue.cs" />
+    <Compile Include="Models\ElementYearValue.cs" />
     <Compile Include="Models\EquationElement.cs" />
     <Compile Include="Models\EquationYear.cs" />
     <Compile Include="Models\GeoAreaBundle.cs" />
@@ -242,6 +256,7 @@
     <Compile Include="Models\Controls\MultiSelectModel.cs" />
     <Compile Include="Models\DataSource.cs" />
     <Compile Include="Models\Validations\RequiredButNull.cs" />
+    <Compile Include="Models\ViewModels\EntityViewModel.cs" />
     <Compile Include="Models\ViewModels\OfficerKPI.cs" />
     <Compile Include="Models\ViewModels\Query.cs" />
     <Compile Include="Models\ُEntity.cs" />
@@ -1384,6 +1399,17 @@
     <Content Include="Content\vendors\jquery\dist\jquery.js" />
     <Content Include="Content\vendors\jquery\dist\jquery.min.js" />
     <Content Include="Content\vendors\jquery\dist\jquery.min.map" />
+    <Content Include="Content\vendors\jqvmap\dist\jquery.vmap.js" />
+    <Content Include="Content\vendors\jqvmap\dist\jquery.vmap.min.js" />
+    <Content Include="Content\vendors\jqvmap\dist\jqvmap.css" />
+    <Content Include="Content\vendors\jqvmap\dist\jqvmap.min.css" />
+    <Content Include="Content\vendors\jqvmap\dist\maps\continents\jquery.vmap.africa.js" />
+    <Content Include="Content\vendors\jqvmap\dist\maps\continents\jquery.vmap.asia.js" />
+    <Content Include="Content\vendors\jqvmap\dist\maps\continents\jquery.vmap.australia.js" />
+    <Content Include="Content\vendors\jqvmap\dist\maps\continents\jquery.vmap.europe.js" />
+    <Content Include="Content\vendors\jqvmap\dist\maps\continents\jquery.vmap.north-america.js" />
+    <Content Include="Content\vendors\jqvmap\dist\maps\continents\jquery.vmap.south-america.js" />
+    <Content Include="Content\vendors\jqvmap\dist\maps\jquery.vmap.ksa.js" />
     <Content Include="Content\vendors\nprogress\nprogress.css" />
     <Content Include="Content\vendors\nprogress\nprogress.js" />
     <Content Include="Content\vendors\nprogress\support\extras.css" />
@@ -1451,6 +1477,7 @@
     <Content Include="Images\logo.png" />
     <Content Include="Images\mini-logo.png" />
     <Content Include="Images\user.png" />
+    <Content Include="Scripts\Amiri-Regular-normal.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\vendors\bootstrap\dist\css\bootstrap-theme.css.map" />
@@ -1466,9 +1493,16 @@
     <Content Include="Content\fonts\SLXGc1nY6HkvalIvTpu0xg.woff2" />
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="fonts\Amiri-Regular.ttf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Scripts\d3\API.md" />
+    <Content Include="Scripts\d3\CHANGES.md" />
+    <Content Include="Scripts\d3\LICENSE" />
+    <Content Include="Scripts\d3\README.md" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\canvasjs.min.js" />
+    <Content Include="Scripts\d3\d3.js" />
+    <Content Include="Scripts\d3\d3.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -1479,6 +1513,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jspdf.min.js" />
+    <Content Include="Scripts\loader.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -1604,6 +1640,10 @@
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Logs\PendingLog.cshtml" />
+    <Content Include="Views\ElementYearValues\Index.cshtml" />
+    <Content Include="Views\ElementYearValues\GetElementValues.cshtml" />
+    <Content Include="Views\Reports\RegionReport.cshtml" />
+    <Content Include="Views\Shared\_Plain.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1642,6 +1682,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201912110414433_GeoAreaFix.resx">
       <DependentUpon>201912110414433_GeoAreaFix.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001131756369_UserElements.resx">
+      <DependentUpon>202001131756369_UserElements.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001132114238_UsersElements.resx">
+      <DependentUpon>202001132114238_UsersElements.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001142035222_ElementYearVaules.resx">
+      <DependentUpon>202001142035222_ElementYearVaules.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

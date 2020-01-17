@@ -312,7 +312,7 @@ namespace Marsad.Controllers
             }
         }
 
-
+        [HttpGet]
         public JsonResult IsExist(int Code, int? ID)
         {
             bool isExists = false;

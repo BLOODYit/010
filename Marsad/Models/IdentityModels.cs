@@ -13,8 +13,7 @@ namespace Marsad.Models
     {
         public ApplicationUser() : base()
         {
-            Indicators = new List<Indicator>();
-            Bundles = new List<Bundle>();
+            Elements = new List<Element>();            
         }
         [MaxLength(255)]
         [Display(Name = "الإسم")]
@@ -24,8 +23,7 @@ namespace Marsad.Models
         [Display(Name = "الجهة")]
         public int? EntityID { get; set; }
         public Entity Entity { get; set; }
-        public List<Bundle> Bundles { get; set; }
-        public List<Indicator> Indicators { get; set; }
+        public virtual List<Element> Elements { get; set; }        
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -73,7 +71,6 @@ namespace Marsad.Models
         public DbSet<Marsad.Models.EquationElement> EquationElements { get; set; }
         public DbSet<Marsad.Models.EquationYear> EquationYears { get; set; }
         public DbSet<Marsad.Models.CalculatedValue> CalculatedValues { get; set; }
-        
-
+        public DbSet<Marsad.Models.ElementYearValue> ElementYearValues { get; set; }
     }
 }

@@ -29,15 +29,18 @@ namespace Marsad
 
             //Scripts
 
-            
-                bundles.Add(new ScriptBundle("~/scripts/charts").Include(
-                    "~/Scripts/canvasjs.min.js"));
+
+            bundles.Add(new ScriptBundle("~/scripts/charts").Include(
+                "~/Scripts/canvasjs.min.js"));
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-*", "~/Scripts/jquery-{version}.js"));
             bundles.Add(new ScriptBundle("~/bundles/main").Include(
                           "~/Scripts/bootstrap.js"
                         , "~/Content/vendors/fastclick/lib/fastclick.js"
                         , "~/Content/build/js/custom.js"
-                        , "~/Content/bootstrap-datepicker.min.js"));
+                        , "~/Content/bootstrap-datepicker.min.js"
+                        , "~/Scripts/jspdf.min.js"
+                        , "~/Scripts/Amiri-Regular-normal.js"
+                        , "~/Scripts/jspdf.plugin.autotable.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -68,9 +71,8 @@ namespace Marsad
 
             bundles.Add(new ScriptBundle("~/Scripts/JQVMap").Include(
                "~/Content/vendors/jqvmap/dist/jquery.vmap.js",
-               "~/Content/vendors/jqvmap/dist/maps/jquery.vmap.world.js",
-               "~/Content/vendors/jqvmap/examples/js/jquery.vmap.sampledata.js"));
-            
+               "~/Content/vendors/jqvmap/dist/maps/jquery.vmap.ksa.js"));
+
 
         }
     }

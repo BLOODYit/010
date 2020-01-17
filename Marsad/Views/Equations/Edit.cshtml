@@ -142,7 +142,11 @@
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
-
+              $('#add-element').click(function () {
+                $('#elements option:selected').each(function () {
+                    $('#equation_text').val($('#equation_text').val() + "[" + $(this).text() + "]");
+                });
+            });
          $('#add-new-element').click(function () {
                 $.get('@Url.Action("GetCreateElement","Elements")').done(function (res) {
                     $mymodal = $("#addElementModel");
