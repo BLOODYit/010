@@ -1,0 +1,48 @@
+﻿@using Marsad.Models.ViewModels
+@model Dictionary<int, IndicatorValues>
+@{
+    Layout = "";
+}
+<button type="button" class="btn btn-success" id="export">تصدير</button>
+<table class="table table-bordered" id="html-table">
+    <thead>
+        <tr>
+            <th>المؤشر</th>
+            <th>الحزمة</th>
+            @foreach (int year in ViewBag.Years)
+            {
+                <th>سنة: @year</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var key in Model.Keys)
+        {
+            <tr>
+                <td>@Model[key].IndicatorName</td>
+                <td>@Model[key].BundleName</td>
+                @foreach (int year in ViewBag.Years)
+                {
+                    if (Model[key].Values.ContainsKey(year))
+                    {
+                        <td>@Model[key].Values[year]</td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script type="text/javascript">
+     $('#export').click(function () {
+                            var pdf = new jsPDF();
+                            pdf.setFont('Amiri');
+                            pdf.text('تقرير تصنيف المؤشرات', (pdf.internal.pageSize.width / 2), 12, 'center');                            
+                            pdf.autoTable({ html: '#html-table',startY:20,styles: {textAlign:"right",font: "Amiri"}});                            
+                            pdf.save("reprt.pdf");
+                        });
+</script>

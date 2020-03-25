@@ -19,14 +19,16 @@ namespace Marsad.Models.ViewModels
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "كلمة السر")]
-        public string Password { get; set; }
+        public string OfficerPassword { get; set; }
         [DataType(DataType.Password)]
         [Display(Name = "تأكيد كلمة السر")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Compare("OfficerPassword", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
         [Display(Name = "إسم المستخدم")]        
-        public string UserName { get; set; }
-        [Display(Name = "إسم ضابط الإتصال")]        
-        public string OfficerName { get; internal set; }
+        public string OfficerUserName { get; set; }
+        [Display(Name = "إسم ضابط الإتصال")]
+        public string OfficerName { get;  set; }
+        [Display(Name = "بريد اليكتروني ضابط الإتصال")]
+        public string OfficerEmail{ get; set; }
     }
 }

@@ -88,6 +88,7 @@ namespace Marsad.Controllers
                 {
                     ActionDate = x.Key.CreatedAt,
                     UserName = x.Key.ApplicationUser.Name,
+                    Entity = x.Key.ApplicationUser.Entity,
                     Log = "تحديث قيم نطاق (" + x.Key.GeoArea.Name + ")",
                     Year = x.Key.Year,
                     ApplicationUserID = x.Key.ApplicationUser.Id,

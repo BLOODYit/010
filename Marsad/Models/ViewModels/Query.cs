@@ -11,6 +11,7 @@ namespace Marsad.Models.ViewModels
         public int Code { get; set; }
         public string Name { get; set; }
         public string BundleName { get; set; }
+        public bool HasParent { get; set; }
         public int IndicatorsCount { get; set; }
     }
 

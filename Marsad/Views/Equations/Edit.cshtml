@@ -86,6 +86,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2 col-xs-12"></label>
                     <div class="col-sm-10 col-xs-12">
+                        <input type="text" id="elementSearch" class="form-control" placeholder="بحث العناصر" />
                         <select multiple name="Elements" id="elements" class="form-control" size="6">
                             @foreach (var key in ViewBag.Elements.Keys)
                             {
@@ -110,7 +111,7 @@
                 <div class="form-group">
                     <div class="col-md-offset-2 col-sm-10 col-xs-12">
                         <input type="submit" value="حفظ" class="btn btn-primary" />
-                        @Html.ActionLink("الرئيسية", "Index", null, new { @class = "btn btn-default" })
+                        @Html.ActionLink("رجوع", "Index", null, new { @class = "btn btn-default" })
                     </div>
                 </div>
             </div>
@@ -142,6 +143,21 @@
 @section Scripts{
     <script type="text/javascript">
         $(document).ready(function () {
+
+             $('#elementSearch').keyup(function (evt) {                
+                var val = $(this).val();
+                $('#elements option').each(function () {
+                    var opVal = $(this).text();
+                    if (opVal.toLowerCase().indexOf(val.toLowerCase()) >= 0) {
+                        $(this).removeAttr('hidden');
+                    }
+                    else {
+                        $(this).attr('hidden', 'hidden');
+                        $(this).removeAttr('selected');
+                    }
+                });
+             });
+
               $('#add-element').click(function () {
                 $('#elements option:selected').each(function () {
                     $('#equation_text').val($('#equation_text').val() + "[" + $(this).text() + "]");

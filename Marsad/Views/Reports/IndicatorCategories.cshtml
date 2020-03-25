@@ -1,0 +1,85 @@
+﻿@{
+    ViewBag.Title = "تقرير تصنيف المؤشرات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>تقرير تصنيف المؤشرات</h2>
+            <hr />
+            <form action="@Url.Action("IndicatorCategories")" method="get" id="GeoAreaTypeForm">
+                <div class="form-group">
+                    <label class="control-label col-sm-2 col-xs-12">النطاق الجغرافي</label>
+                    <div class="col-sm-10 col-xs-12">
+                        <select name="Type" class="form-control" id="GeoAreaType">
+                            <option value="Region" @(ViewBag.Type == "Region" ? "selected" : "")>منطقة</option>
+                            <option value="SubRegion" @(ViewBag.Type == "SubRegion" ? "selected" : "")>الحاضرة</option>
+                            <option value="Governorate" @(ViewBag.Type == "Governorate" ? "selected" : "")>المحافظة</option>
+                            <option value="Town" @(ViewBag.Type == "Town" ? "selected" : "")>البلدية</option>
+                            <option value="City" @(ViewBag.Type == "City" ? "selected" : "")>المدينة</option>
+                            <option value="District" @(ViewBag.Type == "District" ? "selected" : "")>الحي</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group" id="IndicatorIDDiv">
+                <label class="control-label col-sm-2 col-xs-12">@ViewBag.TypeName</label>
+                <div class="col-sm-10 col-xs-12">
+                    @Html.DropDownList("GeoAreaID", null, htmlAttributes: new { @class = "form-control", @id = "GeoAreaID" })
+                </div>
+            </div>
+            <div id="years"></div>
+            <div id="report"></div>
+        </div>
+    </div>
+</div>
+
+@section  scripts{
+    @Scripts.Render("~/scripts/charts")
+    <script type="text/javascript">
+
+        function showReport() {
+            $('#report').html('');
+            var geoAreaId = $('#GeoAreaID').val();
+            var _years = $('.years');
+            var years = [];
+            _years.each(function () {
+                if ($(this).val()) {
+                    years.push($(this).val());
+                }
+            });
+            if (years.length==0) {
+                alert('برجاء إختيار السنة');
+                return;
+            }
+            var q = "geoAreaId=" + geoAreaId;
+            $('.years').each(function () {
+                q += "&years="+$(this).val();
+            });
+            $.get("@Url.Action("GetIndicatorCategories","Reports")/?"+q, function (data, status) {
+                $('#report').html(data);
+            });
+        }
+        function getYears() {
+              $('#years').html('');
+                var geoAreaId = $('#GeoAreaID').val();
+                if (geoAreaId > 0) {
+                    $.get("@Url.Action("GetYears","Reports")/?geoAreaId="+geoAreaId, function (data, status) {
+                        $('#years').html(data);
+                    });
+                }
+        }
+        $(function () {
+            $('#GeoAreaType').change(function () {
+                $('#GeoAreaTypeForm').submit();
+            });
+
+            $('#GeoAreaID').change(function () {
+                getYears();
+            });
+            $('#GeoAreaID').change();
+           
+        });
+    </script>
+}

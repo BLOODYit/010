@@ -14,6 +14,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/Scripts/nprogress")
     @RenderSection("css", required: false)
+
 </head>
 <body class="nav-md">
     <div class="container body">
@@ -67,7 +68,12 @@
 
                                         <li><a href="@Url.Action("Period", "Reports")">مقارنة مؤشر في مدة زمنية</a></li>
                                         <li><a href="@Url.Action("GeoArea", "Reports")">مقارنة مؤشر في نطاق جغرافي</a></li>
-
+                                        <li><a href="@Url.Action("IndicatorCategories", "Reports")">تصنيف المؤشرات الحضرية</a></li>
+                                        <li><a href="@Url.Action("Bundles", "Reports")">حزم المؤشرات الحضرية</a></li>
+                                        @if (User.IsInRole("Admin"))
+                                        {
+                                            <li><a href="@Url.Action("PendingLog", "Reports")">مدخلات ضباط الإتصال</a></li>
+                                        }
                                     </ul>
                                 </li>
                                 @if (User.IsInRole("Admin"))
@@ -85,7 +91,7 @@
                                         </ul>
                                     </li>
                                 }
-                                @if (User.IsInRole("Admin") || User.IsInRole("Admin"))
+                                @if (User.IsInRole("Admin") || User.IsInRole("Officer"))
                                 {
                                     <li class="@Html.IsSelected("ElementYearValues", "")"><a href="@Url.Action("Index", "ElementYearValues")"><i class="fa fa-refresh"></i> تحديث قيم العناصر</a></li>
                                 }
@@ -97,9 +103,8 @@
                                             <li><a href="@Url.Action("Index", "Bundles")">إدارة الحزم</a></li>
                                             <li><a href="@Url.Action("Index", "Indicators")">إدارة المؤشرات الحضرية</a></li>
                                             <li><a href="@Url.Action("Index", "Elements")">إدارة العناصر والقيم</a></li>
-
-
                                             <li><a href="@Url.Action("Index", "IndicatorGroups")">إدارة مجموعات المؤشرات</a></li>
+                                            <li><a href="@Url.Action("Index", "IndicatorTypes")">إدارة تصنيف المؤشرات</a></li>
 
                                             <li>
                                                 <a>مصادر البيانات<span class="fa fa-chevron-down"></span></a>

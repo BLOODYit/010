@@ -86,18 +86,19 @@ namespace Marsad.Controllers
                 db.Entities.Add(entity);
                 db.SaveChanges();
                 Log(LogAction.Create, entity);
-                if (!string.IsNullOrEmpty(entityViewModel.UserName)
+                if (!string.IsNullOrEmpty(entityViewModel.OfficerUserName)
                     && !string.IsNullOrEmpty(entityViewModel.Name)
-                    && !string.IsNullOrEmpty(entityViewModel.Password)
+                    && !string.IsNullOrEmpty(entityViewModel.OfficerPassword)
                     && !string.IsNullOrEmpty(entityViewModel.ConfirmPassword))
                 {
                     ApplicationUser user = new ApplicationUser()
                     {
-                        UserName = entityViewModel.UserName,
+                        UserName = entityViewModel.OfficerUserName,
                         Name = entityViewModel.OfficerName,
+                        Email = entityViewModel.OfficerEmail,
                         EntityID = entity.ID
                     };
-                    IdentityResult identityResult = userManager.Create(user, entityViewModel.Password);
+                    IdentityResult identityResult = userManager.Create(user, entityViewModel.OfficerPassword);
                     if (identityResult.Succeeded)
                     {
                         userManager.AddToRole(user.Id, "Officer");

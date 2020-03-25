@@ -64,6 +64,9 @@ namespace Marsad.Models
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
+        [Display(Name = "أهمية المؤشر")]        
+        public string IndicatorImportance { get; set; }
+
         [Display(Name = "إرتباط المؤشر")]
         [DataType(DataType.MultilineText)]
         public string Correlation { get; set; }

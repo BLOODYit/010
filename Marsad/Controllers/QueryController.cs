@@ -42,7 +42,8 @@ namespace Marsad.Controllers
                 Code = x.Code,
                 Name = x.Name,
                 BundleName = x.Bundle.Name,
-                IndicatorsCount = x.ChildIndicators.Count()
+                IndicatorsCount = x.ChildIndicators.Count(),
+                HasParent =x.HasParent
             });
             return View(result.ToList());
         }

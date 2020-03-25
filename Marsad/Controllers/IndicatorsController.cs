@@ -11,16 +11,17 @@ using Marsad.Models;
 
 namespace Marsad.Controllers
 {
-    [Authorize(Roles = "Admin,Officer")]
+    [Authorize(Roles = "Admin,Officer,Visitor")]
     public class IndicatorsController : BaseController
     {
 
         // GET: Indicators
         [Authorize(Roles = "Admin")]
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize,string indicatorType)
         {
 
             ViewBag.CurrentSort = sortOrder;
+            ViewBag.indicatorType = indicatorType;
             if (searchString != null)
             {
                 page = 1;
@@ -33,6 +34,17 @@ namespace Marsad.Controllers
 
             var indicators = db.Indicators.Include(i => i.Bundle).Include(i => i.IndicatorType).Include(i => i.ParentIndicator).AsQueryable();
             indicators = SortParams(sortOrder, indicators, searchString);
+            if (!string.IsNullOrEmpty(indicatorType))
+            {
+                if (indicatorType.Equals("parent"))
+                {
+                    indicators = indicators.Where(x => !x.IndicatorID.HasValue);
+                }
+                else if (indicatorType.Equals("child"))
+                {
+                    indicators = indicators.Where(x => x.IndicatorID.HasValue);
+                }
+            }
             if (!pageSize.HasValue)
                 pageSize = 10;
             int pageNumber = (page ?? 1);
@@ -53,7 +65,7 @@ namespace Marsad.Controllers
         }
 
         // GET: Indicators/Details/5
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Officer,Visitor")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -87,7 +99,7 @@ namespace Marsad.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod")] Indicator indicator, string command)
+        public ActionResult Create([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod,ElementCount,IndicatorImportance")] Indicator indicator, string command)
         {
             if (ModelState.IsValid)
             {
@@ -131,7 +143,7 @@ namespace Marsad.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod")] Indicator indicator)
+        public ActionResult Edit([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod,ElementCount,IndicatorImportance")] Indicator indicator)
         {
             if (ModelState.IsValid)
             {

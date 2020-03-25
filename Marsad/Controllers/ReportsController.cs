@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Marsad.Models.ViewModels;
 
 namespace Marsad.Controllers
 {
@@ -13,7 +14,7 @@ namespace Marsad.Controllers
     public class ReportsController : Controller
     {
         ApplicationDbContext db = new ApplicationDbContext();
-
+        #region ReportActions
         public ActionResult Period(string type = "Region")
         {
             type = SetType(type);
@@ -32,6 +33,105 @@ namespace Marsad.Controllers
             return View();
         }
 
+        public ActionResult IndicatorCategories(string type = "Region")
+        {
+            type = SetType(type);
+            ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(type)), "ID", "Name");
+            return View();
+        }
+
+        public ActionResult GetYears(int geoAreaId)
+        {
+            int[] years = db.CalculatedValues.Where(x => x.GeoAreaID == geoAreaId).Select(x => x.EquationYear.Year).Distinct().ToArray();            
+            return View(years);
+        }
+
+        public ActionResult GetIndicatorCategories(int geoAreaId, int[] years)
+        {
+            var calculatedVals = db.CalculatedValues.Where(x => years.Contains(x.EquationYear.Year) && x.GeoAreaID == geoAreaId)
+                .Include(x => x.EquationYear.Equation.Indicator)
+                .Include(x => x.EquationYear.Equation.Indicator.Bundle)
+                .ToList();
+            Dictionary<int, IndicatorValues> result = new Dictionary<int, IndicatorValues>();
+            foreach(var cv in calculatedVals)
+            {
+                if (!result.ContainsKey(cv.EquationYear.Equation.IndicatorID))
+                {
+                    IndicatorValues indicatorValues = new IndicatorValues()
+                    {
+                        BundleID = cv.EquationYear.Equation.Indicator.BundleID,
+                        BundleName = cv.EquationYear.Equation.Indicator.Bundle.Name,
+                        IndicatorID = cv.EquationYear.Equation.IndicatorID,
+                        IndicatorName = cv.EquationYear.Equation.Indicator.Name,
+                        Values = new Dictionary<int, float>()
+                    };
+                    result.Add(cv.EquationYear.Equation.IndicatorID, indicatorValues);
+                }
+                if (!result[cv.EquationYear.Equation.IndicatorID].Values.ContainsKey(cv.EquationYear.Year))
+                {
+                    result[cv.EquationYear.Equation.IndicatorID].Values.Add(cv.EquationYear.Year,cv.Value);
+                }
+            }
+            ViewBag.Years = years.OrderBy(x => x);
+            return View(result);
+        }
+
+        public ActionResult Bundles()
+        {
+            var bundles = db.Bundles.Include(x => x.Indicators).ToList();
+            return View(bundles);
+        }
+
+        [Authorize(Roles ="Admin")]
+        public ActionResult PendingLog(string sortOrder, string currentFilter, string searchString)
+        {
+            ViewBag.CurrentSort = sortOrder;
+            if (searchString == null)
+            {
+                searchString = currentFilter;
+            }
+            ViewBag.CurrentFilter = searchString;
+
+            var query = db.ElementYearValues.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(searchString))
+                query = query.Where(x => x.Element.Name.Contains(searchString));
+            var result = query.Include(x => x.ApplicationUser)
+                .Include(x => x.Element)
+                .Where(x => x.IsCommited == false)
+                .GroupBy(x => new { x.CreatedAt, x.ApplicationUser, x.Year, x.GeoArea })
+                .Select(x => new PendingLog()
+                {
+                    ActionDate = x.Key.CreatedAt,
+                    UserName = x.Key.ApplicationUser.Name,
+                    Entity = x.Key.ApplicationUser.Entity,
+                    Log = "تحديث قيم نطاق (" + x.Key.GeoArea.Name + ")",
+                    Year = x.Key.Year,
+                    ApplicationUserID = x.Key.ApplicationUser.Id,
+                    GeoAreaID = x.Key.GeoArea.ID
+                })
+                .OrderBy(x => x.ActionDate)
+                .ToList();
+            var details = db.ElementYearValues.Include(x => x.Element).Where(x => x.IsCommited == false);
+            if (!string.IsNullOrWhiteSpace(searchString))
+                details = details.Where(x => x.Element.Name.Contains(searchString));
+            ViewBag.Details = details;
+            return View(result);
+        }
+
+        [AllowAnonymous]
+        public ActionResult RegionReport()
+        {
+            var indicators = db.Indicators.Where(x => x.Equations.Any());
+            var bundleIds = indicators.Select(x => x.BundleID).Distinct().ToArray();
+            var bundles = db.Bundles.Where(x => bundleIds.Contains(x.ID));
+            ViewBag.BundleID = new SelectList(bundles, "ID", "Name");
+            ViewBag.Indicators = indicators.Select(x => new { x.ID, x.Name, x.BundleID }).ToList();
+            ViewBag.CalculatedValues = db.CalculatedValues.Select(x => new { x.Value, x.GeoAreaID, x.EquationYear.Year, x.EquationYear.Equation.IndicatorID });
+            return View();
+        }
+        #endregion
+
+        #region AjaxActions
         public ActionResult GetIndicatorEquations(int indicatorId, int geoAreaID)
         {
             var indicator = db.Indicators.Where(x => x.ID == indicatorId).Include(x => x.Equations).FirstOrDefault();
@@ -76,6 +176,7 @@ namespace Marsad.Controllers
             List<CalculatedValue> results = GetData(indicatorId, geoAreaIds, new int[] { year });
             return View(results);
         }
+        #endregion
 
         private List<CalculatedValue> GetData(int indicatorId, int[] geoAreaIds, int[] years)
         {
@@ -101,7 +202,7 @@ namespace Marsad.Controllers
             }
             return result;
         }
-      
+
         private string SetType(string type)
         {
             if (string.IsNullOrWhiteSpace(type) || !Marsad.Models.GeoArea.Types.ContainsKey(type))
@@ -125,17 +226,6 @@ namespace Marsad.Controllers
             return value.Value.ToString();
         }
 
-        [AllowAnonymous]
-        public ActionResult RegionReport()
-        {
-            var indicators = db.Indicators.Where(x => x.Equations.Any());
-            var bundleIds = indicators.Select(x => x.BundleID).Distinct().ToArray();
-            var bundles = db.Bundles.Where(x => bundleIds.Contains(x.ID));
-            ViewBag.BundleID = new SelectList(bundles, "ID", "Name");
-            ViewBag.Indicators = indicators.Select(x=>new {x.ID,x.Name,x.BundleID }).ToList();
-            ViewBag.CalculatedValues = db.CalculatedValues.Select(x => new { x.Value, x.GeoAreaID, x.EquationYear.Year, x.EquationYear.Equation.IndicatorID });            
-            return View();
-        }
 
 
     }

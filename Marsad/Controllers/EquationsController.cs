@@ -72,8 +72,8 @@ namespace Marsad.Controllers
 
             var bundles = db.Bundles.Include(x => x.Indicators).AsQueryable();
             bundles = bundles.Where(x => x.Indicators.Any());
-            ViewBag.IndicatorID = new SelectList(indicator.Bundle.Indicators, "ID", "Name", indicator);
-            ViewBag.BundleID = new SelectList(bundles, "ID", "Name", indicator.Bundle);
+            ViewBag.IndicatorID = new SelectList(indicator.Bundle.Indicators, "ID", "Name", indicator.ID);
+            ViewBag.BundleID = new SelectList(bundles, "ID", "Name", indicator.BundleID);
             ViewBag.Elements = db.Elements.ToDictionary(x => x.ID, x => x.Name);
             CultureInfo arSA = new CultureInfo("ar-SA");
             arSA.DateTimeFormat.Calendar = new HijriCalendar();

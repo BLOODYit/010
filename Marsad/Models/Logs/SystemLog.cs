@@ -39,6 +39,7 @@ namespace Marsad.Models
         public string ApplicationUserID { get; set; }
         [MaxLength(1000)]
         public string UserName { get; set; }
+        public Entity Entity { get; set; }
         public DateTime ActionDate { get; set; }
         public string Details { get; set; }
     }

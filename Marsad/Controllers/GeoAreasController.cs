@@ -144,8 +144,16 @@ namespace Marsad.Controllers
             if (!geoArea.Type.Equals("Kingdom"))
             {
                 db.GeoAreas.Remove(geoArea);
-                db.SaveChanges();
-                Log(LogAction.Delete, _geoArea);
+                try
+                {
+                    db.SaveChanges();
+                    Log(LogAction.Delete, _geoArea);
+                }
+                catch
+                {                    
+                    ViewBag.Error = string.Format("لا يمكن حذف {0} لان بها نطاقات جغرافية مرتبطة", GeoArea.Types[geoArea.Type]);
+                    return View(geoArea);
+                }
             }
             return RedirectToAction("Index", new { Type = geoArea.Type });
         }

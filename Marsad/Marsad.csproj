@@ -190,6 +190,7 @@
     <Compile Include="Controllers\GeoAreasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IndicatorGroupsController.cs" />
+    <Compile Include="Controllers\IndicatorTypesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\IndicatorsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -257,6 +258,7 @@
     <Compile Include="Models\DataSource.cs" />
     <Compile Include="Models\Validations\RequiredButNull.cs" />
     <Compile Include="Models\ViewModels\EntityViewModel.cs" />
+    <Compile Include="Models\ViewModels\IndicatorValues.cs" />
     <Compile Include="Models\ViewModels\OfficerKPI.cs" />
     <Compile Include="Models\ViewModels\Query.cs" />
     <Compile Include="Models\ُEntity.cs" />
@@ -1644,6 +1646,16 @@
     <Content Include="Views\ElementYearValues\GetElementValues.cshtml" />
     <Content Include="Views\Reports\RegionReport.cshtml" />
     <Content Include="Views\Shared\_Plain.cshtml" />
+    <Content Include="Views\IndicatorTypes\Create.cshtml" />
+    <Content Include="Views\IndicatorTypes\Delete.cshtml" />
+    <Content Include="Views\IndicatorTypes\Details.cshtml" />
+    <Content Include="Views\IndicatorTypes\Edit.cshtml" />
+    <Content Include="Views\IndicatorTypes\Index.cshtml" />
+    <Content Include="Views\Reports\Bundles.cshtml" />
+    <Content Include="Views\Reports\IndicatorCategories.cshtml" />
+    <Content Include="Views\Reports\PendingLog.cshtml" />
+    <Content Include="Views\Reports\GetYears.cshtml" />
+    <Content Include="Views\Reports\GetIndicatorCategories.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

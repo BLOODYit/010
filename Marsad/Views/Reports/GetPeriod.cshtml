@@ -14,7 +14,10 @@
             else
             {
                 <div id="html-data">
-                    <h2>@Model.First().EquationYear.Equation.Indicator.Name</h2>
+                    <div class="col-xs-12">
+                        <h2 style="display:none;"></h2>
+                        <h2>@Model.First().EquationYear.Equation.Indicator.Name</h2>
+                    </div>
                     <table class="table table-stripped" id="html-table">
                         <thead>
                             <tr>

@@ -13,27 +13,28 @@
             }
             else
             {
-                <div id="html-data">
-                    <h2>@Model.First().EquationYear.Equation.Indicator.Name - @Model.First().EquationYear.Year</h2>
-                    <table class="table table-stripped" id="html-table">
-                        <thead>
-                            <tr>
-                                @foreach (var cv in Model)
-                                {
-                                    <td>@cv.GeoArea.Name</td>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                @foreach (var cv in Model)
-                                {
-                                    <td>@cv.Value @cv.EquationYear.Equation.Indicator.MeasureUnit</td>
-                                }
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+        <div id="html-data">
+            <h2 style="display:none;"></h2>
+            <h2>@Model.First().EquationYear.Equation.Indicator.Name - @Model.First().EquationYear.Year</h2>
+            <table class="table table-stripped" id="html-table">
+                <thead>
+                    <tr>
+                        @foreach (var cv in Model)
+                        {
+                            <td>@cv.GeoArea.Name</td>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (var cv in Model)
+                        {
+                            <td>@cv.Value @cv.EquationYear.Equation.Indicator.MeasureUnit</td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
                 <div id="chartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>
                 <br />
                 <div id="barchartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>

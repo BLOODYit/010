@@ -76,6 +76,14 @@
             </dd>
 
             <dt>
+                @Html.DisplayNameFor(model => model.IndicatorImportance)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IndicatorImportance)
+            </dd>
+
+            <dt>
                 @Html.DisplayNameFor(model => model.Description)
             </dt>
 
@@ -146,10 +154,17 @@
 
         }
     </div>
-<p>
-    @Html.ActionLink("تعديل", "Edit", new { id = Model.ID },new {@class="btn btn-primary"})
-    @Html.ActionLink("الرئيسية", "Index",null,new {@class="btn btn-default"})
-</p>
+    <p>
+        @if (User.IsInRole("Admin"))
+        {
+            @Html.ActionLink("تعديل", "Edit", new { id = Model.ID }, new { @class = "btn btn-primary" })
+            @Html.ActionLink("رجوع", "Index", null, new { @class = "btn btn-default" })
+        }
+        else
+        {
+        <a href="@Url.Action("Indicators","Query")" class="btn btn-default">رجوع</a>            
+        }
+    </p>
 </div>
 </div>
 </div>

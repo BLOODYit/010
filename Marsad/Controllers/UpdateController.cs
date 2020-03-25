@@ -35,7 +35,7 @@ namespace Marsad.Controllers
 
         public ActionResult GetIndicatorEquations(int indicatorId, int geoAreaID)
         {
-            var indicator = db.Indicators.Where(x => x.ID == indicatorId).Include(x => x.Equations).FirstOrDefault();            
+            var indicator = db.Indicators.Where(x => x.ID == indicatorId).Include(x => x.Equations).FirstOrDefault();
             if (indicator == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -43,10 +43,12 @@ namespace Marsad.Controllers
             var equationIds = indicator.Equations.Select(x => x.ID).ToList();
             var equationYears = db.EquationYears.Where(x => equationIds.Contains(x.EquationID)).OrderBy(x => x.Year).ToList();
             var elementIDs = db.EquationElements.Where(x => equationIds.Contains(x.EquationID)).Select(x => x.ElementID).ToArray();
-            var elementYearValues = db.ElementYearValues.Include(x=>x.ApplicationUser).Where(x => x.GeoAreaID == geoAreaID && elementIDs.Contains(x.ElementID)).ToList();
+            var elementYearValues = db.ElementYearValues.Include(x => x.ApplicationUser).Where(x => x.GeoAreaID == geoAreaID && elementIDs.Contains(x.ElementID)).ToList();
+            var calculatedValues = db.CalculatedValues.Where(x => x.GeoAreaID == geoAreaID && x.EquationYear.Equation.IndicatorID == indicatorId).ToDictionary(x => x.EquationYear.Year, x => x.Value);
             ViewBag.EquationYears = equationYears;
             ViewBag.GeoAreaID = geoAreaID;
             ViewBag.ElementYearValues = elementYearValues;
+            ViewBag.CalculatedValues = calculatedValues;
             return View(indicator);
         }
 
@@ -76,6 +78,7 @@ namespace Marsad.Controllers
             string userId = User.Identity.GetUserId();
             try
             {
+                var calculate = false;
                 if (action.Equals("delete"))
                 {
                     DeleteUpdate(geoArea, equationYear);
@@ -83,16 +86,16 @@ namespace Marsad.Controllers
                 }
                 else if (action.Equals("add"))
                 {
-                    AddUpdate(geoArea, equationYear, userId, elementValuesKeys);
+                    calculate=AddUpdate(geoArea, equationYear, userId, elementValuesKeys);
                 }
                 else if (action.Equals("edit"))
                 {
-                    EditUpdate(geoArea, equationYear, userId, elementValuesKeys);
+                    calculate=EditUpdate(geoArea, equationYear, userId, elementValuesKeys);
                 }
-                if (action.Equals("add") || action.Equals("edit"))
+                DeleteCalculated(geoArea, equationYear);
+                if ((action.Equals("add") || action.Equals("edit") )&& calculate)
                 {
                     float value = CalculateEquation(equationYear, geoArea);
-
                     Commit(geoArea, equationYear, value);
                 }
 
@@ -109,7 +112,7 @@ namespace Marsad.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public JsonResult GeoAreasConfirm()
-        {            
+        {
             var geoAreaID = Request["GeoAreaID"];
             var equationYearID = Request["EquationYearID"];
             GeoArea geoArea = null;
@@ -128,6 +131,7 @@ namespace Marsad.Controllers
                 return Json(new { success = false, error = "برجاء إدخال بيانات صحيحة" });
             }
             float value = CalculateEquation(equationYear, geoArea);
+            DeleteCalculated(geoArea, equationYear);
             Commit(geoArea, equationYear, value);
             db.SaveChanges();
             UpdateLog(geoArea, equationYear, "commit");
@@ -198,8 +202,7 @@ namespace Marsad.Controllers
         }
 
         private void Commit(GeoArea geoArea, EquationYear equationYear, float value)
-        {
-            DeleteCalculated(geoArea, equationYear);
+        {            
             DateTime commitedAt = DateTime.Now;
             foreach (var elementValue in equationYear.ElementValues.Where(x => x.GeoAreaID == geoArea.ID))
             {
@@ -229,14 +232,15 @@ namespace Marsad.Controllers
             return (float)results[0];
         }
 
-        private void EditUpdate(GeoArea geoArea, EquationYear equationYear, string userId, string[] elementValuesKeys)
+        private bool EditUpdate(GeoArea geoArea, EquationYear equationYear, string userId, string[] elementValuesKeys)
         {
             DeleteUpdate(geoArea, equationYear);
-            AddUpdate(geoArea, equationYear, userId, elementValuesKeys);
+            return AddUpdate(geoArea, equationYear, userId, elementValuesKeys);
         }
 
-        private void AddUpdate(GeoArea geoArea, EquationYear equationYear, string userId, string[] elementValuesKeys)
+        private bool AddUpdate(GeoArea geoArea, EquationYear equationYear, string userId, string[] elementValuesKeys)
         {
+            var calculate = true;
             string values = "";
             var elementIds = new List<int>();
             foreach (string evs in elementValuesKeys)
@@ -247,9 +251,15 @@ namespace Marsad.Controllers
                 {
                     throw new Exception("Equation Element Not Found");
                 }
-                string strValue = Request[evs];
-                if (float.TryParse(strValue, out float fValue))
+                string strValue = Request[evs].Trim();
+                float _fValue = 0;
+                float? fValue = null;
+                if (string.IsNullOrEmpty(strValue) || float.TryParse(strValue, out _fValue))
                 {
+                    if (!string.IsNullOrEmpty(strValue))
+                        fValue = _fValue;
+                    else
+                        calculate = false;
                     values += string.Format("{0} : {1}\r\n", equationElement.Element.Name, strValue);
                     var createdAt = DateTime.Now;
                     var elementValue = new ElementValue()
@@ -269,13 +279,16 @@ namespace Marsad.Controllers
                     throw new Exception("Value is in correct");
                 }
             }
-
-            var elementYearValues = db.ElementYearValues.Where(x => x.GeoAreaID == geoArea.ID && x.Year == equationYear.Year && elementIds.Contains(x.ElementID)).ToList();
-            foreach (var eyv in elementYearValues)
+            if (calculate)
             {
-                eyv.IsCommited = true;
-                db.Entry(eyv).State = EntityState.Modified;
+                var elementYearValues = db.ElementYearValues.Where(x => x.GeoAreaID == geoArea.ID && x.Year == equationYear.Year && elementIds.Contains(x.ElementID)).ToList();
+                foreach (var eyv in elementYearValues)
+                {
+                    eyv.IsCommited = true;
+                    db.Entry(eyv).State = EntityState.Modified;
+                }
             }
+            return calculate;
         }
 
         private void DeleteUpdate(GeoArea geoArea, EquationYear equationYear)
@@ -287,7 +300,7 @@ namespace Marsad.Controllers
                 db.ElementValues.Remove(elementValues[i]);
             }
             var elementYearValues = db.ElementYearValues.Where(x => x.GeoAreaID == geoArea.ID && x.Year == equationYear.Year && elementIds.Contains(x.ElementID)).ToList();
-            foreach(var eyv in elementYearValues)
+            foreach (var eyv in elementYearValues)
             {
                 eyv.IsCommited = false;
                 db.Entry(eyv).State = EntityState.Modified;

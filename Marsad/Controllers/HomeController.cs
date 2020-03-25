@@ -36,7 +36,8 @@ namespace Marsad.Controllers
             if (role != null)
                 officerCount = role.Users.Count();
             ViewBag.OfficersCount = officerCount;
-            ViewBag.ParentIndicatorCount = db.Indicators.Where(x => x.IndicatorID == null).Count();
+            ViewBag.ParentIndicatorCount = db.Indicators.Where(x => !x.HasParent).Count();
+            ViewBag.ChildIndicatorCount = db.Indicators.Where(x => x.HasParent).Count();
             ViewBag.BundleCount = db.Bundles.Count();
             ViewBag.DataSourceCount = db.DataSources.Count();
             ViewBag.DataSourceGroupCount = db.DataSourceGroups.Count();

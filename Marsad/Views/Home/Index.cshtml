@@ -4,6 +4,9 @@
     @Styles.Render("~/Content/JQVMap")
 }
 <style>
+    th a, th a:hover {
+    color: #2a3f54;
+}
     .fa {
         font-size: 28px;
     }
@@ -25,30 +28,50 @@
 <!-- top tiles -->
 <div class="row tile_count">
     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-bar-chart"></i> إجمالي المؤشرات</span>
-        <div class="count">@ViewBag.IndicatorCount</div>
-        <span class="count_bottom"><i class="green">@ViewBag.ParentIndicatorCount</i> مؤشرات رئيسية</span>
+        <a href="@Url.Action("Indicators","Query")">
+            <span class="count_top"><i class="fa fa-bar-chart"></i> إجمالي المؤشرات</span>
+            <div class="count">@ViewBag.IndicatorCount</div>
+        </a>
+        <a href="@Url.Action("Indicators","Query",new { indicatorType="parent"})"><span class="count_bottom"><i class="green">@ViewBag.ParentIndicatorCount</i> مؤشرات رئيسية</span></a>
+        <br />
+        <a href="@Url.Action("Indicators","Query",new { indicatorType="child"})"><span class="count_bottom"><i class="green">@ViewBag.ChildIndicatorCount</i> مؤشرات فرعية</span></a>
     </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-folder"></i> عدد الحزم</span>
-        <div class="count">@ViewBag.BundleCount</div>
-        @*<span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> 3 شهور</span>*@
-    </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-file"></i> مصادر البيانات</span>
-        <div class="count">@ViewBag.DataSourceCount</div>
-        <span class="count_bottom"><i class="green"><i></i>@ViewBag.DataSourceGroupCount </i> مجموعات</span>
-    </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-home"></i> الجهات</span>
-        <div class="count">@ViewBag.EntitiesCount</div>
-        @*<span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>12% </i> أخر إسبوع</span>*@
-    </div>
-    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-        <span class="count_top"><i class="fa fa-user"></i> ضباط الإتصال</span>
-        <div class="count">@ViewBag.OfficersCount</div>
-    </div>
-
+    @{
+        var bundlesUrl = "#";
+        var entitiesUrl = "#";
+        var usersUrl = "#";
+    }
+    @if (User.IsInRole("Admin"))
+    {
+        bundlesUrl = Url.Action("Index", "Bundles");
+        entitiesUrl = Url.Action("Index", "Entities");
+        usersUrl = Url.Action("Index", "Users", new { Type = "Officer" });
+    }
+    <a href="@bundlesUrl">
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-folder"></i> عدد الحزم</span>
+            <div class="count">@ViewBag.BundleCount</div>
+        </div>
+    </a>
+    <a href="@Url.Action("DataSources","Query")">
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-file"></i> مصادر البيانات</span>
+            <div class="count">@ViewBag.DataSourceCount</div>
+            <span class="count_bottom"><i class="green"><i></i>@ViewBag.DataSourceGroupCount </i> مجموعات</span>
+        </div>
+    </a>
+    <a href="@entitiesUrl">
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-home"></i> الجهات</span>
+            <div class="count">@ViewBag.EntitiesCount</div>
+        </div>
+    </a>
+    <a href="@usersUrl">
+        <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+            <span class="count_top"><i class="fa fa-user"></i> ضباط الإتصال</span>
+            <div class="count">@ViewBag.OfficersCount</div>
+        </div>
+    </a>
 </div>
 <!-- /top tiles -->
 @if (User.IsInRole("Admin"))
@@ -102,48 +125,11 @@
                     <h3> النطاقات الجغرافية</h3>
                 </div>
             </div>
-
             <div class="col-md-6">
-                <table class="table table-bordered table-hover gr">
-
-                    <tr>
-                        <th>منطقة</th>
-                        <td>@(ViewBag.GeoAreas.ContainsKey("Region") ? ViewBag.GeoAreas["Region"] : 0)</td>
-                    </tr>
-                    <tr>
-                        <th>حاضرة</th>
-                        <td>@(ViewBag.GeoAreas.ContainsKey("SubRegion") ? ViewBag.GeoAreas["SubRegion"] : 0)</td>
-                    </tr>
-                    <tr>
-                        <th>محافظة</th>
-                        <td>@(ViewBag.GeoAreas.ContainsKey("Governorate") ? ViewBag.GeoAreas["Governorate"] : 0)</td>
-                    </tr>
-
-                    <tr>
-                        <th>بلدية</th>
-                        <td>@(ViewBag.GeoAreas.ContainsKey("Town") ? ViewBag.GeoAreas["Town"] : 0)</td>
-                    </tr>
-
-                    <tr>
-                        <th>مدينة</th>
-                        <td>@(ViewBag.GeoAreas.ContainsKey("City") ? ViewBag.GeoAreas["City"] : 0)</td>
-                    </tr>
-
-                    <tr>
-                        <th>حي</th>
-                        <td>@(ViewBag.GeoAreas.ContainsKey("District") ? ViewBag.GeoAreas["District"] : 0)</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="col-md-6">
-                <svg style="width: 100%;height: 471px;margin: 0px;" viewBox="0 0 841 1190" enable-background="new 0 0 841.49291 1190.23937"
-                     version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                    <g id="Layers">
-                        <g id="حدود_محافظات">
-                            <clipPath id="SVG_CP_1">
-                                <path d="M13.92064,1176.37992L13.92064,12.96154L830.91837,12.96154L830.91837,1176.37992L13.92064,1176.37992z" />
-                            </clipPath>
-                            <path clip-path="url(#SVG_CP_1)" fill="#497e48" fill-rule="evenodd" stroke="none" d="M418.09931,424.85053M418.09931,424.85053
+                <svg stroke="none" style="width: 100%;height: 263px;border: none;margin: 0px;" viewBox="0 210 600 800" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="Layers" stroke="none">
+                        <g id="حدود_محافظات" stroke="none">
+                            <path fill="#497e48" fill-rule="evenodd" stroke="none" d="M418.09931,424.85053M418.09931,424.85053
 				L418.09931,424.85053zM418.09931,424.61051M418.09931,424.61051L418.09931,424.85053L418.09931,424.61051zM418.09931,424.37048
 				M418.09931,424.37048L418.09931,424.61051L418.09931,424.37048zM418.09931,424.37048M418.09931,424.37048L418.09931,424.37048
 				zM418.09931,424.37048M418.09931,424.37048L418.09931,424.37048zM418.09931,424.13045M418.09931,424.13045L418.09931,424.37048
@@ -1150,16 +1136,60 @@
 				L122.88568,225.14678L129.12596,221.0663L132.24611,220.82627L136.56631,217.7059L136.56631,213.38538L166.8077,215.78567L175.4481,213.38538
 				L236.89094,223.70661L241.93117,231.86758" />
                         </g>
-                        <g id="Other">
-                            <clipPath id="SVG_CP_2">
-                                <path d="M0,1190.23937L0,0L841.49291,0L841.49291,1190.23937L0,1190.23937z" />
-                            </clipPath>
-                            <path clip-path="url(#SVG_CP_2)" fill="none" stroke="#000000" stroke-width="0.96004" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round" d="
-				M13.92064,1176.1399L13.92064,12.72151L830.91837,12.72151L830.91837,1176.1399L13.92064,1176.1399z" />
-                        </g>
                     </g>
                 </svg>
-            </div>                
+            </div>
+            <div class="col-md-6">
+                <table class="table table-bordered table-hover gr">
+                    @{
+                        var regionUrl = "#";
+                        var subRegionUrl = "#";
+                        var governorateUrl = "#";
+                        var townUrl = "#";
+                        var cityUrl = "#";
+                        var districtUrl = "#";
+                        if (User.IsInRole("Admin"))
+                        {
+                            regionUrl = Url.Action("Index", "GeoAreas", new { type = "Region" });
+                            subRegionUrl = Url.Action("Index", "GeoAreas", new { type = "SubRegion" });
+                            governorateUrl = Url.Action("Index", "GeoAreas", new { type = "Governorate" });
+                            townUrl = Url.Action("Index", "GeoAreas", new { type = "Town" });
+                            cityUrl = Url.Action("Index", "GeoAreas", new { type = "City" });
+                            districtUrl = Url.Action("Index", "GeoAreas", new { type = "District" });
+                        }
+                    }
+
+                    <tr>
+                        <th><a href="@regionUrl">منطقة</a></th>
+                        <td><a href="@regionUrl">@(ViewBag.GeoAreas.ContainsKey("Region") ? ViewBag.GeoAreas["Region"] : 0)</a></td>
+                    </tr>
+
+                    <tr>
+                        <th><a href="@subRegionUrl">حاضرة</a></th>
+                        <td><a href="@subRegionUrl">@(ViewBag.GeoAreas.ContainsKey("SubRegion") ? ViewBag.GeoAreas["SubRegion"] : 0)</a></td>
+                    </tr>
+                    <tr>
+                        <th><a href="@governorateUrl">محافظة</a></th>
+                        <td><a href="@governorateUrl">@(ViewBag.GeoAreas.ContainsKey("Governorate") ? ViewBag.GeoAreas["Governorate"] : 0)</a></td>
+                    </tr>
+
+                    <tr>
+                        <th><a href="@townUrl">بلدية</a></th>
+                        <td><a href="@townUrl">@(ViewBag.GeoAreas.ContainsKey("Town") ? ViewBag.GeoAreas["Town"] : 0)</a></td>
+                    </tr>
+
+                    <tr>
+                        <th><a href="@cityUrl">مدينة</a></th>
+                        <td><a href="@cityUrl">@(ViewBag.GeoAreas.ContainsKey("City") ? ViewBag.GeoAreas["City"] : 0)</a></td>
+                    </tr>
+
+                    <tr>
+                        <th><a href="@districtUrl">حي</a></th>
+                        <td><a href="@districtUrl">@(ViewBag.GeoAreas.ContainsKey("District") ? ViewBag.GeoAreas["District"] : 0)</a></td>
+                    </tr>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>

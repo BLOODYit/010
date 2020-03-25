@@ -327,7 +327,7 @@ textarea {
 }
 
 .nav-sm .navbar.nav_title {
-    height: 60px !important;
+    height: 58px !important;
 }
 .logo-sm{
     display:none;
@@ -357,4 +357,17 @@ textarea {
 .login_content h1 {
     font: inherit;    
     font-size: 30px;
+}
+
+.right_col .col-xs-12:first-child h1:first-child, .right_col .col-xs-12:first-child h2:first-child,
+.right_col .col-sm-12:first-child h1:first-child, .right_col .col-sm-12:first-child h2:first-child {
+    background: #2a3f54;
+    color: white;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: -10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }

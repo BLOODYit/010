@@ -1,0 +1,72 @@
+﻿@model List<Marsad.Models.PendingLog>
+
+@{
+    ViewBag.Title = "مراجعة الأرقام والتحديثات";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    IQueryable<ElementYearValue> elementValues = ViewBag.Details as IQueryable<ElementYearValue>;
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1>مراجعة الأرقام والتحديثات</h1>
+            <hr />
+            <div class="col-sm-8 offset-sm-2">
+                <form action="@Url.Action("PendingLog")">
+                    <div class="input-group">
+                        <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث" />
+                        <span class="input-group-btn">
+                            <input type="submit" value="بحث" class="btn btn-primary" />
+                        </span>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-2 col-xs-12">
+                <button class="btn btn-success" id="export">تصدير</button>
+            </div>
+            <table class="table table-striped jambo_table" id="html-table" dir="rtl" style="direction:rtl;">
+                <thead>
+                    <tr>
+                        <th>العملية</th>
+                        <th>الجهة</th>
+                        <th>تاريخ العملية</th>
+                        <th>القيم المحدثة</th>
+                        <th>السنة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Log</td>
+                            <td>@(item.Entity != null ? item.Entity.Name : item.UserName)</td>
+                            <td>@item.ActionDate.ToString()</td>
+                            <td>
+                                @if (elementValues != null)
+                                {
+                                    var evs = elementValues.Where(x => x.Year == item.Year && x.ApplicationUserID == item.ApplicationUserID && x.GeoAreaID == item.GeoAreaID).ToList();
+                                    @Html.Raw(string.Join(" - ", evs.Select(x => x.Element.Name + " : " + x.Value.ToString()).ToArray()));
+                                }
+                            </td>
+                            <td>@item.Year</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section  scripts{    
+    <script type="text/javascript">
+        $(function () {
+            $('#export').click(function () {
+                var pdf = new jsPDF();
+                pdf.setFont('Amiri');
+                pdf.text('تقرير ضباط الإتصال', (pdf.internal.pageSize.width / 2), 12, 'center');
+                pdf.autoTable({ html: '#html-table', startY: 20, styles: {textAlign: "right", font: "Amiri" } });
+                pdf.save("reprt.pdf");
+            });
+        });
+    </script>
+}

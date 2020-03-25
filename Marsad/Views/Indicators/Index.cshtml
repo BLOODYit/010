@@ -3,13 +3,13 @@
 @using Marsad.Helpers;
 
 @{
-    ViewBag.Title = "إدارة المؤشرات الحضارية";
+    ViewBag.Title = "إدارة المؤشرات الحضرية";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <h1>إدارة المؤشرات الحضارية</h1>
+            <h1>إدارة المؤشرات الحضرية</h1>
             <hr />
 
             <div class="col-sm-2">
@@ -17,6 +17,9 @@
             </div>
             <div class="col-sm-8">
                 <form action="@Url.Action("Index")">
+                    <label><input type="radio" name="indicatorType" value="all" @((ViewBag.indicatorType == null || ViewBag.indicatorType == "all") ? "checked" : "") />  الكل</label>
+                    <label><input type="radio" name="indicatorType" value="parent" @(ViewBag.indicatorType == "parent" ? "checked" : "") /> مؤشر رئيسي</label>
+                    <label><input type="radio" name="indicatorType" value="child" @(ViewBag.indicatorType == "child" ? "checked" : "") /> مؤشر فرعي</label>
                     <div class="input-group">
                         <input class="form-control" name="searchString" value="@ViewBag.CurrentFilter" placeholder="بحث" />
                         <span class="input-group-btn">

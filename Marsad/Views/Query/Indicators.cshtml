@@ -37,6 +37,7 @@
                         <th class="column-title">كود المؤشر</th>
                         <th class="column-title">أسم المؤشر</th>
                         <th class="column-title">الحزمة التابع لها</th>
+                        <th class="column-title">نوع المؤشر</th>
                         <th class="column-title no-link last">
                             <span class="nobr">عمليات</span>
                         </th>
@@ -53,6 +54,7 @@
                         <td>@item.Name</td>
 
                         <td>@item.BundleName</td>
+                        <td>@(item.HasParent?"فرعي":"رئيسي")</td>
                         <td class=" last">
                             <a class="btn btn-defualt btn-xs" href="@Url.Action("Details","Indicators",new { item.ID })">عرض</a>
                         </td>

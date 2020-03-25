@@ -1,0 +1,52 @@
+﻿@model int[]
+@{
+    Layout = "";
+}
+<style>
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Model == null || Model.Length == 0)
+            {
+                <h3 class="text-danger">لا يوجد سنوات</h3>
+            }
+            else
+            {
+                <table class="table">
+                    <tbody id="years-container">
+                        <tr id="year1">
+                            <td>
+                                <select class="form-control years">
+                                    @foreach (int year in Model.OrderBy(x => x))
+                                    {
+                                        <option value="@year">@year</option>
+                                    }
+                                </select>
+                            </td>
+                            <td><button class="btn btn-success" type="button" id="add-year">+</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary" id="view-report">عرض</button>                
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#add-year').click(function () {
+            var html = $('#year1').html();
+            html = html.replace('<button class="btn btn-success" type="button" id="add-year">+</button>', '<button class="btn btn-danger del-year" type="button">-</button>');
+            html = "<tr>" + html+"</tr>"
+            $('#years-container').append(html);
+            $('.del-year').unbind();
+            $('.del-year').click(function () {
+                $(this).parent().parent().remove();
+            });
+        });
+        $('#view-report').click(function () {
+            showReport();
+        });
+    });
+</script>

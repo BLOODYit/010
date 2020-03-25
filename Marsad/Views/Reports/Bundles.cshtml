@@ -1,0 +1,83 @@
+﻿@model List<Marsad.Models.Bundle>
+@{
+    ViewBag.Title = "تقرير حزم المؤشرات الحضرية";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2>تقرير حزم المؤشرات الحضرية</h2>
+            <hr />
+            <div class="col-sm-2 col-xs-12">
+                <button class="btn btn-success" id="export">تصدير</button>
+            </div>
+            <div id="report">
+                <div id="html-data" dir="rtl">
+                    <table class="table table-stripped" id="html-table" dir="rtl" style="direction:rtl;">
+                        <thead>
+                            <tr>
+                                <th>م</th>
+                                <th>الحزمة</th>
+                                <th>م</th>
+                                <th>المؤشرات التابعة</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                var i = 1;
+                            }
+                            @foreach (var b in Model)
+                            {
+                                if (b.Indicators.Count() == 0)
+                                {
+                                    <tr>
+                                        <td>@(i++)</td>
+                                        <td>@b.Name</td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                }
+                                
+                                    var j = 1;
+                                    var span = b.Indicators.Count() > 1 ? b.Indicators.Count() : 1;
+                                
+                                foreach (var ind in b.Indicators)
+                                {
+                        <tr>
+                            @if (j == 1)
+                            {
+                                <td rowspan="@span">@(i++)</td>
+                                <td rowspan="@span">@b.Name</td>
+                            }
+                            <td>@(j++)</td>
+                            <td>@ind.Name</td>
+
+                        </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section  scripts{
+    @Scripts.Render("~/scripts/charts")
+    <script type="text/javascript">
+        $(function () {
+            $('#export').click(function () {
+                var pdf = new jsPDF();
+                pdf.setFont('Amiri');
+                pdf.text('تقرير حزم المؤشرات الحضرية', (pdf.internal.pageSize.width / 2), 12, 'center');
+                pdf.autoTable({ html: '#html-table', startY: 20, styles: {textAlign: "right", font: "Amiri" } });
+                pdf.save("reprt.pdf");
+            });
+        });
+
+    </script>
+}
