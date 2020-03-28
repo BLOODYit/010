@@ -40,7 +40,9 @@ namespace Marsad
                         , "~/Content/bootstrap-datepicker.min.js"
                         , "~/Scripts/jspdf.min.js"
                         , "~/Scripts/Amiri-Regular-normal.js"
-                        , "~/Scripts/jspdf.plugin.autotable.min.js"));
+                        , "~/Scripts/jspdf.plugin.autotable.min.js"
+                        , "~/Scripts/html2canvas.min.js"
+                        , "~/Content/vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));

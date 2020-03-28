@@ -9,6 +9,6 @@
         public int ElementID { get; set; }
         public virtual Element Element { get; set; }
 
-        public float ElementValue { get; set; }
+        public double ElementValue { get; set; }
     }
 }

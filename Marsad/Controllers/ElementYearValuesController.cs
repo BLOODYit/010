@@ -1,7 +1,9 @@
 ﻿using Marsad.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,8 +12,15 @@ namespace Marsad.Controllers
 {
     public class ElementYearValuesController : BaseController
     {
-        // GET: ElementYearValues
-        ApplicationDbContext db = new ApplicationDbContext();
+        UserStore<ApplicationUser> userStore;
+        UserManager<ApplicationUser> userManager;
+        public ElementYearValuesController()
+        {
+            db = new ApplicationDbContext();
+            userStore = new UserStore<ApplicationUser>(db);
+            userManager = new UserManager<ApplicationUser>(userStore);
+        }
+        // GET: ElementYearValues        
         public ActionResult Index(string type = "Region")
         {
             type = SetType(type);
@@ -35,7 +44,7 @@ namespace Marsad.Controllers
             return View();
         }
 
-        public JsonResult UpdateElementValues(int year,int geoArea, int[] elementIds, float[] values)
+        public JsonResult UpdateElementValues(int year,int geoArea, int[] elementIds, double[] values)
         {
 
             if (elementIds == null || values == null || elementIds.Length != values.Length)
@@ -49,7 +58,7 @@ namespace Marsad.Controllers
             var oldElementValues = db.ElementYearValues.Where(x => x.Year == year && userElementIds.Contains(x.ElementID)).ToList();
             db.ElementYearValues.RemoveRange(oldElementValues);
             var createdAt = DateTime.Now;
-            Dictionary<int, float> elemets = new Dictionary<int, float>();
+            Dictionary<int, double> elemets = new Dictionary<int, double>();
             for (int i = 0; i < elementIds.Length; i++)
             {
                 if (!userElementIds.Contains(elementIds[i]))
@@ -76,15 +85,39 @@ namespace Marsad.Controllers
             var gA = db.GeoAreas.Find(geoArea);
             if (gA != null)
                 geoAreaName = gA.Name;
-            var notes = "";
+            var notes = string.Format("نظاق جغرافي ({0}) لسنة {1}, القيم (", geoAreaName,year);
+            var valueCounts = 0;
             foreach(var id in elemets.Keys)
             {
                 if (elementNames.ContainsKey(id))
                 {
-                    notes += string.Format("نطاق جغرافي {2}, قيم {0} : {1}", elementNames[id], elemets[id],geoAreaName);
+                    notes += string.Format("{0}:{1}, ", elementNames[id], elemets[id]);
+                    valueCounts++;
                 }
             }
+            notes = notes.TrimEnd(' ').TrimEnd(',');
+            notes += ")";
             Log(LogAction.Create, new ElementYearValue(), notes);
+            if (User.IsInRole("Officer"))
+            {                
+                var user = userManager.Users.Include(x => x.Entity).Where(x => x.Id == userId).FirstOrDefault();
+                if (user != null)
+                {                  
+                    db.OfficerLogs.Add(new OfficerLog()
+                    {
+                        ApplicationUserId = user.Id,
+                        Name = user.Name,
+                        UserName = user.UserName,
+                        EntityName = user.Entity != null ? user.Entity.Name : user.Name,
+                        ActionDate = DateTime.Now,
+                        ValuesCount = valueCounts,
+                        Notes = notes,
+                        Year = year
+                    }) ;
+                    db.SaveChanges();
+                }
+                
+            }                     
             return Json(new { success=true }, JsonRequestBehavior.AllowGet);
         }
 
@@ -102,5 +135,5 @@ namespace Marsad.Controllers
             return type;
         }
 
-    }
+    }   
 }

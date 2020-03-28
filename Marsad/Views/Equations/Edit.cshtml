@@ -13,108 +13,108 @@
             {
                 @Html.AntiForgeryToken()
 
-            <div class="form-horizontal">
-                <h2>تعديل معادلة</h2>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                @Html.HiddenFor(model => model.ID)
+                <div class="form-horizontal">
+                    <h2>تعديل معادلة</h2>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.ID)
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Indicator.BundleID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                    <div class="col-sm-10 col-xs-12">
-                        @Model.Indicator.Bundle.Name
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                    <div class="col-sm-10 col-xs-12">
-                        @Model.Indicator.Name
-                        <input name="IndicatorID" value="@Model.IndicatorID" type="hidden" />
-                    </div>
-                </div>
-
-                @{
-                    var years = Model.EquationYears.Select(x => x.Year).ToArray();
-
-                }
-            <div id="years">
-                @if (years.Length > 0)
-                {
                     <div class="form-group">
-                        <label class="control-label col-sm-2 col-xs-12">السنة</label>
-                        <div class="col-sm-9 col-xs-12">
-                            <input name="years" class="form-control year" required value="@years[0]" />
-                        </div>
-                        <div>
-                            <button class="btn btn-success" type="button" id="add_year">+</button>
+                        @Html.LabelFor(model => model.Indicator.BundleID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                        <div class="col-sm-10 col-xs-12">
+                            @Model.Indicator.Bundle.Name
                         </div>
                     </div>
 
-                    for (int i = 1; i < years.Length; i++)
-                    {
-                        <div class="form-group">
-                            <label class="control-label col-sm-2 col-xs-12">السنة</label>
-                            <div class="col-sm-9 col-xs-12">
-                                <input name="years" class="form-control year" required value="@years[i]" />
-                            </div>
-                            <div>
-                                <button class="btn btn-danger del_year" type="button" id="del_year">X</button>
-                            </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                        <div class="col-sm-10 col-xs-12">
+                            @Model.Indicator.Name
+                            <input name="IndicatorID" value="@Model.IndicatorID" type="hidden" />
                         </div>
+                    </div>
+
+                    @{
+                        var years = Model.EquationYears.Select(x => x.Year).ToArray();
+
                     }
-                }
-                else
-                {
-                    <div class="form-group">
-                        <label class="control-label col-sm-2 col-xs-12">السنة</label>
-                        <div class="col-sm-9 col-xs-12">
-                            <input name="years" class="form-control year" required value="" />
-                        </div>
-                        <div>
-                            <button class="btn btn-success" type="button" id="add_year">+</button>
-                        </div>
-                    </div>
-                }
-                <div class="col-sm-offset-3">
-                    @Html.ValidationMessage("years", new { @class = "text-danger" })
-                </div>
-            </div>
+                    <div id="years">
+                        @if (years.Length > 0)
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-sm-2 col-xs-12">السنة</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input name="years" class="form-control year" required value="@years[0]" />
+                                </div>
+                                <div>
+                                    <button class="btn btn-success" type="button" id="add_year">+</button>
+                                </div>
+                            </div>
 
-
-
-                <div class="form-group">
-                    <label class="control-label col-sm-2 col-xs-12"></label>
-                    <div class="col-sm-10 col-xs-12">
-                        <input type="text" id="elementSearch" class="form-control" placeholder="بحث العناصر" />
-                        <select multiple name="Elements" id="elements" class="form-control" size="6">
-                            @foreach (var key in ViewBag.Elements.Keys)
+                            for (int i = 1; i < years.Length; i++)
                             {
-                                <option value="@key">@ViewBag.Elements[key]</option>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-2 col-xs-12">السنة</label>
+                                    <div class="col-sm-9 col-xs-12">
+                                        <input name="years" class="form-control year" required value="@years[i]" />
+                                    </div>
+                                    <div>
+                                        <button class="btn btn-danger del_year" type="button" id="del_year">X</button>
+                                    </div>
+                                </div>
                             }
-                        </select>
-                        <button type="button" class="btn btn-primary" id="add-element">إضافة</button>
-                        <button type="button" class="btn btn-primary" id="add-new-element">إضافة عنصر جديد</button>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                <label class="control-label col-sm-2 col-xs-12">السنة</label>
+                                <div class="col-sm-9 col-xs-12">
+                                    <input name="years" class="form-control year" required value="" />
+                                </div>
+                                <div>
+                                    <button class="btn btn-success" type="button" id="add_year">+</button>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-sm-offset-3">
+                            @Html.ValidationMessage("years", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    @Html.Partial("~/Views/Shared/Controls/_Equation.cshtml", new EquationModel() { ID = "EquationText", Name = "EquationText", Value = Model.EquationText })
-                    <div class="row">
-                        <div class="col-md-6 col-sm-12 col-xs-12"></div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
-                            @Html.ValidationMessageFor(model => model.EquationText, "", new { @class = "text-danger" })
+
+
+                    <div class="form-group">
+                        <label class="control-label col-sm-2 col-xs-12"></label>
+                        <div class="col-sm-10 col-xs-12">
+                            <input type="text" id="elementSearch" class="form-control" placeholder="بحث العناصر" />
+                            <select multiple name="Elements" id="elements" class="form-control" size="6">
+                                @foreach (var key in ViewBag.Elements.Keys)
+                                {
+                                    <option value="@key">@ViewBag.Elements[key]</option>
+                                }
+                            </select>
+                            <button type="button" class="btn btn-primary" id="add-element">إضافة</button>
+                            <button type="button" class="btn btn-primary" id="add-new-element">إضافة عنصر جديد</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.Partial("~/Views/Shared/Controls/_Equation.cshtml", new EquationModel() { ID = "EquationText", Name = "EquationText", Value = Model.EquationText })
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12 col-xs-12"></div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                @Html.ValidationMessageFor(model => model.EquationText, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-sm-10 col-xs-12">
+                            <input type="submit" value="حفظ" class="btn btn-primary" />
+                            @Html.ActionLink("رجوع", "Index", null, new { @class = "btn btn-default" })
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-sm-10 col-xs-12">
-                        <input type="submit" value="حفظ" class="btn btn-primary" />
-                        @Html.ActionLink("رجوع", "Index", null, new { @class = "btn btn-default" })
-                    </div>
-                </div>
-            </div>
             }
 
 
@@ -144,7 +144,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-             $('#elementSearch').keyup(function (evt) {                
+             $('#elementSearch').keyup(function (evt) {
                 var val = $(this).val();
                 $('#elements option').each(function () {
                     var opVal = $(this).text();
@@ -163,9 +163,10 @@
                     $('#equation_text').val($('#equation_text').val() + "[" + $(this).text() + "]");
                 });
             });
-         $('#add-new-element').click(function () {
+            $('#add-new-element').click(function () {
+                $mymodal = $("#addElementModel");
+                $mymodal.find("div.modal-body").html('');
                 $.get('@Url.Action("GetCreateElement","Elements")').done(function (res) {
-                    $mymodal = $("#addElementModel");
                     $mymodal.find("div.modal-body").html(res);
                     $mymodal.modal("show");
                 });

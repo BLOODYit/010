@@ -44,7 +44,7 @@
             <hr />
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10 col-xs-12">
-                    <input id="submit" type="submit" value="إنشاء" class="btn btn-success" />
+                    <input id="submit" type="button" value="إنشاء" class="btn btn-success" />
                     <input id="cancel" type="button" value="الغاء" class="btn btn-default" />
                 </div>
             </div>
@@ -61,9 +61,8 @@
             $mymodal.modal("hide");
         });
 
-        var $form = $('#elementForm');
-        $form.submit(function (e) {
-            var $form = $(this);
+        $('#submit').click(function (e) {                
+            var $form = $('#elementForm');
             if ($form.valid()) {
                 $.ajax({
                     url: $form.attr('action'),
@@ -73,7 +72,7 @@
                     beforeSend: function (xhr, opts) { },                    
                     complete: function () {},
                     success: function (data) {
-                        if (data.success) {
+                        if (data.success) {                            
                             $('#elements').append('<option value="'+data.data.ID+'">'+data.data.Name+'</option>');
                             $mymodal.modal("hide");
                         }

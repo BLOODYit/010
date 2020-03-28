@@ -38,11 +38,16 @@
 </table>
 
 <script type="text/javascript">
-     $('#export').click(function () {
-                            var pdf = new jsPDF();
-                            pdf.setFont('Amiri');
-                            pdf.text('تقرير تصنيف المؤشرات', (pdf.internal.pageSize.width / 2), 12, 'center');                            
-                            pdf.autoTable({ html: '#html-table',startY:20,styles: {textAlign:"right",font: "Amiri"}});                            
-                            pdf.save("reprt.pdf");
-                        });
+    $('#export').click(function () {
+        var rtlTable = $('#html-table').clone();
+        rtlTable.find('tr').each(function () {
+            var tds = $(this).children('td,th').get().reverse();
+            $(this).append(tds);
+        });
+        var pdf = new jsPDF();
+        pdf.setFont('Amiri');
+        pdf.text('تقرير تصنيف المؤشرات', (pdf.internal.pageSize.width / 2), 12, 'center');
+        pdf.autoTable({ html: rtlTable.get()[0], startY: 20, styles: { textAlign: "right", font: "Amiri" } });
+        pdf.save("reprt.pdf");
+    });
 </script>

@@ -16,9 +16,10 @@
         margin: 0px !important;
         padding: 0px !important;
     }
-    #equation_text{
-        direction:rtl;
-        text-align:right;
+
+    #equation_text {
+        direction: rtl;
+        text-align: right;
     }
 </style>
 <div class="row">
@@ -34,13 +35,11 @@
                 <td><button id="pow3" type="button" class="eq_btn">x<sup>3</sup></button></td>
             </tr>
             <tr>
-
-
                 <td><button id="mult" type="button" class="eq_btn">x</button></td>
                 <td><button id="b9" type="button" class="eq_btn">9</button></td>
                 <td><button id="b8" type="button" class="eq_btn">8</button></td>
                 <td><button id="b7" type="button" class="eq_btn">7</button></td>
-                <td><button id="exp" type="button" class="eq_btn">e<sup>x</sup></button></td>
+                <td><button id="log" type="button" class="eq_btn">log</button></td>
                 <td><button id="logx" type="button" class="eq_btn">log<sub>x</sub></button></td>
                 <td><button id="log10" type="button" class="eq_btn">log<sub>10</sub></button></td>
             </tr>
@@ -49,7 +48,7 @@
                 <td><button id="b6" type="button" class="eq_btn">6</button></td>
                 <td><button id="b5" type="button" class="eq_btn">5</button></td>
                 <td><button id="b4" type="button" class="eq_btn">4</button></td>
-                <td><button id="tenpow" type="button" class="eq_btn">10<sup>x</sup></button></td>
+                <td><button id="exp" type="button" class="eq_btn">e<sup>x</sup></button></td>
                 <td><button id="e" type="button" class="eq_btn">e</button></td>
                 <td><button id="pi" type="button" class="eq_btn">&pi;</button></td>
             </tr>
@@ -65,7 +64,8 @@
             </tr>
             <tr>
                 <td><button id="dot" type="button" class="eq_btn">.</button></td>
-                <td colspan="3"><button id="b0" type="button" class="eq_btn">0</button></td>
+                <td colspan="2"><button id="b0" type="button" class="eq_btn">0</button></td>
+                <td><button id="tenpow" type="button" class="eq_btn">10<sup>x</sup></button></td>
                 <td><button id="rad" type="button" class="eq_btn">RAD</button></td>
                 <td><button id="rand" type="button" class="eq_btn">RND</button></td>
                 <td><button id="sqrt" type="button" class="eq_btn">SQRT</button></td>
@@ -87,9 +87,20 @@
 
 <script type="text/javascript" defer>
 
-    function addItem(str, index = 0) {        
-        $('#equation_text').val($('#equation_text').val() + str);
-        $('#equation_text').selectionStart = $('#equation_text').selectionEnd = $('#equation_text').val().length - str.length + index;
+    function addItem(str, index = null) {
+        var v = $('#equation_text').val();
+        var cursorPos = $('#equation_text').prop('selectionStart');
+        if (cursorPos === 0)
+            cursorPos = v.length;
+        var textBefore = v.substring(0, cursorPos);
+        var textAfter = v.substring(cursorPos, v.length);
+        $('#equation_text').val(textBefore + str + textAfter);
+        if (index != null) {
+            $('#equation_text').focus();
+            document.getElementById('equation_text').selectionEnd =
+                cursorPos + str.length - index;
+        }
+        addValue();
     }
     function toogleItem(str) {
         var val = $('#equation_text').val();
@@ -116,35 +127,78 @@
         $('#sign').click(function () { toogleItem("-") });
         $('#start_brace').click(function () { addItem("(") });
         $('#end_brace').click(function () { addItem(")") });
-        $('#pow').click(function () { addItem("POW(,)", 4) });
-        $('#pow2').click(function () { addItem("POW(,2)", 4) });
-        $('#pow3').click(function () { addItem("POW(,3)", 4) });
+        $('#pow').click(function () { addItem("POW(,)", 2) });
+        $('#pow2').click(function () { addItem("POW(,2)", 3) });
+        $('#pow3').click(function () { addItem("POW(,3)", 3) });
         $('#mult').click(function () { addItem("*") });
         $('#b9').click(function () { addItem("9") });
         $('#b8').click(function () { addItem("8") });
         $('#b7').click(function () { addItem("7") });
-        $('#exp').click(function () { addItem("EXP()", 4) });
-        $('#logx').click(function () { addItem("LOG(,)", 4) });
+        $('#exp').click(function () { addItem("EXP()", 1) });
+        $('#log').click(function () { addItem("LOG()", 1) });
+        $('#logx').click(function () { addItem("LOG(,)", 2) });
         $('#log10').click(function () { addItem("LOG(,10)", 4) });
         $('#minus').click(function () { addItem("-") });
         $('#b6').click(function () { addItem("6") });
         $('#b5').click(function () { addItem("5") });
         $('#b4').click(function () { addItem("4") });
-        $('#tenpow').click(function () { addItem("POW(10,)", 6) });
+        $('#tenpow').click(function () { addItem("POW(10,)", 1) });
         $('#e').click(function () { addItem("EXP(1)") });
         $('#pi').click(function () { addItem("PI") });
         $('#plus').click(function () { addItem("+") });
         $('#b3').click(function () { addItem("3") });
         $('#b2').click(function () { addItem("2") });
         $('#b1').click(function () { addItem("1") });
-        $('#tan').click(function () { addItem("tan()", 4) });
-        $('#cos').click(function () { addItem("cos()", 4) });
-        $('#sin').click(function () { addItem("sin()", 4) });
+        $('#tan').click(function () { addItem("tan()", 1) });
+        $('#cos').click(function () { addItem("cos()", 1) });
+        $('#sin').click(function () { addItem("sin()", 1) });
         $('#dot').click(function () { toogleItem(".") });
         $('#b0').click(function () { addItem("0") });
-        $('#rad').click(function () { addItem("RAD(,)", 4) });
-        $('#rand').click(function () { addItem("RAND()") });
-        $('#sqrt').click(function () { addItem("sqrt()", 5) });
-        $('#dot').click(function () { addItem(".") });        
+        $('#rad').click(function () { addItem("RAD(,)", 2) });
+        $('#rand').click(function () { addItem("RAND()", 1) });
+        $('#sqrt').click(function () { addItem("sqrt()", 1) });
+        $('#dot').click(function () { addItem(".") });
+
+        $('#back').click(function () {
+            $('#equation_text').focus();
+            var cursorPos = $('#equation_text').prop('selectionStart');
+            if (cursorPos > 0) {
+                $('#equation_text').prop('selectionStart', cursorPos - 1);
+                $('#equation_text').prop('selectionEnd', cursorPos - 1);
+            }
+
+        });
+        $('#next').click(function () {
+            $('#equation_text').focus();
+            var cursorPos = $('#equation_text').prop('selectionStart');
+            if (cursorPos < $('#equation_text').val().length) {
+                $('#equation_text').prop('selectionStart', cursorPos + 1);
+                $('#equation_text').prop('selectionEnd', cursorPos + 1);
+            }
+        });
+
+        $('#previous').click(function () {
+            if (valIndex > 0) {
+                vals = vals.slice(0, valIndex);
+                valIndex--;
+            }
+            $('#equation_text').val(vals[valIndex]);
+        });
+        $("#equation_text").on("change paste", function () {
+            addValue();
+        });
+        $('#add-element').click(function () {
+            addValue();
+        });
+
+        vals.push($('#equation_text').val());
+        valIndex++;
+
     });
+    var vals = [];
+    var valIndex = -1;
+    function addValue() {
+        vals.push($('#equation_text').val());
+        valIndex++;
+    }
 </script>

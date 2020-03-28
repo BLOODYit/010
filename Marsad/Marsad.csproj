@@ -251,6 +251,7 @@
     <Compile Include="Models\EquationYear.cs" />
     <Compile Include="Models\GeoAreaBundle.cs" />
     <Compile Include="Models\Logs\SystemLog.cs" />
+    <Compile Include="Models\OfficerLog.cs" />
     <Compile Include="Models\Reports.cs" />
     <Compile Include="Models\GeoArea.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -1505,6 +1506,7 @@
     <Content Include="Scripts\canvasjs.min.js" />
     <Content Include="Scripts\d3\d3.js" />
     <Content Include="Scripts\d3\d3.min.js" />
+    <Content Include="Scripts\html2canvas.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />

@@ -1,14 +1,13 @@
-﻿@model List<Marsad.Models.PendingLog>
+﻿@model List<Marsad.Models.OfficerLog>
 
 @{
-    ViewBag.Title = "مراجعة الأرقام والتحديثات";
+    ViewBag.Title = "مدخلات ضباط الإتصال";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    IQueryable<ElementYearValue> elementValues = ViewBag.Details as IQueryable<ElementYearValue>;
 }
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <h1>مراجعة الأرقام والتحديثات</h1>
+            <h1>مدخلات ضباط الإتصال</h1>
             <hr />
             <div class="col-sm-8 offset-sm-2">
                 <form action="@Url.Action("PendingLog")">
@@ -26,7 +25,6 @@
             <table class="table table-striped jambo_table" id="html-table" dir="rtl" style="direction:rtl;">
                 <thead>
                     <tr>
-                        <th>العملية</th>
                         <th>الجهة</th>
                         <th>تاريخ العملية</th>
                         <th>القيم المحدثة</th>
@@ -37,34 +35,77 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@item.Log</td>
-                            <td>@(item.Entity != null ? item.Entity.Name : item.UserName)</td>
+                            <td>@item.EntityName</td>
                             <td>@item.ActionDate.ToString()</td>
-                            <td>
-                                @if (elementValues != null)
-                                {
-                                    var evs = elementValues.Where(x => x.Year == item.Year && x.ApplicationUserID == item.ApplicationUserID && x.GeoAreaID == item.GeoAreaID).ToList();
-                                    @Html.Raw(string.Join(" - ", evs.Select(x => x.Element.Name + " : " + x.Value.ToString()).ToArray()));
-                                }
-                            </td>
+                            <td>@item.Notes</td>
                             <td>@item.Year</td>
                         </tr>
                     }
                 </tbody>
-            </table>
+            </table>           
         </div>
     </div>
 </div>
 
 
-@section  scripts{    
+@section  scripts{
     <script type="text/javascript">
         $(function () {
             $('#export').click(function () {
                 var pdf = new jsPDF();
                 pdf.setFont('Amiri');
-                pdf.text('تقرير ضباط الإتصال', (pdf.internal.pageSize.width / 2), 12, 'center');
-                pdf.autoTable({ html: '#html-table', startY: 20, styles: {textAlign: "right", font: "Amiri" } });
+                pdf.text('تقرير مدخلات ضباط الإتصال', (pdf.internal.pageSize.width / 2), 12, 'center');
+                var rtlTable = $('#html-table').clone();
+                rtlTable.find('tr').each(function () {
+                    var tds = $(this).children('td,th').get().reverse();
+                    $(this).append(tds);
+                });                
+                pdf.autoTable({
+                    html: rtlTable.get()[0], startY: 20, styles: { halign: "left", font: "Amiri" },
+                    didParseCell({ doc, cell, column }) {                        
+                        if (cell === undefined) {
+                            return;
+                        }
+                        const hasCustomWidth = (typeof cell.styles.cellWidth === 'number');
+                        if (hasCustomWidth || cell.raw == null || cell.colSpan > 1) {
+                            return
+                        }
+                        let text;
+                        if (cell.raw instanceof Node) {
+                            text = cell.raw.innerText;
+                        } else {
+                            if (typeof cell.raw == 'object') {
+                                return;
+                            } else {
+                                text = '' + cell.raw;
+                            }
+                        }
+                        // split cell string by spaces
+                        const words = text.split(/\s+/);
+                        // calculate longest word width
+                        const maxWordUnitWidth = words.map(s => Math.floor(doc.getStringUnitWidth(s) * 100) / 100).reduce((a, b) => Math.max(a, b), 0);
+                        const maxWordWidth = maxWordUnitWidth * (cell.styles.fontSize / doc.internal.scaleFactor)
+                        const minWidth = cell.padding('horizontal') + maxWordWidth;
+
+                        // update minWidth for cell & column
+
+                        if (minWidth > cell.minWidth) {
+                            cell.minWidth = minWidth;
+                        }
+
+                        if (cell.minWidth > cell.wrappedWidth) {
+                            cell.wrappedWidth = cell.minWidth;
+                        }
+
+                        if (cell.minWidth > column.minWidth) {
+                            column.minWidth = cell.minWidth;
+                        }
+
+                        if (column.minWidth > column.wrappedWidth) {
+                            column.wrappedWidth = column.minWidth;
+                        }
+                    }
+                });
                 pdf.save("reprt.pdf");
             });
         });

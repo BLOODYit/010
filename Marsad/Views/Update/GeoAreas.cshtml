@@ -28,6 +28,7 @@
                 <div class="form-group">
                     <label class="control-label col-sm-2 col-xs-12">المؤشر</label>
                     <div class="col-sm-10 col-xs-12">
+                        <input type="text" id="elementNames" class="form-control" placeholder="تصفية المؤشر بالعنصر" />
                         <input type="text" id="IndicatorName" class="form-control" placeholder="البحث عن المؤشر" />
                         <select id="IndicatorID" name="IndicatorID" class="form-control" required>
                             <option value="">-- إختر المؤشر --</option>
@@ -53,6 +54,7 @@
                     });
                 }
         }
+        var indIds = [];
 
         $(function () {
             $('#BundleID').change(function (e) {
@@ -70,17 +72,46 @@
             $('#IndicatorID,#GeoAreaID').change(function () {
                 getIndicator();
             });
-            $('#IndicatorName').keyup(function () {
-                var val = $(this).val();
+
+            function filterIndicators() {
+                $('#IndicatorID').val('');
+                var val = $('#IndicatorName').val();
                 $('#IndicatorID option').each(function () {
                     var option = $(this);
-                    if (option.text().toLowerCase().indexOf(val.toLowerCase()) >= 0) {
+                    var show = option.text().toLowerCase().indexOf(val.toLowerCase()) >= 0;
+                    show = show && (indIds.length === 0 || indIds.includes(option.val() * 1));
+                    show = show || option.val() == '';
+                    if (show) {
                         option.removeAttr('hidden');
                     }
                     else {
                         option.attr('hidden','hidden');
                     }
                 });
+            }
+            $('#IndicatorName').keyup(function () {
+                filterIndicators();
+            });
+            var elements = [
+                @foreach(var d  in ViewBag.Elements.Keys)
+                {
+                    <text>{ value: '@d', data: @Html.Raw(Json.Encode(ViewBag.Elements[d])) },</text>
+                }
+            ];
+
+            $('#elementNames').change(function () {
+                if ($(this).val() === '') {
+                    indIds = [];
+                    filterIndicators();
+                }
+            });
+
+            $('#elementNames').autocomplete({
+                lookup: elements,
+                onSelect: function (suggestion) {
+                    indIds = suggestion.data;
+                    filterIndicators();
+                },
             });
         });
     </script>

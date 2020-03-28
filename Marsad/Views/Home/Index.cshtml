@@ -90,23 +90,20 @@
                         <thead>
                             <tr>
                                 <th>الجهة</th>
-                                <th>عدد القيم المحدثة</th>
-                                <th>اخر تحديث</th>
+                                <th>مجموع القيم المعدلة</th>
+                                <th>اخر تعديل</th>
+                                <th>تفاصيل التعديل</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (OfficerKPI item in ViewBag.OfficersKPI)
                             {
-                                <tr>
-                                    <td>
-                                        @if (item.ApplicationUser.Entity != null)
-                                        {
-                                            @item.ApplicationUser.Entity.Name
-                                        }
-                                    </td>
-                                    <td>@item.Count</td>
-                                    <td>@item.LastUpdated</td>
-                                </tr>
+                            <tr>
+                                <td>@item.EntityName</td>
+                                <td>@item.TotalEditSum</td>
+                                <td>@item.LastEditCount تحديث بتاريخ : @item.LastEdit</td>
+                                <td>@item.Log</td>
+                            </tr>
                             }
                         </tbody>
                     </table>

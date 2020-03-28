@@ -11,6 +11,6 @@ namespace Marsad.Models.ViewModels
         public string IndicatorName { get; set; }
         public int BundleID { get; set; }
         public string BundleName { get; set; }
-        public Dictionary<int,float> Values { get; set; }
+        public Dictionary<int,double> Values { get; set; }
     }
 }

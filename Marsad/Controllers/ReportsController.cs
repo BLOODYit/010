@@ -42,7 +42,7 @@ namespace Marsad.Controllers
 
         public ActionResult GetYears(int geoAreaId)
         {
-            int[] years = db.CalculatedValues.Where(x => x.GeoAreaID == geoAreaId).Select(x => x.EquationYear.Year).Distinct().ToArray();            
+            int[] years = db.CalculatedValues.Where(x => x.GeoAreaID == geoAreaId).Select(x => x.EquationYear.Year).Distinct().ToArray();
             return View(years);
         }
 
@@ -53,7 +53,7 @@ namespace Marsad.Controllers
                 .Include(x => x.EquationYear.Equation.Indicator.Bundle)
                 .ToList();
             Dictionary<int, IndicatorValues> result = new Dictionary<int, IndicatorValues>();
-            foreach(var cv in calculatedVals)
+            foreach (var cv in calculatedVals)
             {
                 if (!result.ContainsKey(cv.EquationYear.Equation.IndicatorID))
                 {
@@ -63,26 +63,34 @@ namespace Marsad.Controllers
                         BundleName = cv.EquationYear.Equation.Indicator.Bundle.Name,
                         IndicatorID = cv.EquationYear.Equation.IndicatorID,
                         IndicatorName = cv.EquationYear.Equation.Indicator.Name,
-                        Values = new Dictionary<int, float>()
+                        Values = new Dictionary<int, double>()
                     };
                     result.Add(cv.EquationYear.Equation.IndicatorID, indicatorValues);
                 }
                 if (!result[cv.EquationYear.Equation.IndicatorID].Values.ContainsKey(cv.EquationYear.Year))
                 {
-                    result[cv.EquationYear.Equation.IndicatorID].Values.Add(cv.EquationYear.Year,cv.Value);
+                    result[cv.EquationYear.Equation.IndicatorID].Values.Add(cv.EquationYear.Year, cv.Value);
                 }
             }
             ViewBag.Years = years.OrderBy(x => x);
             return View(result);
         }
 
-        public ActionResult Bundles()
+        public ActionResult Bundles(int[] bundleIds)
         {
-            var bundles = db.Bundles.Include(x => x.Indicators).ToList();
-            return View(bundles);
+            ViewBag.Bundles = db.Bundles.ToDictionary(x => x.ID, x => x.Name);
+            ViewBag.bundleIds = bundleIds;
+
+            var bundles = db.Bundles.AsQueryable();
+            if (bundleIds != null && bundleIds.Length > 0)
+            {
+                bundles = bundles.Where(x => bundleIds.Contains(x.ID));
+            }
+            var result = bundles.Include(x => x.Indicators);
+            return View(result.ToList());
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public ActionResult PendingLog(string sortOrder, string currentFilter, string searchString)
         {
             ViewBag.CurrentSort = sortOrder;
@@ -92,30 +100,10 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
 
-            var query = db.ElementYearValues.AsQueryable();
+            var query = db.OfficerLogs.AsQueryable();
             if (!string.IsNullOrWhiteSpace(searchString))
-                query = query.Where(x => x.Element.Name.Contains(searchString));
-            var result = query.Include(x => x.ApplicationUser)
-                .Include(x => x.Element)
-                .Where(x => x.IsCommited == false)
-                .GroupBy(x => new { x.CreatedAt, x.ApplicationUser, x.Year, x.GeoArea })
-                .Select(x => new PendingLog()
-                {
-                    ActionDate = x.Key.CreatedAt,
-                    UserName = x.Key.ApplicationUser.Name,
-                    Entity = x.Key.ApplicationUser.Entity,
-                    Log = "تحديث قيم نطاق (" + x.Key.GeoArea.Name + ")",
-                    Year = x.Key.Year,
-                    ApplicationUserID = x.Key.ApplicationUser.Id,
-                    GeoAreaID = x.Key.GeoArea.ID
-                })
-                .OrderBy(x => x.ActionDate)
-                .ToList();
-            var details = db.ElementYearValues.Include(x => x.Element).Where(x => x.IsCommited == false);
-            if (!string.IsNullOrWhiteSpace(searchString))
-                details = details.Where(x => x.Element.Name.Contains(searchString));
-            ViewBag.Details = details;
-            return View(result);
+                query = query.Where(x => x.Name.Contains(searchString) || x.EntityName.Contains(searchString) || x.Notes.Contains(searchString));
+            return View(query.ToList());
         }
 
         [AllowAnonymous]

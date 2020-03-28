@@ -14,7 +14,7 @@ namespace Marsad.Models
         public virtual EquationElement EquationElement { get; set; }
         public int EquationYearID { get; set; }
         public virtual EquationYear EquationYear { get; set; }        
-        public float? Value { get; set; }
+        public double? Value { get; set; }
         public int GeoAreaID { get; set; }
         public GeoArea GeoArea { get; set; }       
         public string ApplicationUserID { get; set; }

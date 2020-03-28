@@ -62,15 +62,16 @@ namespace Marsad.Models
         public DbSet<CaseYear> CaseYears { get; set; }
         public DbSet<CaseYearIndicator> CaseYearIndicators { get; set; }
         public DbSet<ElementValue> ElementValues { get; set; }      
-        public DbSet<Marsad.Models.Element> Elements { get; set; }
-        public DbSet<Marsad.Models.Entity> Entities { get; set; }
-        public DbSet<Marsad.Models.Equation> Equations { get; set; }
-        public DbSet<Marsad.Models.GeoArea> GeoAreas { get; set; }        
-        public DbSet<Marsad.Models.SystemLog> SystemLogs { get; set; }
-        public DbSet<Marsad.Models.UpdateLog> UpdateLogs { get; set; }        
-        public DbSet<Marsad.Models.EquationElement> EquationElements { get; set; }
-        public DbSet<Marsad.Models.EquationYear> EquationYears { get; set; }
-        public DbSet<Marsad.Models.CalculatedValue> CalculatedValues { get; set; }
-        public DbSet<Marsad.Models.ElementYearValue> ElementYearValues { get; set; }
+        public DbSet<Element> Elements { get; set; }
+        public DbSet<Entity> Entities { get; set; }
+        public DbSet<Equation> Equations { get; set; }
+        public DbSet<GeoArea> GeoAreas { get; set; }        
+        public DbSet<SystemLog> SystemLogs { get; set; }
+        public DbSet<UpdateLog> UpdateLogs { get; set; }        
+        public DbSet<EquationElement> EquationElements { get; set; }
+        public DbSet<EquationYear> EquationYears { get; set; }
+        public DbSet<CalculatedValue> CalculatedValues { get; set; }
+        public DbSet<ElementYearValue> ElementYearValues { get; set; }
+        public DbSet<OfficerLog> OfficerLogs { get; set; }
     }
 }

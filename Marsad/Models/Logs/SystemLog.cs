@@ -27,6 +27,9 @@ namespace Marsad.Models
         public string UserName { get; set; }
         public DateTime ActionDate { get; set; }
         public string Details { get; set; }
+        public string ApplicationUserId { get; internal set; }
+        public int ValuesCount { get; internal set; }
+        public string Type { get; internal set; }
     }
 
     public class PendingLog
