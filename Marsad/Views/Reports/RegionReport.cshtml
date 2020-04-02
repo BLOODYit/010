@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_Plain.cshtml";
 }
-@Styles.Render("~/Content/JQVMap");
+@Styles.Render("~/Content/mapReportStyle")
 <style>
     body {
         background-color: white;
@@ -29,10 +29,12 @@
                 </div>
             </div>
             <div id="indicator">
-                <div class="col-md-8 col-md-offset-2">
-                    <div id="map" style="width: 500px; height: 600px;"></div>
-                    <input type="range" class="custom-range" min="0" max="0" id="yearRange">
-                    <div class="full-width text-center" id="currentYear"></div>
+                <div class="col-xs-12">
+                    <div style="width:100%;max-width:700px;margin:auto">
+                        <div id="map" style="width: 100%; height: 500px;"></div>
+                        <input type="range" class="custom-range" min="0" max="0" id="yearRange">
+                        <div class="full-width text-center" id="currentYear"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -41,19 +43,84 @@
 
 @section  scripts{
     @Scripts.Render("~/scripts/charts")
-    @Scripts.Render("~/Scripts/JQVMap");
+    @Scripts.Render("~/Content/mapReport");
 
     <script type="text/javascript">
+        var backgroundColor = '@(ViewBag.backgroundColor!=null?ViewBag.backgroundColor:"#f4fcff")';
+        var startColor = '@(ViewBag.startColor!=null?ViewBag.startColor:"#C8EEFF")';
+        var endColor = '@(ViewBag.endColor!=null?ViewBag.endColor:"#0071A4")';
+         var regions = {
+                g1: "الخبر",
+                g2: "بقيق",
+                g3: "الدمام",
+                g4: "النعيرية",
+                g5: "القرية العليا",
+                g6: "الخفجي",
+                g7: "الجبيل",
+                g8: "القطيف",
+                g9: "رأس تنورة",
+                g10:"حفر الباطن"
+        };
+        var map;
+
         $(function () {
-                  $('#map').vectorMap({ map: 'ksa' });
-        });
-        var years;
-        function fillMap(indicatorId, year) {
-            //clear Map
-             calculatedValues.forEach(function (e, i) {
-                if (e.IndicatorID == indicatorId && e.Year == year) {
+            $('#map').vectorMap({
+                map: 'govs',
+                backgroundColor: backgroundColor,
+                series: {
+                    regions: [{
+                        values: {},
+                        scale: [startColor, endColor],
+                        min: 0,
+                        max: 0
+                    }]
+                },
+                onRegionTipShow: function (e, el, code) {
+                    if (data[code] == undefined) {
+                        el.html(el.html() + ' (لا يوجد بيانات)');
+                    }
+                    else {
+                        el.html(el.html() + ' (' + data[code] + ')');
+                    }
+                },
+                labels: {
+                    regions: {
+                        render: function (code) {
+                            return regions[code];
+                        }
+                    }
                 }
             });
+        });
+
+        var years;
+        var data = {};
+        function fillMap(indicatorId, year) {
+            data = {};
+            var min, max;
+             calculatedValues.forEach(function (e, i) {
+                 if (e.IndicatorID == indicatorId && e.Year == year) {
+                     for (k in regions) {
+                         if (regions[k] === e.Name) {
+                             data[k] = e.Value;
+                         }
+                     }
+                     if (min == undefined)
+                         min = e.Value;
+                     else if (min > e.Value)
+                         min = e.Value;
+                     if (max == undefined)
+                         max = e.Value;
+                     else if (max < e.Value)
+                         max = e.Value;
+                 }
+             });
+            if (min == undefined) min = 0;
+            if (max == undefined) max = 0;
+            var map = $('#map').vectorMap('get', 'mapObject');
+            map.series.regions[0].min=min;
+            map.series.regions[0].max = max;
+            map.series.regions[0].setValues(data);
         }
 
         function getIndicator(indicatorId) {

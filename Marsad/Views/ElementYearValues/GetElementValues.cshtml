@@ -4,49 +4,52 @@
 <br />
 <div class="container clear">
     <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <label class="control-label col-sm-2 col-xs-12">مصدر البيانات</label>
-            <div class="col-sm-10 col-xs-12">
-                <select class="form-control" id="dataSources">
-                    <option value="">الكل</option>
-                    @foreach (var key in ViewBag.DataSources.Keys)
-                    {
-                        <option value="@key">@ViewBag.DataSources[key]</option>
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <td width="50">م</td>
-                            <td width="400">العنصر</td>
-                            <td colspan="2">القيمة</td>
-                        </tr>
-                    </thead>
-                    <tbody id="elementRows">
-                        @{
-                            var i = 0;
-                        }
-                        @foreach (Element element in ViewBag.Elements)
-                        {
-                            var ev = ((List<ElementYearValue>)ViewBag.ElementYearValues).Where(x => x.ElementID == element.ID).FirstOrDefault();
-                            <tr data-datasourceid="@element.DataSourceID">
-                                <td>@(++i)</td>
-                                <td>@element.Name</td>
-                                <td><input type="number" step="0.01" class="form-control elementvalue" data-element="@element.ID" value="@(ev==null?"":ev.Value.ToString())" /></td>
-                                <td>@element.MeasureUnit</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <button class="btn btn-primary" id="update-btn">تحديث</button>
-            </div>
+    <div class="col-md-8">
+        <label class="control-label col-sm-2 col-xs-12">مصدر البيانات</label>
+        <div class="col-sm-10 col-xs-12">
+            <select class="form-control" id="dataSources">
+                <option value="">الكل</option>
+                @foreach (var key in ViewBag.DataSources.Keys)
+                {
+                    <option value="@key">@ViewBag.DataSources[key]</option>
+                }
+            </select>
         </div>
     </div>
-    <script type="text/javascript">
+    <div class="row">
+        <div class="col-md-12">
+            <button id="deleteIdsBtn" type="button" class="btn btn-danger" disabled="disabled">الغاء  القيم</button>
+            <table class="table table-condensed table-hover">
+                <thead>
+                    <tr>
+                        <td width="50"><input type="checkbox" id="checkAll" /></td>
+                        <td width="50">م</td>
+                        <td width="400">العنصر</td>
+                        <td colspan="2">القيمة</td>
+                    </tr>
+                </thead>
+                <tbody id="elementRows">
+                    @{
+                        var i = 0;
+                    }
+                    @foreach (Element element in ViewBag.Elements)
+                    {
+                        var ev = ((List<ElementYearValue>)ViewBag.ElementYearValues).Where(x => x.ElementID == element.ID).FirstOrDefault();
+                        <tr data-datasourceid="@element.DataSourceID">
+                            <td><input type="checkbox" name="deleteIds" value="@element.ID" class="deleteIds" /></td>
+                            <td>@(++i)</td>
+                            <td>@element.Name</td>
+                            <td><input type="number" step="0.01" class="form-control elementvalue" data-element="@element.ID" value="@(ev==null?"":ev.Value.ToString())" /></td>
+                            <td>@element.MeasureUnit</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button class="btn btn-primary" id="update-btn">تحديث</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
     $(function () {
         $('#update-btn').click(function () {
             var year = $('#year').val();
@@ -61,7 +64,6 @@
                 }
             });
             var data = { year: year, geoArea: geoArea, elementIds: elementIds, values: values };
-            console.log(data);
             $.ajax({
                 type: "post",
                 data: data,
@@ -83,5 +85,36 @@
                 }
             });
         });
+        $('.deleteIds').change(function () {
+            var checked = $('.deleteIds:checked').length;
+            $('#checkAll').prop('checked', (checked == $('.deleteIds').length));
+            $('#deleteIdsBtn').prop('disabled', checked == 0);
+        });
+        $('#checkAll').change(function () {
+            $('.deleteIds').prop('checked', $('#checkAll').prop('checked'));
+            $('#deleteIdsBtn').prop('disabled', !$('#checkAll').prop('checked'));
+        });
+        $('#deleteIdsBtn').click(function () {
+            var ids = [];
+            $('.deleteIds:checked').each(function () {
+                ids.push($(this).val());
+            });
+            if (ids.length > 0) {
+                if (confirm('هل تريد الغاء قيم ' + ids.length + ' سجلات ؟')) {
+                    var year = $('#year').val();
+                    var geoArea = $('#GeoAreaID').val();
+                    var data = { year: year, geoArea: geoArea, elementIds: ids};
+                    $.ajax({
+                        type: "post",
+                        data: data,
+                        url: '@Url.Action("DeleteElementValues")',
+                        success: function () {
+                            alert('تم تحديث القيم');
+                            $('#getYears').click();
+                        }
+                    });
+                }
+            }
+        });
     });
-    </script>
+</script>

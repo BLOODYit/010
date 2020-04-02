@@ -298,6 +298,9 @@
     <Content Include="Content\build\images\loading.gif" />
     <Content Include="Content\build\js\custom.js" />
     <Content Include="Content\build\js\custom.min.js" />
+    <Content Include="Content\mapReport\govs.js" />
+    <Content Include="Content\mapReport\jquery-jvectormap-2.0.5.css" />
+    <Content Include="Content\mapReport\jquery-jvectormap-2.0.5.min.js" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\vendors\animate.css\animate.css" />
     <Content Include="Content\vendors\animate.css\animate.min.css" />
@@ -1518,6 +1521,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\jspdf.min.js" />
+    <Content Include="Scripts\jspdf.plugin.autotable.min.js" />
     <Content Include="Scripts\loader.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Web.config" />

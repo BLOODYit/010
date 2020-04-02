@@ -107,14 +107,24 @@ namespace Marsad.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult RegionReport()
-        {
-            var indicators = db.Indicators.Where(x => x.Equations.Any());
+        public ActionResult RegionReport(string backgroundColor, string startColor, string endColor)
+        {                                    
+            string[] govNames = new string[] { "الخبر", "بقيق", "الدمام", "النعيرية", "القرية العليا", "الخفجي", "الجبيل", "القطيف", "رأس تنورة", "حفر الباطن" };
+            int[] govIds = db.GeoAreas.Where(x => govNames.Contains(x.Name) && x.Type.Equals("Governorate")).Select(x => x.ID).ToArray();                        
+            var calculatedValues = db.CalculatedValues.Where(x => govIds.Contains(x.GeoAreaID)).Select(x => new { x.Value, x.GeoAreaID, x.GeoArea.Name, x.EquationYear.Year, x.EquationYear.Equation.IndicatorID }).ToArray();
+            var indicatorIds = calculatedValues.Select(x => x.IndicatorID).Distinct().ToArray();
+            var indicators = db.Indicators.Where(x => indicatorIds.Contains(x.ID));
             var bundleIds = indicators.Select(x => x.BundleID).Distinct().ToArray();
             var bundles = db.Bundles.Where(x => bundleIds.Contains(x.ID));
             ViewBag.BundleID = new SelectList(bundles, "ID", "Name");
             ViewBag.Indicators = indicators.Select(x => new { x.ID, x.Name, x.BundleID }).ToList();
-            ViewBag.CalculatedValues = db.CalculatedValues.Select(x => new { x.Value, x.GeoAreaID, x.EquationYear.Year, x.EquationYear.Equation.IndicatorID });
+            ViewBag.CalculatedValues = calculatedValues;
+            if (!string.IsNullOrWhiteSpace(backgroundColor))
+                ViewBag.backgroundColor = backgroundColor;
+            if (!string.IsNullOrWhiteSpace(startColor))
+                ViewBag.startColor = startColor;
+            if (!string.IsNullOrWhiteSpace(endColor))
+                ViewBag.endColor = endColor;
             return View();
         }
         #endregion

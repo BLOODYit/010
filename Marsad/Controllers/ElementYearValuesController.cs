@@ -121,6 +121,68 @@ namespace Marsad.Controllers
             return Json(new { success=true }, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult DeleteElementValues(int year, int geoArea, int[] elementIds)
+        {
+
+            if (elementIds == null)
+                throw new Exception("Invalid Inputs");
+            var userElementIds = elementIds;
+            var userId = User.Identity.GetUserId();
+            if (User.IsInRole("Officer"))
+            {
+                userElementIds = db.Elements.Where(x => x.ApplicationUsers.Where(y => y.Id == userId).Any()).Select(x => x.ID).ToArray();
+            }
+            var oldElementValues = db.ElementYearValues.Where(x => x.Year == year && userElementIds.Contains(x.ElementID)).ToList();
+            db.ElementYearValues.RemoveRange(oldElementValues);
+            var createdAt = DateTime.Now;
+            List<int> elemets = new List<int>();
+            for (int i = 0; i < elementIds.Length; i++)
+            {
+                if (!userElementIds.Contains(elementIds[i]))
+                    continue;                
+                    elemets.Add(elementIds[i]);                
+            }
+            db.SaveChanges();
+            elementIds = elemets.ToArray();
+            var elementNames = db.Elements.Where(x => elementIds.Contains(x.ID)).ToDictionary(x => x.ID, x => x.Name);
+            var geoAreaName = "";
+            var gA = db.GeoAreas.Find(geoArea);
+            if (gA != null)
+                geoAreaName = gA.Name;
+            var notes = string.Format("نظاق جغرافي ({0}) لسنة {1}, حذف القيم (", geoAreaName, year);
+            var valueCounts = 0;
+            foreach (var id in elemets)
+            {
+                if (elementNames.ContainsKey(id))
+                {
+                    notes += string.Format("{0}, ", elementNames[id]);
+                    valueCounts++;
+                }
+            }
+            notes = notes.TrimEnd(' ').TrimEnd(',');
+            notes += ")";
+            Log(LogAction.Delete, new ElementYearValue(), notes);
+            if (User.IsInRole("Officer"))
+            {
+                var user = userManager.Users.Include(x => x.Entity).Where(x => x.Id == userId).FirstOrDefault();
+                if (user != null)
+                {
+                    db.OfficerLogs.Add(new OfficerLog()
+                    {
+                        ApplicationUserId = user.Id,
+                        Name = user.Name,
+                        UserName = user.UserName,
+                        EntityName = user.Entity != null ? user.Entity.Name : user.Name,
+                        ActionDate = DateTime.Now,
+                        ValuesCount = valueCounts,
+                        Notes = notes,
+                        Year = year
+                    });
+                    db.SaveChanges();
+                }
+            }
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
 
         private string SetType(string type)
         {

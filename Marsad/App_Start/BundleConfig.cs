@@ -27,6 +27,12 @@ namespace Marsad
             bundles.Add(new StyleBundle("~/Content/daterangepicker").Include(
                       "~/Content/vendors/bootstrap-daterangepicker/daterangepicker.css"));
 
+            bundles.Add(new StyleBundle("~/Content/mapReportStyle").Include(
+                      "~/Content/mapReport/jquery-jvectormap-2.0.5.css"));
+
+            bundles.Add(new ScriptBundle("~/Content/mapReport").Include(
+                      "~/Content/mapReport/jquery-jvectormap-2.0.5.min.js"
+                      , "~/Content/mapReport/govs.js"));
             //Scripts
 
 
@@ -73,7 +79,8 @@ namespace Marsad
 
             bundles.Add(new ScriptBundle("~/Scripts/JQVMap").Include(
                "~/Content/vendors/jqvmap/dist/jquery.vmap.js",
-               "~/Content/vendors/jqvmap/dist/maps/jquery.vmap.ksa.js"));
+               "~/Content/vendors/jqvmap/dist/maps/jquery.vmap.ksa.js",
+               "~/Content/govs.js"));
 
 
         }
