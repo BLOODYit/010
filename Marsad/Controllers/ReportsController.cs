@@ -13,6 +13,11 @@ namespace Marsad.Controllers
     [Authorize]
     public class ReportsController : Controller
     {
+        public string[] GovNames
+        {
+            get { return System.Configuration.ConfigurationManager.AppSettings["GovNames"].Split(','); }
+        }
+
         ApplicationDbContext db = new ApplicationDbContext();
         #region ReportActions
         public ActionResult Period(string type = "Region")
@@ -107,10 +112,10 @@ namespace Marsad.Controllers
         }
 
         [AllowAnonymous]
-        public ActionResult RegionReport(string backgroundColor, string startColor, string endColor)
-        {                                    
-            string[] govNames = new string[] { "الخبر", "بقيق", "الدمام", "النعيرية", "القرية العليا", "الخفجي", "الجبيل", "القطيف", "رأس تنورة", "حفر الباطن" };
-            int[] govIds = db.GeoAreas.Where(x => govNames.Contains(x.Name) && x.Type.Equals("Governorate")).Select(x => x.ID).ToArray();                        
+        public ActionResult RegionReport(string backgroundColor, string startColor, string endColor, string items)
+        {
+            string[] govNames = GovNames;
+            int[] govIds = db.GeoAreas.Where(x => govNames.Contains(x.Name) && x.Type.Equals("Governorate")).Select(x => x.ID).ToArray();
             var calculatedValues = db.CalculatedValues.Where(x => govIds.Contains(x.GeoAreaID)).Select(x => new { x.Value, x.GeoAreaID, x.GeoArea.Name, x.EquationYear.Year, x.EquationYear.Equation.IndicatorID }).ToArray();
             var indicatorIds = calculatedValues.Select(x => x.IndicatorID).Distinct().ToArray();
             var indicators = db.Indicators.Where(x => indicatorIds.Contains(x.ID));
@@ -125,6 +130,71 @@ namespace Marsad.Controllers
                 ViewBag.startColor = startColor;
             if (!string.IsNullOrWhiteSpace(endColor))
                 ViewBag.endColor = endColor;
+            if (string.IsNullOrEmpty(items))
+                ViewBag.items = new string[] { "map", "table", "piechart", "barchart" };
+            else
+                ViewBag.items = items.ToLower().Split(',');
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult CityBundles(string cityName)
+        {
+            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName) && x.Type.Equals("City")).FirstOrDefault();
+            if (city != null)
+            {
+                var bundlesIds = db.CalculatedValues.Where(x => x.GeoAreaID == city.ID)
+                .Include(x => x.EquationYear.Equation.Indicator.Bundle)
+                .Select(x => x.EquationYear.Equation.Indicator.Bundle.ID).ToArray();
+                var bundles = db.Bundles.Where(x => bundlesIds.Contains(x.ID)).ToList();
+                ViewBag.Bundles = bundles;
+            }
+            ViewBag.CityName = cityName;
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult CityYearRange(int bundleId, string cityName)
+        {
+            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName) && x.Type.Equals("City")).FirstOrDefault();
+            if (city != null)
+            {
+                var years = db.CalculatedValues
+                    .Where(x => x.GeoAreaID == city.ID)
+                    .Where(x => x.EquationYear.Equation.Indicator.BundleID == bundleId)
+                    .Select(x => x.EquationYear.Year).OrderBy(x => x).Distinct().ToList();
+                var bundle = db.Bundles.First(x => x.ID == bundleId);
+                ViewBag.Years = years;
+                ViewBag.CityName = cityName;
+                ViewBag.BundleId = bundleId;
+                if (bundle != null)
+                    ViewBag.BundleName = bundle.Name;
+            }
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult CityIndicators(int bundleId, string cityName, int[] years, int? currentYear)
+        {
+            if (currentYear == null && years != null && years.Length > 0)
+                currentYear = years[0];
+            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName) && x.Type.Equals("City")).FirstOrDefault();
+            if (city != null && currentYear!=null)
+            {
+                var indicators = db.CalculatedValues
+                    .Where(x => x.GeoAreaID == city.ID && x.EquationYear.Year == currentYear && x.EquationYear.Equation.Indicator.BundleID == bundleId)
+                    .Include(x => x.EquationYear.Equation.Indicator)
+                    .ToDictionary(x => x.EquationYear.Equation.Indicator, x => x.Value);                 
+                ViewBag.Indicators = indicators;                
+                
+            }
+            var bundle = db.Bundles.First(x => x.ID == bundleId);
+            ViewBag.BundleID = bundleId;
+            ViewBag.Years = years;
+            ViewBag.CurrentYear = currentYear;
+            ViewBag.CityName = cityName;
+            if (bundle != null)
+                ViewBag.BundleName = bundle.Name;
             return View();
         }
         #endregion
@@ -174,6 +244,8 @@ namespace Marsad.Controllers
             List<CalculatedValue> results = GetData(indicatorId, geoAreaIds, new int[] { year });
             return View(results);
         }
+
+
         #endregion
 
         private List<CalculatedValue> GetData(int indicatorId, int[] geoAreaIds, int[] years)

@@ -301,6 +301,7 @@
     <Content Include="Content\mapReport\govs.js" />
     <Content Include="Content\mapReport\jquery-jvectormap-2.0.5.css" />
     <Content Include="Content\mapReport\jquery-jvectormap-2.0.5.min.js" />
+    <Content Include="Content\mob.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\vendors\animate.css\animate.css" />
     <Content Include="Content\vendors\animate.css\animate.min.css" />
@@ -1479,6 +1480,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\rtl.css" />
+    <Content Include="Images\dammam.jpg" />
     <Content Include="Images\favicon.ico" />
     <Content Include="Images\logo.png" />
     <Content Include="Images\mini-logo.png" />
@@ -1534,7 +1536,7 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_CityLayout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
@@ -1662,6 +1664,10 @@
     <Content Include="Views\Reports\PendingLog.cshtml" />
     <Content Include="Views\Reports\GetYears.cshtml" />
     <Content Include="Views\Reports\GetIndicatorCategories.cshtml" />
+    <Content Include="Views\Reports\CityIndicators.cshtml" />
+    <Content Include="Views\Reports\CityBundles.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Reports\CityYearRange.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

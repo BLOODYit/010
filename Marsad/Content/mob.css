@@ -1,0 +1,131 @@
+﻿html, body {
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    direction: rtl;
+}
+
+body {
+    background-image: url('../Images/dammam.jpg');
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100%;
+}
+
+h2 {
+    background: #5c5c5c;
+    margin: 0px;
+    color: #eeeeee;
+    text-align: center;
+    padding: 5px;
+    font-size: 20px
+}
+
+.bundles {
+    display: block;
+    list-style: none;
+    margin: 10px;
+    padding: 0px;
+}
+
+    .bundles li {
+        margin: 0px;
+        display: block;
+        padding: 5px;
+    }
+
+        .bundles li::after {
+            content: '>';
+            float: left;
+            font-size: 20px;
+            font-weight: 900;
+            color: #7d7d7d;
+        }
+
+a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #4a4a4a;
+    font-size: 20px;
+}
+
+
+.slider {
+    -webkit-appearance: none;
+    width: 90%;
+    height: 7px;
+    border-radius: 5px;
+    background: #0a0a0a;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        background: #4CAF50;
+        cursor: pointer;
+    }
+
+.slidecontainer {
+    text-align: center;
+    margin-top: 10px;
+}
+
+#showBtn {
+    display: block;
+    text-align: center;
+    background: #5c5c5c;
+    color: #eeeeee;
+    width: 90%;
+    margin: auto;
+    padding: 10px;
+}
+
+#currentYear {
+    width: 100%;
+    padding: 10px;
+    background: #5c5c5c;
+    color: #eeeeee;
+    font-size: 17px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.indicatorTable {
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    /* background: rgba(27, 27, 27, 0.62); */
+    padding: 5px;
+}
+
+    .indicatorTable tr {
+        margin: 5px;
+        background: rgba(27, 27, 27, 0.62);
+    }
+
+        .indicatorTable tr td {
+            padding: 5px;
+            border: 1px solid;
+            margin: 5px 0px;
+        }
+
+table.indicatorTable {
+}

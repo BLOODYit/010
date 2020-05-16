@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "CityIndicators";
+    Layout = "~/Views/Shared/_CityLayout.cshtml";
+}
+<a href="@Url.Action("CityBundles","Reports",new { cityName=ViewBag.CityName})"><h2>@ViewBag.CityName</h2></a>
+<a href="@Url.Action("CityYearRange","Reports",new { cityName=ViewBag.CityName,bundleId=ViewBag.BundleID})"><h2>@ViewBag.BundleName</h2></a>
+@if (ViewBag.Years == null || ViewBag.Years.Length <= 0 || ViewBag.CurrentYear == null || ViewBag.Indicators == null)
+{
+    <h4>لا يوجد بيانات</h4>
+}
+else
+{
+    <select name="currentYear" id="currentYear" onchange="changeCurrentYear()">
+        @foreach (var year in ViewBag.Years)
+        {
+            <option value="@year" @(ViewBag.CurrentYear == year ? "selected" : "")>@year</option>
+        }
+    </select>
+    <table class="indicatorTable">
+        @foreach (Indicator val in ViewBag.Indicators.Keys)
+        {
+            <tr>
+                <td width="60%">@val.Name</td>
+                <td width="40%">@ViewBag.Indicators[val] @val.MeasureUnit</td>
+            </tr>
+        }
+    </table>
+}
+<script type="text/javascript">
+    function changeCurrentYear(){
+        var years = @Json.Encode(ViewBag.Years);
+        var _years = "";
+        for (var i = 0; i < years.length; i++) {
+            _years += "&years=" + years[i];
+        }
+
+        var href = "@Url.Action("CityIndicators","Reports")?cityName=@ViewBag.CityName&bundleId=@ViewBag.BundleID&currentYear=" + document.getElementById("currentYear").value + _years;
+        window.location = href;
+    }
+</script>

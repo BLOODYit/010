@@ -31,10 +31,49 @@
             <div id="indicator">
                 <div class="col-xs-12">
                     <div style="width:100%;max-width:700px;margin:auto">
-                        <div id="map" style="width: 100%; height: 500px;"></div>
                         <input type="range" class="custom-range" min="0" max="0" id="yearRange">
                         <div class="full-width text-center" id="currentYear"></div>
                     </div>
+                    @foreach (string type in ViewBag.items)
+                    {
+                        if (type.Equals("map"))
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div style="width:100%;max-width:700px;margin:auto">
+                                        <div id="map" style="width: 100%; height: 500px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (type.Equals("barchart"))
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div style="width:100%;max-width:700px;margin:auto">
+                                        <div id="barchartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (type.Equals("piechart"))
+                        {<div class="row">
+                                <div class="col-xs-12">
+                                    <div style="width:100%;max-width:700px;margin:auto">
+                                        <div id="chartContainer" style="direction:ltr; height: 370px; max-width: 920px;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else if (type.Equals("table"))
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div id="table"></div>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -92,17 +131,18 @@
                 }
             });
         });
-
         var years;
         var data = {};
         function fillMap(indicatorId, year) {
             data = {};
+            chartData = [];
             var min, max;
              calculatedValues.forEach(function (e, i) {
                  if (e.IndicatorID == indicatorId && e.Year == year) {
                      for (k in regions) {
                          if (regions[k] === e.Name) {
                              data[k] = e.Value;
+                             chartData.push({ y: e.Value, label: e.Name });
                          }
                      }
                      if (min == undefined)
@@ -117,24 +157,78 @@
              });
             if (min == undefined) min = 0;
             if (max == undefined) max = 0;
+            @if (((string[])ViewBag.items).Contains("map"))
+            {
+            <text>
             var map = $('#map').vectorMap('get', 'mapObject');
             map.series.regions[0].min=min;
             map.series.regions[0].max = max;
             map.series.regions[0].setValues(data);
+            </text>
+            }            
+            fillTableAndChart(chartData,$('#IndicatorID :selected').text());
         }
-
         function getIndicator(indicatorId) {
+            var yearsValue = {};
              years= [];
             calculatedValues.forEach(function (e, i) {
                 if (e.IndicatorID == indicatorId && !years.includes(e.Year)) {
                     years.push(e.Year);
+                    yearsValue[e.Year] = e.Value;
                 }
             });
             years.sort();
             $('#yearRange').attr('max', years.length-1);
             $('#yearRange').change();
         }
-
+        function fillTableAndChart(chartData,title) {
+            var table = "<table class='table'><thead><tr><th>المحافظة</th><th>القيمة</th></tr></thead><tbody>";
+            for (var i = 0; i < chartData.length; i++) {
+                table += "<tr><td>" + chartData[i].label + "</td><td>" + chartData[i].y + "</td></tr>";
+            }
+            table += "</tbody></table>";
+            $('#table').html(table);
+            @if (((string[])ViewBag.items).Contains("piechart"))
+            {
+              <text>
+             var chart = new CanvasJS.Chart("chartContainer", {
+             animationEnabled: true,
+             title: { text: title },
+             data: [{
+                 type: "pie",
+                 startAngle: 240,
+                 yValueFormatString: "##0.00",
+                 indexLabel: "{label} {y}",
+                 dataPoints: chartData
+             }]
+            });
+            chart.render();
+            </text>
+            }
+            @if (((string[])ViewBag.items).Contains("barchart"))
+            {
+            <text>
+            var bchart = new CanvasJS.Chart("barchartContainer", {
+                animationEnabled: true,
+                title: { text: title },
+                axisX: { interval: 1 },
+                axisY2: {
+                    interlacedColor: "rgba(1,77,101,.2)",
+                    gridColor: "rgba(1,77,101,.1)",
+                    title: title
+                },
+                data: [{
+                    type: "column",
+                    name: "companies",
+                    axisYType: "secondary",
+                    color: "#014D65",
+                    dataPoints: chartData
+                }]
+            });
+            bchart.render();
+            </text>
+            }
+        }
         var indicators = @Html.Raw(Json.Encode(ViewBag.Indicators));
         var calculatedValues = @Html.Raw(Json.Encode(ViewBag.CalculatedValues));
         $(function () {

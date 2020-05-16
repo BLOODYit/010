@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "CityBundles";
+    Layout = "~/Views/Shared/_CityLayout.cshtml";
+}
+<a href="@Url.Action("CityBundles","Reports",new { cityName=ViewBag.CityName})"><h2>@ViewBag.CityName</h2></a>
+<a href="@Url.Action("CityYearRange","Reports",new { cityName=ViewBag.CityName,bundleId=ViewBag.BundleID})"><h2>@ViewBag.BundleName</h2></a>
+@if (ViewBag.Years == null || ViewBag.Years.Count <= 0)
+{
+    <h4>لا يوجد بيانات</h4>
+}
+else
+{
+    <div class="slidecontainer">
+        <input type="range" min="0" max="@(ViewBag.Years.Count-1)" value="0" class="slider" id="range1">
+        <h5 id="output1"></h5>
+    </div>
+
+    <div class="slidecontainer">
+        <input type="range" min="0" max="@(ViewBag.Years.Count-1)" value="@(ViewBag.Years.Count-1)" class="slider" id="range2">
+        <h5 id="output2"></h5>
+    </div>
+
+    <a id="showBtn" href="">عرض</a>
+}
+
+<script type="text/javascript">
+    var years = @Json.Encode(ViewBag.Years);
+    var slider1 = document.getElementById("range1");
+    var slider2 = document.getElementById("range2");
+    function setLink() {
+        var slider1 = document.getElementById("range1");
+        var slider2 = document.getElementById("range2");
+        var output1 = document.getElementById('output1');
+        var output2 = document.getElementById('output2');
+        var start = slider1.value;
+        var end = slider2.value;
+        output1.innerHTML = years[start];
+        output2.innerHTML = years[end];
+        var link = document.getElementById("showBtn");
+        var _years = "";
+        var ry = years.slice(slider1.value, (slider2.value * 1 + 1));
+        for (var i = 0; i < ry.length; i++) {
+            _years += "&years=" + ry[i];
+        }
+        var href = "@Url.Action("CityIndicators","Reports")?bundleId=@ViewBag.BundleId&cityName=@ViewBag.CityName" + _years;
+        link.setAttribute('href', href);
+    }
+
+    slider1.oninput = function () {
+        setLink();
+    }
+    slider2.oninput = function () {
+        setLink();
+    }
+    setLink();
+</script>

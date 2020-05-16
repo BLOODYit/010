@@ -1,0 +1,21 @@
+﻿
+@{
+    ViewBag.Title = "CityBundles";
+    Layout = "~/Views/Shared/_CityLayout.cshtml";
+}
+<h2>@ViewBag.CityName</h2>
+@if (ViewBag.Bundles == null || ViewBag.Bundles.Count <= 0)
+{
+    <h4>لا يوجد بيانات</h4>
+}
+else
+{
+    <ul class="bundles">
+        @foreach (var item in ViewBag.Bundles)
+        {
+            <a href="@Url.Action("CityYearRange","Reports",new { bundleId=item.ID,cityName=ViewBag.CityName })">
+                <li>@item.Name</li>
+            </a>
+        }
+    </ul>
+}
