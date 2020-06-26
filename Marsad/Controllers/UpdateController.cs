@@ -26,6 +26,10 @@ namespace Marsad.Controllers
 
         public ActionResult GeoAreas(string type)
         {
+            var userId = User.Identity.GetUserId();
+            var isDeleted = userManager.Users.Where(x => x.Id == userId).FirstOrDefault().IsDeleted;
+            if (isDeleted)
+                throw new Exception("Not Allowed");
             var bundles = GetAllowedBundles();
             type = SetType(type);
             ViewBag.GeoAreaID = new SelectList(db.GeoAreas.Where(x => x.Type.Equals(type)), "ID", "Name");

@@ -140,7 +140,7 @@ namespace Marsad.Controllers
         [AllowAnonymous]
         public ActionResult CityBundles(string cityName)
         {
-            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName) && x.Type.Equals("City")).FirstOrDefault();
+            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName)).FirstOrDefault();
             if (city != null)
             {
                 var bundlesIds = db.CalculatedValues.Where(x => x.GeoAreaID == city.ID)
@@ -156,7 +156,7 @@ namespace Marsad.Controllers
         [AllowAnonymous]
         public ActionResult CityYearRange(int bundleId, string cityName)
         {
-            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName) && x.Type.Equals("City")).FirstOrDefault();
+            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName)).FirstOrDefault();
             if (city != null)
             {
                 var years = db.CalculatedValues
@@ -178,7 +178,7 @@ namespace Marsad.Controllers
         {
             if (currentYear == null && years != null && years.Length > 0)
                 currentYear = years[0];
-            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName) && x.Type.Equals("City")).FirstOrDefault();
+            var city = db.GeoAreas.Where(x => x.Name.Equals(cityName)).FirstOrDefault();
             if (city != null && currentYear!=null)
             {
                 var indicators = db.CalculatedValues

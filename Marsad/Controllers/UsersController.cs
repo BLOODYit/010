@@ -47,8 +47,8 @@ namespace Marsad.Controllers
             }
             ViewBag.CurrentFilter = searchString;
             ViewBag.Roles = roleManager.Roles.ToDictionary(x => x.Id, x => x.Name);
-
-            var users = userManager.Users.Include(x => x.Entity);
+            ViewBag.CurrentUserID = User.Identity.GetUserId();
+            var users = userManager.Users.Where(x=>!x.IsDeleted).Include(x => x.Entity);
             users = SortParams(sortOrder, users, searchString);
             int pageSize = 50;
             int pageNumber = (page ?? 1);
@@ -62,7 +62,7 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ApplicationUser user = userManager.FindById(id);
+            ApplicationUser user = userManager.Users.Where(x=>!x.IsDeleted && x.Id==id).FirstOrDefault();
             if (user == null)
             {
                 return HttpNotFound();
@@ -93,7 +93,8 @@ namespace Marsad.Controllers
                 {
                     Name = newUser.Name,
                     UserName = newUser.UserName,
-                    Email = newUser.UserName
+                    Email = newUser.UserName,
+                    IsDeleted=false
                 };
                 if (newUser.RoleID.Equals("Officer"))
                 {
@@ -221,12 +222,15 @@ namespace Marsad.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
+            if (id == User.Identity.GetUserId())
+            {
+                return RedirectToAction("Index");
+            }
             ApplicationUser user = userManager.FindById(id);
-
-            ApplicationUser _user = new ApplicationUser() { UserName = user.UserName, Name = user.Name, Id = user.Id };
-            userManager.Delete(user);
+            user.IsDeleted = true;
+            userManager.Update(user);
             db.SaveChanges();
-            Log(LogAction.Delete, _user);
+            Log(LogAction.Delete, user);
             return RedirectToAction("Index");
         }
 

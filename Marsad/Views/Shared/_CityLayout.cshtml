@@ -11,6 +11,16 @@
     <title>@ViewBag.Title - المرصد الحضري بالمنطقة الشرقية</title>
     @RenderSection("css", required: false)
     <link rel="stylesheet" href="~/Content/mob.css" />
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <style>
+        .canvasjs-chart-credit {
+            display: none !important;
+        }
+
+        .canvasjs-chart-tooltip {
+            direction: rtl;
+        }
+    </style>
 </head>
 <body>
     @RenderBody()

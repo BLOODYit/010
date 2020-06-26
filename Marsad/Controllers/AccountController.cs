@@ -79,6 +79,12 @@ namespace Marsad.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    ApplicationUser user = UserManager.Users.Where(x => x.UserName == model.UserName).FirstOrDefault();
+                    if (user.IsDeleted)
+                    {
+                        ModelState.AddModelError("", "برجاء إدخال بيانات صحيحة");
+                        return View(model);
+                    }
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");

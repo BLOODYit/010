@@ -14,7 +14,14 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/Scripts/nprogress")
     @RenderSection("css", required: false)
-
+    <style>
+        .canvasjs-chart-credit{
+            display:none !important;
+        }
+        .canvasjs-chart-tooltip{
+            direction:rtl;
+        }
+    </style>
 </head>
 <body class="nav-md">
     <div class="container body">

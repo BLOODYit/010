@@ -196,8 +196,8 @@ namespace Marsad.Controllers
         {
             bool isAdmin = User.IsInRole("Admin");            
             var userId = User.Identity.GetUserId();
-            var bundleUsersIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == userId).Any()).Select(x => x.ID).ToList();
-            var indicatorUsersIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == userId).Any() || bundleUsersIds.Contains(x.BundleID)).Select(x => x.ID).ToList();
+            var bundleUsersIds = db.Bundles.Where(x => x.Users.Where(y => y.Id == userId && !y.IsDeleted).Any()).Select(x => x.ID).ToList();
+            var indicatorUsersIds = db.Indicators.Where(x => x.Users.Where(y => y.Id == userId && !y.IsDeleted).Any() || bundleUsersIds.Contains(x.BundleID)).Select(x => x.ID).ToList();
             var indicators = db.Indicators.Where(x=>x.Equations.Any()).Where(x => x.BundleID == id && (indicatorUsersIds.Contains(x.ID) || isAdmin)).Select(x => new { x.ID, x.Name }).ToList();
             return Json(new { success = true, data = indicators }, JsonRequestBehavior.AllowGet);
         }

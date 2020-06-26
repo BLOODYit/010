@@ -240,6 +240,10 @@
     <Compile Include="Migrations\202001142035222_ElementYearVaules.Designer.cs">
       <DependentUpon>202001142035222_ElementYearVaules.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006261038226_AddIsDeleted.cs" />
+    <Compile Include="Migrations\202006261038226_AddIsDeleted.Designer.cs">
+      <DependentUpon>202006261038226_AddIsDeleted.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CalculatedValue.cs" />
     <Compile Include="Models\CaseYearIndicatorValue.cs" />
@@ -1715,6 +1719,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202001142035222_ElementYearVaules.resx">
       <DependentUpon>202001142035222_ElementYearVaules.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006261038226_AddIsDeleted.resx">
+      <DependentUpon>202006261038226_AddIsDeleted.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

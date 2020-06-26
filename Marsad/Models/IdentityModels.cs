@@ -23,7 +23,8 @@ namespace Marsad.Models
         [Display(Name = "الجهة")]
         public int? EntityID { get; set; }
         public Entity Entity { get; set; }
-        public virtual List<Element> Elements { get; set; }        
+        public virtual List<Element> Elements { get; set; }
+        public bool IsDeleted { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

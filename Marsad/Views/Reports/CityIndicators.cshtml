@@ -16,15 +16,22 @@ else
             <option value="@year" @(ViewBag.CurrentYear == year ? "selected" : "")>@year</option>
         }
     </select>
-    <table class="indicatorTable">
+    <div id="keywords-container">
+        <input class="form-control" id="keywords" placeholder="بحث ...." />
+    </div>
+    <div class="indicatorTable">
+        <div class="head">
+            <div class="cell" style="width:60%">المؤشر</div>
+            <div class="cell" style="width:40%">قيمة المؤشر</div>
+        </div>
         @foreach (Indicator val in ViewBag.Indicators.Keys)
         {
-            <tr>
-                <td width="60%">@val.Name</td>
-                <td width="40%">@ViewBag.Indicators[val] @val.MeasureUnit</td>
-            </tr>
+            <div class="row">
+                <div class="cell kwv" style="width:60%">@val.Name</div>
+                <div class="cell" style="width:40%;text-align:center;">@ViewBag.Indicators[val].ToString("#.##") @val.MeasureUnit</div>
+            </div>
         }
-    </table>
+    </div>
 }
 <script type="text/javascript">
     function changeCurrentYear(){
@@ -37,4 +44,18 @@ else
         var href = "@Url.Action("CityIndicators","Reports")?cityName=@ViewBag.CityName&bundleId=@ViewBag.BundleID&currentYear=" + document.getElementById("currentYear").value + _years;
         window.location = href;
     }
+    $(document).ready(function () {
+        $('#keywords').keyup(function () {
+            var val = $(this).val();
+            $('.kwv').each(function () {
+                var text = $(this).text();
+                if (val == '' || text.indexOf(val) > -1) {
+                    $(this).parent().show();
+                }
+                else {
+                    $(this).parent().hide();
+                }
+            });
+        });
+    });
 </script>

@@ -31,9 +31,13 @@ namespace Marsad.Controllers
         public ActionResult GetElementValues(int year,int geoArea)
         {
             var elements = db.Elements.AsQueryable();
+            var userId = User.Identity.GetUserId();
+            var isDeleted = userManager.Users.Where(x => x.Id == userId).FirstOrDefault().IsDeleted;
+            if (isDeleted)
+                throw new Exception("Not Allowed");
             if (User.IsInRole("Officer"))
             {
-                var userId = User.Identity.GetUserId();
+                
                 elements = elements.Where(x => x.ApplicationUsers.Where(y => y.Id == userId).Any());
             }
             var elementIds = elements.Select(x => x.ID).ToArray();
@@ -51,6 +55,9 @@ namespace Marsad.Controllers
                 throw new Exception("Invalid Inputs");
             var userElementIds = elementIds;
             var userId = User.Identity.GetUserId();
+            var isDeleted = userManager.Users.Where(x => x.Id == userId).FirstOrDefault().IsDeleted;
+            if (isDeleted)
+                throw new Exception("Not Allowed");
             if (User.IsInRole("Officer"))
             {
                 userElementIds = db.Elements.Where(x => x.ApplicationUsers.Where(y => y.Id == userId).Any()).Select(x => x.ID).ToArray();
@@ -128,6 +135,9 @@ namespace Marsad.Controllers
                 throw new Exception("Invalid Inputs");
             var userElementIds = elementIds;
             var userId = User.Identity.GetUserId();
+            var isDeleted = userManager.Users.Where(x => x.Id == userId).FirstOrDefault().IsDeleted;
+            if (isDeleted)
+                throw new Exception("Not Allowed");
             if (User.IsInRole("Officer"))
             {
                 userElementIds = db.Elements.Where(x => x.ApplicationUsers.Where(y => y.Id == userId).Any()).Select(x => x.ID).ToArray();
