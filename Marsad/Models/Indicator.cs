@@ -18,6 +18,7 @@ namespace Marsad.Models
             this.ChildIndicators = new List<Indicator>();
             this.Cases = new List<Case>();
             this.Users = new List<ApplicationUser>();
+            this.IndicatorLimits = new List<IndicatorLimit>();
         }
 
         [Key]
@@ -86,5 +87,6 @@ namespace Marsad.Models
         public List<Indicator> ChildIndicators { get; set; }
         public List<Case> Cases { get; set; }
         public List<ApplicationUser> Users { get; set; }
+        public List<IndicatorLimit> IndicatorLimits { get; set; }
     }
 }

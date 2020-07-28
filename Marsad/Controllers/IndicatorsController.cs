@@ -17,7 +17,7 @@ namespace Marsad.Controllers
 
         // GET: Indicators
         [Authorize(Roles = "Admin")]
-        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize,string indicatorType)
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page, int? pageSize, string indicatorType)
         {
 
             ViewBag.CurrentSort = sortOrder;
@@ -73,7 +73,10 @@ namespace Marsad.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Indicator indicator = db.Indicators.Include(x => x.ChildIndicators).Where(x => x.ID == id).FirstOrDefault();
+            Indicator indicator = db.Indicators
+                .Include(x => x.ChildIndicators)
+                .Include(x => x.IndicatorLimits)
+                .Where(x => x.ID == id).FirstOrDefault();
             if (indicator == null)
             {
                 return HttpNotFound();
@@ -99,11 +102,19 @@ namespace Marsad.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod,ElementCount,IndicatorImportance")] Indicator indicator, string command)
+        public ActionResult Create(
+            [Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod,ElementCount,IndicatorImportance")] Indicator indicator
+            , string command
+            , int[] years
+            , double?[] intHighs
+            , double?[] intLows
+            , double?[] locHighs
+            , double?[] locLows)
         {
+            AddIndicatorLimits(years, intHighs, intLows, locHighs, locLows, indicator);
             if (ModelState.IsValid)
             {
-                db.Indicators.Add(indicator);
+                db.Indicators.Add(indicator);                
                 db.SaveChanges();
                 Log(LogAction.Create, indicator);
                 if (command.Equals("إنشاء"))
@@ -126,7 +137,10 @@ namespace Marsad.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Indicator indicator = db.Indicators.Find(id);
+            Indicator indicator = db.Indicators
+                .Include(x => x.IndicatorLimits)
+                .Where(x => x.ID == id)
+                .FirstOrDefault();
             if (indicator == null)
             {
                 return HttpNotFound();
@@ -143,11 +157,18 @@ namespace Marsad.Controllers
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod,ElementCount,IndicatorImportance")] Indicator indicator)
+        public ActionResult Edit([Bind(Include = "ID,Code,Name,MeasureUnit,HasParent,IndicatorID,IndicatorTypeID,BundleID,Description,Correlation,GeoArea,References,CalculationMethod,ElementCount,IndicatorImportance")] Indicator indicator
+            , int[] years
+            , double?[] intHighs
+            , double?[] intLows
+            , double?[] locHighs
+            , double?[] locLows)
         {
+            db.Entry(indicator).State = EntityState.Modified;
+            AddIndicatorLimits(years, intHighs, intLows, locHighs, locLows, indicator);
             if (ModelState.IsValid)
             {
-                db.Entry(indicator).State = EntityState.Modified;
+                
                 db.SaveChanges();
                 Log(LogAction.Update, indicator);
                 return RedirectToAction("Index");
@@ -333,6 +354,34 @@ namespace Marsad.Controllers
             else
                 isExists = db.Indicators.Where(x => x.Code == Code && x.ID != ID.Value).Any();
             return Json(!isExists, JsonRequestBehavior.AllowGet);
+        }
+
+
+        private void AddIndicatorLimits(int[] years, double?[] intHighs
+            , double?[] intLows
+            , double?[] locHighs
+            , double?[] locLows,
+            Indicator indicator)
+        {
+            var limits = db.IndicatorLimits.Where(x => x.IndicatorID == indicator.ID);
+            db.IndicatorLimits.RemoveRange(limits);
+            if (years == null)
+                return;
+            if (years.Length != intHighs.Length || years.Length != intLows.Length ||
+                years.Length != locHighs.Length || years.Length != locLows.Length)
+                return;
+                for (int i = 0; i < years.Length; i++)
+                {
+                    indicator.IndicatorLimits.Add(new IndicatorLimit()
+                    {
+                        IntHigh = intHighs[i],
+                        IntLow = intLows[i],
+                        LocHigh = locHighs[i],
+                        LocLow = locLows[i],
+                        Year = years[i],
+                        IndicatorID=indicator.ID
+                    }); ;
+                }
         }
     }
 }

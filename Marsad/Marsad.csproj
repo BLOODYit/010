@@ -244,6 +244,10 @@
     <Compile Include="Migrations\202006261038226_AddIsDeleted.Designer.cs">
       <DependentUpon>202006261038226_AddIsDeleted.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007270811098_Add-Limits.cs" />
+    <Compile Include="Migrations\202007270811098_Add-Limits.Designer.cs">
+      <DependentUpon>202007270811098_Add-Limits.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CalculatedValue.cs" />
     <Compile Include="Models\CaseYearIndicatorValue.cs" />
@@ -254,6 +258,7 @@
     <Compile Include="Models\EquationElement.cs" />
     <Compile Include="Models\EquationYear.cs" />
     <Compile Include="Models\GeoAreaBundle.cs" />
+    <Compile Include="Models\IndicatorLimit.cs" />
     <Compile Include="Models\Logs\SystemLog.cs" />
     <Compile Include="Models\OfficerLog.cs" />
     <Compile Include="Models\Reports.cs" />
@@ -1722,6 +1727,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006261038226_AddIsDeleted.resx">
       <DependentUpon>202006261038226_AddIsDeleted.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007270811098_Add-Limits.resx">
+      <DependentUpon>202007270811098_Add-Limits.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

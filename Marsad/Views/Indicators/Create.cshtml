@@ -11,134 +11,188 @@
         {
             @Html.AntiForgeryToken()
 
-        <div class="form-horizontal">
-            <h4>إنشاء مؤشر</h4>
-            <hr />
+            <div class="form-horizontal">
+                <h4>إنشاء مؤشر</h4>
+                <hr />
 
-            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            <div class="form-group">
-                @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1", @Value = ViewBag.NextCode } })
-                    @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Code, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "1", @Value = ViewBag.NextCode } })
+                        @Html.ValidationMessageFor(model => model.Code, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ElementCount, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.ElementCount, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ElementCount, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ElementCount, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.ElementCount, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ElementCount, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.MeasureUnit, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.MeasureUnit, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.MeasureUnit, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MeasureUnit, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.MeasureUnit, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MeasureUnit, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.HasParent, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    <div class="checkbox">
-                        @Html.DropDownList("HasParent", new List<SelectListItem>() { new SelectListItem() { Text = "رئيسي", Value = "false" }, new SelectListItem() { Text = "فرعي", Value = "true" } }, htmlAttributes: new { @class = "form-control", @id = "HasParent" })
-                        @Html.ValidationMessageFor(model => model.HasParent, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(model => model.HasParent, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        <div class="checkbox">
+                            @Html.DropDownList("HasParent", new List<SelectListItem>() { new SelectListItem() { Text = "رئيسي", Value = "false" }, new SelectListItem() { Text = "فرعي", Value = "true" } }, htmlAttributes: new { @class = "form-control", @id = "HasParent" })
+                            @Html.ValidationMessageFor(model => model.HasParent, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="IndicatorIDDiv">
+                    @Html.LabelFor(model => model.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-7 col-xs-12">
+                        <input type="text" id="indicatorsSearch" class="form-control" placeholder="بحث المؤشرات" />
+                        <select id="IndicatorID" class="form-control" name="IndicatorID">
+                            <option value=""></option>
+                            @foreach (var item in ViewBag.IndicatorID)
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        @Html.ValidationMessageFor(model => model.IndicatorID, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-sm-3 col-xs-12">
+                        <button type="button" class="btn btn-primary" id="addParentIndicator">إضافة مؤشر رئيسي</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IndicatorTypeID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.DropDownList("IndicatorTypeID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.IndicatorTypeID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BundleID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.DropDownList("BundleID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BundleID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IndicatorImportance, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.IndicatorImportance, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.IndicatorImportance, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Correlation, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.Correlation, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Correlation, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.References, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.References, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.References, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CalculationMethod, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
+                    <div class="col-sm-10 col-xs-12">
+                        @Html.EditorFor(model => model.CalculationMethod, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CalculationMethod, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10 col-xs-12">
+                        <input type="submit" name="command" value="إنشاء" class="btn btn-success" />
+                        @Html.ActionLink("رجوع", "Index", null, new { @class = "btn btn-default" })
+                        <input type="button" data-toggle="modal" data-target="#addLimitModal" value="الحد الادنى والاعلى للمؤشر" class="btn btn-primary" />
                     </div>
                 </div>
             </div>
 
-            <div class="form-group" id="IndicatorIDDiv">
-                @Html.LabelFor(model => model.IndicatorID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-7 col-xs-12">
-                    <input type="text" id="indicatorsSearch" class="form-control" placeholder="بحث المؤشرات" />
-                    <select id="IndicatorID" class="form-control" name="IndicatorID">
-                        <option value=""></option>
-                        @foreach (var item in ViewBag.IndicatorID)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>                    
-                    @Html.ValidationMessageFor(model => model.IndicatorID, "", new { @class = "text-danger" })
-                </div>
-                <div class="col-sm-3 col-xs-12">
-                    <button type="button" class="btn btn-primary" id="addParentIndicator">إضافة مؤشر رئيسي</button>
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.IndicatorTypeID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.DropDownList("IndicatorTypeID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.IndicatorTypeID, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.BundleID, null, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.DropDownList("BundleID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.BundleID, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.IndicatorImportance, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.IndicatorImportance, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.IndicatorImportance, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.Correlation, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.Correlation, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Correlation, "", new { @class = "text-danger" })
+            <div class="modal fade" id="addLimitModal">
+                <div class="modal-dialog" style="width: 650px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close"
+                                    data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">الحد الادنى والاعلى</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>السنة</th>
+                                        <th>الحد الأدنى عالمي</th>
+                                        <th>الحد الأقصى عالمي</th>
+                                        <th>الحد الأدنى محلي</th>
+                                        <th>الحد الأقصى محلى</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="limits">
+                                    <tr>
+                                        <th><input class="year" type="number" id="year" /></th>
+                                        <th><input type="number" step="0.01" id="intHigh" /></th>
+                                        <th><input type="number" step="0.01" id="intLow" /></th>
+                                        <th><input type="number" step="0.01" id="locHigh" /></th>
+                                        <th><input type="number" step="0.01" id="locLow" /></th>
+                                        <th><button type="button" id="add-limit" class="btn btn-success">إضافة</button></th>
+                                    </tr>
+                                    @if (Model != null && Model.IndicatorLimits != null)
+                                    {
+                                        foreach (var limit in Model.IndicatorLimits)
+                                        {
+                                            <tr>
+                                                <td><input type="number" name="years" value="@limit.Year" /></td>
+                                                <td><input type="number" step="0.01" name="intHighs" value="@limit.IntHigh" /></td>
+                                                <td><input type="number" step="0.01" name="intLows" value="@limit.IntLow" /></td>
+                                                <td><input type="number" step="0.01" name="locHighs" value="@limit.LocHigh" /></td>
+                                                <td><input type="number" step="0.01" name="locLows" value="@limit.LocLow" /></td>
+                                                <td><button type="button" class="del-limit btn btn-danger">حذف</button></td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                            <button class="btn btn-primary"  data-dismiss="modal">إغلاق</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.References, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.References, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.References, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.CalculationMethod, htmlAttributes: new { @class = "control-label col-sm-2 col-xs-12" })
-                <div class="col-sm-10 col-xs-12">
-                    @Html.EditorFor(model => model.CalculationMethod, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.CalculationMethod, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10 col-xs-12">
-                    <input type="submit" name="command" value="إنشاء" class="btn btn-success" />
-                    @Html.ActionLink("رجوع", "Index", null, new { @class = "btn btn-default" })
-                </div>
-            </div>
-        </div>
         }
 
     </div>
@@ -164,7 +218,47 @@
 
 @section Scripts {
     <script type="text/javascript">
+        function bindDelLimit() {
+            $('.del-limit').unbind('click');
+            $('.del-limit').click(function () {
+                $(this).parent().parent().remove();
+            });
+        }
         $(document).ready(function () {
+            bindDelLimit();
+            $('#add-limit').click(function () {
+                var year = $('#year').val();
+                if (!year) {
+                    alert('برجاء ادخال السنة');
+                    return;
+                }
+                if ($('input[name="year"][value="' + year + '"]').length > 0) {
+                    alert('السنة موجودة من قبل');
+                    return;
+                }
+                var intHigh = $('#intHigh').val();
+                var intLow = $('#intLow').val();
+                var locHigh = $('#locHigh').val();
+                var locLow = $('#locLow').val();
+
+                $('#limits').append('<tr>' +
+                    '<td><input type="number"  name="years" value="' + year + '" /></td>' +
+                    '<td><input type="number" step="0.01"  name="intHighs" value="' + intHigh + '" /></td> ' +
+                    '<td><input type="number" step="0.01"  name="intLows" value="' + intLow + '" /></td> ' +
+                    '<td><input type="number" step="0.01"  name="locHighs" value="' + locHigh + '" /></td> ' +
+                    '<td><input type="number" step="0.01"  name="locLows" value="' + locLow + '" /></td> ' +
+                    '<td><button type="button" class="del-limit btn btn-danger">حذف</button></td> ' +
+                    '</tr>');
+                bindDelLimit();
+                $('#year').val('');
+                 $('#intHigh').val('');
+                $('#intLow').val('');
+                $('#locHigh').val('');
+                $('#locLow').val('');
+            });
+
+
+
             $('#HasParent').change(function () {
                 setHasParent();
             });
@@ -178,16 +272,16 @@
                 });
             });
 
-            $('#indicatorsSearch').keyup(function (evt) {                  
+            $('#indicatorsSearch').keyup(function (evt) {
                 var val = $(this).val();
                 var firstVal = '';
-                  $('#IndicatorID option').each(function () {                      
+                  $('#IndicatorID option').each(function () {
                     var opVal = $(this).text();
                     if (opVal.toLowerCase().indexOf(val.toLowerCase()) >= 0) {
                         $(this).removeAttr('hidden');
                         if (firstVal == '') {
-                            firstVal = $(this).val();                                                     
-                        }                        
+                            firstVal = $(this).val();
+                        }
                     }
                     else {
                         $(this).attr('hidden', 'hidden');

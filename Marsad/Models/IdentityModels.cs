@@ -74,5 +74,6 @@ namespace Marsad.Models
         public DbSet<CalculatedValue> CalculatedValues { get; set; }
         public DbSet<ElementYearValue> ElementYearValues { get; set; }
         public DbSet<OfficerLog> OfficerLogs { get; set; }
+        public DbSet<IndicatorLimit> IndicatorLimits { get; set; }
     }
 }
