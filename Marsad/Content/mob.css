@@ -188,8 +188,464 @@ a {
     padding: 5px;
     margin: 11px auto;
     width: 90%;
-    font-family: Cairo;
     border-radius: 5px;
     border: none;
     outline: unset;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    perspective: 700px;
+    font-family: 'Cairo', sans-serif;
+}
+
+#root {
+    display: flex;
+    justify-content: center;
+    background: #ededed;
+    min-height: 100%;
+}
+
+#back {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    z-index: 10;
+    left: -4px;
+    top: 29px;
+    cursor: pointer;
+}
+
+#settings {
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    z-index: 10;
+    top: 117px;
+    right: 0px;
+}
+
+.App {
+    padding-top: 150px;
+    font-family: sans-serif;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0px 0px 41px -7px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    height: 100%;
+    background: #F3F3F4;
+}
+
+#headerText {
+    color: rgb(34, 34, 34);
+    font-weight: bold;
+    font-size: 20px;
+    width: 100%;
+    height: 46px;
+    text-align: center;
+    margin-top: 30px;
+    word-spacing: 2px;
+    letter-spacing: 1px;
+}
+
+#tripDetail {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    color: #747474;
+    font-size: 10px;
+    margin-top: 26px;
+    letter-spacing: 2px;
+    margin-bottom: 26px;
+}
+
+#tripDest {
+    color: #141414;
+    font-weight: bold;
+    font-size: 28px;
+    letter-spacing: 1px;
+    display: flex;
+}
+
+#oneWay {
+    font-size: 10px;
+    font-weight: 100;
+    background: #498eff;
+    border: 1px solid #0061ff;
+    color: #fff;
+    position: relative;
+    height: 20px;
+    padding: 3px 5px;
+    margin-top: 7px;
+    border-radius: 3px;
+    margin-left: 7px;
+}
+
+#headerInput {
+    width: 100%;
+    height: 40px;
+    border: none;
+    background: #262626;
+    border-radius: 5px;
+    border: 1px solid rgb(81, 81, 81);
+    padding-top: 8px;
+    padding-left: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#cardContainer {
+    position: relative;
+    width: 90%;
+    height: 100px;
+    /* background: rgb(194, 194, 194); */
+    border-radius: 5px;
+    transform-origin: bottom;
+    cursor: pointer;
+}
+
+#first {
+    width: 100%;
+    height: 68px;
+    position: absolute;
+    border-radius: 5px;
+    color: #000;
+    transform-origin: bottom;
+    transform-style: preserve-3d;
+    transition: 0.5s;
+    border-radius: 8px;
+    display: flex;
+    /* backface-visibility: hidden; */
+}
+
+#detailDate {
+    color: #a09a9a;
+    font-size: 9px;
+    padding-top: 11px;
+}
+
+#detailTime {
+    font-weight: bold;
+    font-size: 21px;
+    color: #000;
+}
+
+#detailSub {
+    width: 200px;
+    height: 100px;
+    position: relative;
+    border-radius: 0px 8px 8px 0px;
+    background: #0a0a0a;
+}
+
+#firstDisplay {
+    width: 100%;
+    height: 67px;
+    position: absolute;
+    background: #fff;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 13px 23px;
+    flex-wrap: wrap;
+    backface-visibility: hidden;
+    box-shadow: 0px 0px 25px -1px rgba(0, 0, 0, 0.17);
+}
+
+#info {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: #b2b2b2;
+    font-size: 10px;
+}
+
+#flightDetail {
+    font-size: 20px;
+    font-weight: bold;
+    color: #3f3f3f;
+    text-align: center;
+    width: 100%;
+}
+
+div#flightDetail {
+}
+
+#animContainer {
+    padding-left: 0px;
+    position: absolute;
+    width: 19px;
+    height: 10px;
+    top: 10px;
+    left: 15px;
+    overflow: hidden;
+}
+
+#anim {
+    width: 54px;
+    position: absolute;
+    display: flex;
+    animation: slidein 1s infinite linear;
+}
+
+@keyframes slidein {
+    to {
+        transform: translateX(-18px);
+    }
+
+    from {
+        transform: translateX(0px);
+    }
+}
+
+#circle {
+    width: 5px;
+    height: 5px;
+    background: #707070;
+    border-radius: 50%;
+    margin-right: 13px;
+}
+
+#firstTop {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: #ffffff;
+    backface-visibility: hidden;
+    border-radius: 8px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 3px 0px rgba(132, 132, 132, 0.15);
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+}
+
+#timecontainer {
+    display: flex;
+    padding-right: 10px;
+    padding-top: 14px;
+}
+
+#firstBehind {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: #fff;
+    transform-origin: center;
+    transform: rotate3d(1, 0, 0, -180deg);
+    backface-visibility: hidden;
+    border-radius: 8px;
+    border: 1px dashed #d1d1d1;
+    border-left: none;
+    border-right: none;
+}
+
+#firstBehindDisplay {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: #fff;
+    border-radius: 8px;
+    padding: 6px 23px;
+    justify-content: space-between;
+    box-shadow: 0px 11px 25px -1px rgba(0, 0, 0, 0.17);
+}
+
+#firstBehindRow {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-top: 7px;
+    text-align: left;
+}
+
+#detail {
+    font-size: 15px;
+    color: rgb(69, 69, 69);
+    font-weight: bold;
+}
+
+#detailLabel {
+    color: #686868;
+    font-size: 10px;
+    font-weight: 100;
+}
+
+#second {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    bottom: -2px;
+    transform-origin: bottom;
+    transform-style: preserve-3d;
+    transition: 0.2s;
+    border-radius: 8px;
+}
+
+#secondTop {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: rgb(231, 231, 231);
+    backface-visibility: hidden;
+    border-radius: 8px;
+}
+
+#thirdTop {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: rgb(190, 190, 190);
+    backface-visibility: hidden;
+    border-radius: 8px;
+}
+
+#secondBehind {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: #fff;
+    transform-origin: center;
+    transform: rotate3d(1, 0, 0, -180deg);
+    backface-visibility: hidden;
+    border-radius: 8px;
+    border: 1px dashed #d1d1d1;
+    border-left: none;
+    border-right: none;
+}
+
+#secondBehindDisplay {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: #fff;
+    border-radius: 8px;
+    border-bottom: 1px dashed #d1d1d1;
+    justify-content: space-between;
+    padding: 5px 23px;
+    box-shadow: 0px 11px 25px -1px rgba(0, 0, 0, 0.17);
+}
+
+#secondBehindBottom {
+    padding: 5px 23px;
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    background: #fff;
+    transform-origin: center;
+    transform: rotate3d(1, 0, 0, -180deg);
+    backface-visibility: hidden;
+    border-radius: 0px 0px 8px 8px;
+    border-radius: 8px;
+    box-shadow: 0px 11px 25px -1px rgba(0, 0, 0, 0.17);
+}
+
+#third {
+    width: 100%;
+    height: 70px;
+    position: absolute;
+    transform-origin: bottom;
+    transform-style: preserve-3d;
+    transition: 0.2s;
+    border-radius: 8px;
+}
+
+#button {
+    color: #2d2d2d;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 4px 124px;
+    border: 1px solid #2d2d2d;
+    background: #fff;
+    border-radius: 4px;
+    margin-top: 9px;
+    width: 100%;
+    cursor: pointer;
+    display: block;
+}
+
+#price {
+    color: #2d2d2d;
+    font-weight: bold;
+    font-size: 15px;
+    display: flex;
+    flex-direction: column;
+    margin-top: -2px;
+}
+
+#priceLabel {
+    color: #747474;
+    font-weight: 100;
+    font-size: 10px;
+    text-align: left;
+}
+
+#barCode {
+    width: 98px;
+    height: 30px;
+}
+
+.App > div {
+    width: 90%;
+    margin-bottom: 1;
+}
+
+#root > div {
+    width: 90%;
+    min-height: 100%;
+}
+
+select {
+    border: 1px solid #c5c5c5;
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+    padding: 4px;
+    font-weight: bold;
+}
+
+
+    select:focus {
+        border: 1px solid #c5c5c5;
+    }
+
+.App > div:first-child {
+    position: fixed;
+    margin-top: -165px;
+    height: 100%;
+    padding-bottom: 120px;
+}
+
+.content {
+    background: white;
+    height: 100%;
+    display: block;
+    text-align: right;
+    padding: 10px;
+    border-radius: 5px;
+    overflow: auto;
+}
+
+.table {
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid black;
+    margin: 0px;
+    padding: 5px;
+}
+
+.search {
+    width: 100%;
+    padding: 5px;
 }

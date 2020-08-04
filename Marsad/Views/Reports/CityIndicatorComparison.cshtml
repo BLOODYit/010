@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "CityIndicatorComparisonSelect";
+    Layout = "~/Views/Shared/_CityLayout.cshtml";
+}
+@model Indicator
+<div id='root'>
+    <div>
+        <div class="App">
+            <div>
+                <svg id="back" xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" onclick="window.history.back();" style="cursor:pointer;">
+                    <polyline points="244 400 100 256 244 112" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px;"></polyline>
+                    <line x1="120" y1="256" x2="412" y2="256" style="fill:none;stroke:#000;stroke-linecap:round;stroke-linejoin:round;stroke-width:48px"></line>
+                </svg>
+                <div id="headerText">@ViewBag.City.Name - @ViewBag.Indicator.Name</div>
+                <br />
+                <div class="content">
+                    <div id="barchartContainer" style="direction:ltr; height: 370px; max-width: 920px;margin:auto;"></div>
+                    <table class="table" id="data-table">
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/scripts/charts")
+<script>
+
+        $(function () {
+            var data = [];
+             @foreach (var v in ViewBag.CalculatedValues){
+                 <text>var d = @Html.Raw(Json.Encode(v));</text>
+                 <text>data.push({ y: d.Value, label: "</text>@ViewBag.Year<text>" });</text>
+             }
+            @if (ViewBag.IntLow != null)
+            {
+                <text>data.push({ y: @ViewBag.IntLow, label: "عالمي حد أدنى" });</text>
+            }
+            @if (ViewBag.IntHigh != null)
+            {
+                <text>data.push({ y: @ViewBag.IntHigh, label: "عالمي حد أقصى" });</text>
+            }
+            @if (ViewBag.LocLow != null)
+            {
+                <text>data.push({ y: @ViewBag.LocLow, label: "محلي حد أدنى" });</text>
+            }
+            @if (ViewBag.LocHigh != null)
+            {
+                <text>data.push({ y: @ViewBag.LocHigh, label: "محلي حد أقصى" });</text>
+            }
+            var bchart = new CanvasJS.Chart("barchartContainer", {
+                animationEnabled: true,
+                title: { text: "@ViewBag.Indicator.Name" },
+                axisX: { interval: 1 },
+                axisY2: { interlacedColor: "rgba(1,77,101,.2)", gridColor: "rgba(1,77,101,.1)", title: "@ViewBag.Indicator.Name @ViewBag.Indicator.MeasureUnit" },
+                data: [{
+                    type: "column",
+                    name: "companies",
+                    axisYType: "secondary",
+                    color: "#014D65",
+                    dataPoints: data
+                }]
+            });
+            bchart.render();
+
+            data.forEach(d => {
+                $('#data-table').append('<tr><th>' + d.label + '</th><td>' + d.y + '</td></tr>');
+            });
+        });
+</script>
+}

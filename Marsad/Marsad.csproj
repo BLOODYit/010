@@ -1512,6 +1512,7 @@
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="fonts\Amiri-Regular.ttf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Scripts\content.js" />
     <Content Include="Scripts\d3\API.md" />
     <Content Include="Scripts\d3\CHANGES.md" />
     <Content Include="Scripts\d3\LICENSE" />
@@ -1677,6 +1678,10 @@
     <Content Include="Views\Reports\CityBundles.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Reports\CityYearRange.cshtml" />
+    <Content Include="Views\Reports\CityIndicator.cshtml" />
+    <Content Include="Views\Reports\CityIndicatorComparisonSelect.cshtml" />
+    <Content Include="Views\Reports\CityIndicatorComparison.cshtml" />
+    <Content Include="Views\Reports\CityIndicatorTimeSeries.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

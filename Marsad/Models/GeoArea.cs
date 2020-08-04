@@ -53,7 +53,9 @@ namespace Marsad.Models
         };
 
         public static string GetParentName(string name)
-        {            
+        {
+            if (string.IsNullOrEmpty(name))
+                return name;
             if (name.Equals("District"))
                 return "City";
             else if (name.Equals("City"))

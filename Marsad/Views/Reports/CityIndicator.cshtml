@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "CityIndicator";
+    Layout = "~/Views/Shared/_CityLayout.cshtml";
+}
+@model Indicator
+<div id='root'></div>
+@section scripts{
+    <script type="text/babel">
+        const { useState } = React;
+        const rootElement = document.getElementById("root");
+        
+        const App = () => {                
+        return (
+        <div className="App">
+            <div>
+                <svg id="back"
+                     xmlns="http://www.w3.org/2000/svg"
+                     width="512"
+                     height="512"
+                     viewBox="0 0 512 512"
+                     onClick={() =>
+                    {
+                    window.history.back();
+                    }} style={{ pointer:'cursor' }}>
+                    <polyline points="244 400 100 256 244 112"
+                              style={{
+                    fill: "none",
+                    stroke: "#000",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "48px"
+                }} />
+                    <line x1="120"
+                          y1="256"
+                          x2="412"
+                          y2="256"
+                          style={{
+                    fill: "none",
+                    stroke: "#000",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "48px"
+                }} />
+                </svg>
+                <div id="headerText">@Model.Name</div>                
+                <br />
+                <div class="content">
+                    @Model.Description
+                </div>
+            </div>            
+        </div>
+        );
+        }
+
+        ReactDOM.render(
+        <div><App /></div>, rootElement);
+    </script>
+}

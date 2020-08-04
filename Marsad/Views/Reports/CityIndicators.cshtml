@@ -1,61 +1,172 @@
 ﻿@{
     ViewBag.Title = "CityIndicators";
     Layout = "~/Views/Shared/_CityLayout.cshtml";
-}
-<a href="@Url.Action("CityBundles","Reports",new { cityName=ViewBag.CityName})"><h2>@ViewBag.CityName</h2></a>
-<a href="@Url.Action("CityYearRange","Reports",new { cityName=ViewBag.CityName,bundleId=ViewBag.BundleID})"><h2>@ViewBag.BundleName</h2></a>
-@if (ViewBag.Years == null || ViewBag.Years.Length <= 0 || ViewBag.CurrentYear == null || ViewBag.Indicators == null)
-{
-    <h4>لا يوجد بيانات</h4>
-}
-else
-{
-    <select name="currentYear" id="currentYear" onchange="changeCurrentYear()">
-        @foreach (var year in ViewBag.Years)
+    if (ViewBag.CalculatedValues != null)
+    {
+        foreach(var val in ViewBag.CalculatedValues)
         {
-            <option value="@year" @(ViewBag.CurrentYear == year ? "selected" : "")>@year</option>
+            val.Value = Math.Round(val.Value, 2);
         }
-    </select>
-    <div id="keywords-container">
-        <input class="form-control" id="keywords" placeholder="بحث ...." />
-    </div>
-    <div class="indicatorTable">
-        <div class="head">
-            <div class="cell" style="width:60%">المؤشر</div>
-            <div class="cell" style="width:40%">قيمة المؤشر</div>
-        </div>
-        @foreach (Indicator val in ViewBag.Indicators.Keys)
-        {
-            <div class="row">
-                <div class="cell kwv" style="width:60%">@val.Name</div>
-                <div class="cell" style="width:40%;text-align:center;">@ViewBag.Indicators[val].ToString("#.##") @val.MeasureUnit</div>
+    }
+}
+<div id='root'></div>
+@section scripts{
+    <script type="text/babel">
+        var cityName = '@ViewBag.City.Name';
+        var bundleName = '@ViewBag.BundleName';
+        var ciUrl = '@Url.Action("CityIndicator", "Reports")';
+        var tsUrl = '@Url.Action("CityIndicatorTimeSeries", "Reports")';
+        var compUrl = '@Url.Action("CityIndicatorComparisonSelect", "Reports")';
+        var calculatedValues = @Html.Raw(Json.Encode(ViewBag.CalculatedValues));
+        var years = @Html.Raw(Json.Encode(ViewBag.Years));
+        var year = years[0];
+        const { useState } = React;
+        const rootElement = document.getElementById("root");
+        var Cell = (props) => {
+        const { val,index } = props;
+        const [active, handleActive] = useState(false);
+        return (
+        <div id="cardContainer"
+             style={{
+                height: active ? `300px` : `100px`,
+                transition: "0.9s"
+            }}
+             onClick={() =>
+            {
+            handleActive(!active);
+            }}
+            >
+            <div id="firstDisplay">
+                <div id="flightDetail">
+                    {val.Value} {val.EquationYear.Equation.Indicator.MeasureUnit}
+                </div>
             </div>
-        }
-    </div>
-}
-<script type="text/javascript">
-    function changeCurrentYear(){
-        var years = @Json.Encode(ViewBag.Years);
-        var _years = "";
-        for (var i = 0; i < years.length; i++) {
-            _years += "&years=" + years[i];
+            <div id="first"
+                 style={{
+                    transform: active
+                        ? `rotate3d(1, 0, 0, -180deg)`
+                        : `rotate3d(1, 0, 0, 0deg)`,
+                    transitionDelay: active ? "0s" : "0.3s"
+                }}>
+                <div id="firstTop">
+                    <div id="timecontainer">
+                        {val.EquationYear.Equation.Indicator.Name}
+                    </div>
+                </div>
+                <div id="firstBehind">
+                    <div id="firstBehindDisplay">
+                        <a id="button" href={ciUrl + "?indicatorId=" + val.EquationYear.Equation.Indicator.ID }>
+                            بيانات المؤشر
+                        </a>
+                    </div>
+                    <div id="second"
+                         style={{
+                            transform: active
+                                ? `rotate3d(1, 0, 0, -180deg)`
+                                : `rotate3d(1, 0, 0, 0deg)`,
+                            transitionDelay: active ? "0.2s" : "0.2s"
+                        }}>
+                        <div id="secondTop" />
+                        <div id="secondBehind">
+                            <div id="secondBehindDisplay">
+                                <a id="button" href={tsUrl + "?indicatorId=" + val.EquationYear.Equation.Indicator.ID+"&geoAreaId=@ViewBag.City.ID" }>
+                                    السلسلة الزمنية للمؤشر
+                                </a>
+                            </div>
+                            <div id="third"
+                                 style={{
+                                    transform: active
+                                        ? `rotate3d(1, 0, 0, -180deg)`
+                                        : `rotate3d(1, 0, 0, 0deg)`,
+                                    transitionDelay: active ? "0.4s" : "0s"
+                                }}>
+                                <div id="thirdTop" />
+                                <div id="secondBehindBottom">
+                                    <a id="button" href={compUrl + "?indicatorId=" + val.EquationYear.Equation.Indicator.ID + "&year=" + val.EquationYear.Year + "&geoAreaId=@ViewBag.City.ID" }>
+                                        قيم مؤشرات المقارنة
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        );
         }
 
-        var href = "@Url.Action("CityIndicators","Reports")?cityName=@ViewBag.CityName&bundleId=@ViewBag.BundleID&currentYear=" + document.getElementById("currentYear").value + _years;
-        window.location = href;
-    }
-    $(document).ready(function () {
-        $('#keywords').keyup(function () {
-            var val = $(this).val();
-            $('.kwv').each(function () {
-                var text = $(this).text();
-                if (val == '' || text.indexOf(val) > -1) {
-                    $(this).parent().show();
-                }
-                else {
-                    $(this).parent().hide();
-                }
-            });
-        });
-    });
-</script>
+
+
+        const App = () => {
+        const [Sel , setSel]=useState(year);
+        const [Search,setSearch]=useState('');
+        function onSelChange(yearVal){
+        setSel(yearVal);
+        }
+
+        function onSearchChange(search){        
+        setSearch(search);
+        }
+        return (
+        <div className="App">
+            <div>
+                <svg id="back"
+                     xmlns="http://www.w3.org/2000/svg"
+                     width="512"
+                     height="512"
+                     viewBox="0 0 512 512"
+                     onClick={() =>
+                    {
+                    window.history.back();
+                    }} style={{ pointer:'cursor' }}>
+                    <polyline points="244 400 100 256 244 112"
+                              style={{
+                    fill: "none",
+                    stroke: "#000",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "48px"
+                }} />
+                    <line x1="120"
+                          y1="256"
+                          x2="412"
+                          y2="256"
+                          style={{
+                    fill: "none",
+                    stroke: "#000",
+                    strokeLinecap: "round",
+                    strokeLinejoin: "round",
+                    strokeWidth: "48px"
+                }} />
+                </svg>
+                <div id="headerText">{cityName + ' - ' + bundleName}</div>
+                <select class="form-control" style={{width:'100%'}} onChange={(e) =>
+                    {
+                    onSelChange(e.target.value*1);
+                    }}>
+                    @foreach (int year in ViewBag.Years)
+                    {
+                        <option value="@year">@year</option>
+                    }
+                </select>
+                <input class="form-control search" placeholder="بحث ..." onChange={(e) =>
+                {
+                onSearchChange(e.target.value);
+                }} />
+                <br />
+            </div>
+            {calculatedValues.filter(
+            function(c){
+            if(Sel===c.EquationYear.Year && (!Search ||c.EquationYear.Equation.Indicator.Name.indexOf(Search)>-1))
+            {return c;}
+            }).map((val, i) => (
+            <Cell key={i} index={i} val={val} />
+            ))}
+        </div>
+        );
+        }
+
+        ReactDOM.render(
+        <div><App /></div>, rootElement);
+    </script>
+}
