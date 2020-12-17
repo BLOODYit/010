@@ -251,6 +251,7 @@ namespace Marsad.Controllers
             {
                 equationText = equationText.Replace("[" + elementValue.EquationElement.Element.Name + "]", "(CAST (" + elementValue.Value.ToString() + " as float(53)))");
             }
+            equationText = equationText.Replace(";","").Replace("--","").Replace("!","");
             var results = db.Database.SqlQuery<double>("SELECT CAST ((" + equationText + ") as float(53)) as V1").ToList();
             if (results.Count != 1)
             {
